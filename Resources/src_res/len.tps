@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data version="1.0">
+    <struct type="Settings">
+        <key>fileFormatVersion</key>
+        <int>1</int>
+        <key>variation</key>
+        <string>main</string>
+        <key>verbose</key>
+        <false/>
+        <key>autoSDSettings</key>
+        <array/>
+        <key>allowRotation</key>
+        <true/>
+        <key>quiet</key>
+        <false/>
+        <key>premultiplyAlpha</key>
+        <false/>
+        <key>shapeDebug</key>
+        <false/>
+        <key>dpi</key>
+        <uint>72</uint>
+        <key>dataFormat</key>
+        <string>cocos2d</string>
+        <key>textureFileName</key>
+        <filename>../../../../../../../../../../len.png</filename>
+        <key>flipPVR</key>
+        <false/>
+        <key>ditherType</key>
+        <enum type="SettingsBase::DitherType">NearestNeighbour</enum>
+        <key>backgroundColor</key>
+        <uint>0</uint>
+        <key>libGdx</key>
+        <struct type="LibGDX">
+            <key>filtering</key>
+            <struct type="LibGDXFiltering">
+                <key>x</key>
+                <enum type="LibGDXFiltering::Filtering">Linear</enum>
+                <key>y</key>
+                <enum type="LibGDXFiltering::Filtering">Linear</enum>
+            </struct>
+        </struct>
+        <key>shapePadding</key>
+        <uint>2</uint>
+        <key>jpgQuality</key>
+        <uint>80</uint>
+        <key>pngOptimizationLevel</key>
+        <uint>0</uint>
+        <key>textureSubPath</key>
+        <string></string>
+        <key>textureFormat</key>
+        <enum type="SettingsBase::TextureFormat">png</enum>
+        <key>borderPadding</key>
+        <uint>2</uint>
+        <key>maxTextureSize</key>
+        <QSize>
+            <key>width</key>
+            <int>1024</int>
+            <key>height</key>
+            <int>1024</int>
+        </QSize>
+        <key>fixedTextureSize</key>
+        <QSize>
+            <key>width</key>
+            <int>-1</int>
+            <key>height</key>
+            <int>-1</int>
+        </QSize>
+        <key>reduceBorderArtifacts</key>
+        <false/>
+        <key>algorithmSettings</key>
+        <struct type="AlgorithmSettings">
+            <key>algorithm</key>
+            <enum type="AlgorithmSettings::AlgorithmId">Basic</enum>
+            <key>freeSizeMode</key>
+            <enum type="AlgorithmSettings::AlgorithmFreeSizeMode">Best</enum>
+            <key>sizeConstraints</key>
+            <enum type="AlgorithmSettings::SizeConstraints">POT</enum>
+            <key>forceSquared</key>
+            <false/>
+            <key>forceWordAligned</key>
+            <false/>
+            <key>maxRects</key>
+            <struct type="AlgorithmMaxRectsSettings">
+                <key>heuristic</key>
+                <enum type="AlgorithmMaxRectsSettings::Heuristic">Best</enum>
+            </struct>
+            <key>basic</key>
+            <struct type="AlgorithmBasicSettings">
+                <key>sortBy</key>
+                <enum type="AlgorithmBasicSettings::SortBy">Name</enum>
+                <key>order</key>
+                <enum type="AlgorithmBasicSettings::Order">Ascending</enum>
+            </struct>
+        </struct>
+        <key>andEngine</key>
+        <struct type="AndEngine">
+            <key>minFilter</key>
+            <enum type="AndEngine::MinFilter">Linear</enum>
+            <key>packageName</key>
+            <string>Texture</string>
+            <key>javaFileName</key>
+            <filename>../../../../../../../../../../len.java</filename>
+            <key>wrap</key>
+            <struct type="AndEngineWrap">
+                <key>s</key>
+                <enum type="AndEngineWrap::Wrap">Clamp</enum>
+                <key>t</key>
+                <enum type="AndEngineWrap::Wrap">Clamp</enum>
+            </struct>
+            <key>magFilter</key>
+            <enum type="AndEngine::MagFilter">MagLinear</enum>
+        </struct>
+        <key>dataFileName</key>
+        <filename>../../../../../../../../../../len.plist</filename>
+        <key>multiPack</key>
+        <false/>
+        <key>mainExtension</key>
+        <string></string>
+        <key>forceIdenticalLayout</key>
+        <false/>
+        <key>outputFormat</key>
+        <enum type="SettingsBase::OutputFormat">RGBA8888</enum>
+        <key>contentProtection</key>
+        <struct type="ContentProtection">
+            <key>key</key>
+            <string></string>
+        </struct>
+        <key>autoAliasEnabled</key>
+        <true/>
+        <key>trimSpriteNames</key>
+        <false/>
+        <key>globalSpriteSettings</key>
+        <struct type="SpriteSettings">
+            <key>scale</key>
+            <double>1</double>
+            <key>scaleMode</key>
+            <enum type="ScaleMode">Smooth</enum>
+            <key>innerPadding</key>
+            <uint>0</uint>
+            <key>extrude</key>
+            <uint>0</uint>
+            <key>trimThreshold</key>
+            <uint>1</uint>
+            <key>trimMode</key>
+            <enum type="SpriteSettings::TrimMode">Trim</enum>
+            <key>heuristicMask</key>
+            <false/>
+        </struct>
+        <key>fileList</key>
+        <array>
+            <filename>../CloseNormal.png</filename>
+            <filename>../CloseSelected.png</filename>
+            <filename>../CloseNormal.png</filename>
+            <filename>../CloseSelected.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren1300.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren1301.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren1302.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren1303.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren1304.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren1305.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren1306.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren1307.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren1308.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren1309.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren1310.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren1311.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren1312.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren1313.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren1314.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren1315.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren1316.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren1317.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren1318.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren5128.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren5129.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren5130.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren5100.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren5101.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren5102.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren5103.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren5104.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren5105.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren5106.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren5107.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren5108.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren5109.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren5110.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren5111.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren5112.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren5113.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren5114.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren5115.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren5116.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren5117.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren5118.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren5119.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren5120.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren5121.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren5122.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren5123.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren5124.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren5125.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren5126.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren5127.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren5211.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren5200.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren5201.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren5202.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren5203.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren5204.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren5205.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren5206.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren5207.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren5208.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren5209.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren5210.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren0000.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren0001.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren0002.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren0003.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren0004.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren0005.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren0006.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren0007.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren0008.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren0009.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren0010.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren0011.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren0012.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren0013.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren0014.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren0015.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren2417.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren2418.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren2409.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren2410.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren2411.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren2412.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren2413.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren2414.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren2415.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren2416.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren60v73.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren60v67.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren60v68.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren60v69.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren60v70.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren60v71.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren60v72.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren3900.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren3901.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren3902.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren3903.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren3904.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren3905.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren3906.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren3907.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren3908.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren3909.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren3910.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren3911.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren3912.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren3913.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren3914.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren3915.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren3916.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren3917.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren3918.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren3919.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren9100.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren9101.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren9102.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren9103.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren9104.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren9105.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren9106.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren9107.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren9108.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren9109.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren9110.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren9111.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren9112.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren9113.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren9114.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren9115.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren9116.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren9117.png</filename>
+            <filename>../../../../../../../../../../../Downloads/Len/len/ren9118.png</filename>
+        </array>
+        <key>ignoreFileList</key>
+        <array/>
+        <key>replaceList</key>
+        <array/>
+        <key>ignoredWarnings</key>
+        <array/>
+        <key>commonDivisorX</key>
+        <uint>1</uint>
+        <key>commonDivisorY</key>
+        <uint>1</uint>
+    </struct>
+</data>

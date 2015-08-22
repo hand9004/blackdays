@@ -1,0 +1,98 @@
+﻿빌드 시작: 2015-01-19 오전 3:27:53
+     1>2 노드의 "C:\Users\솔\Desktop\솔의 작업파일\실전\Black Days\프로그래밍\메인 코드\Black Days\Black Days\proj.win32\Black Days.win32.vcxproj" 프로젝트(Build 대상)입니다.
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I. /I..\Classes /I"C:\Users\솔\Desktop\솔의 작업파일\실전\Black Days\프로그래밍\메인 코드\Black Days\cocos2dx" /I"C:\Users\솔\Desktop\솔의 작업파일\실전\Black Days\프로그래밍\메인 코드\Black Days\cocos2dx\include" /I"C:\Users\솔\Desktop\솔의 작업파일\실전\Black Days\프로그래밍\메인 코드\Black Days\cocos2dx\kazmath\include" /I"C:\Users\솔\Desktop\솔의 작업파일\실전\Black Days\프로그래밍\메인 코드\Black Days\cocos2dx\platform\win32" /I"C:\Users\솔\Desktop\솔의 작업파일\실전\Black Days\프로그래밍\메인 코드\Black Days\cocos2dx\platform\third_party\win32" /I"C:\Users\솔\Desktop\솔의 작업파일\실전\Black Days\프로그래밍\메인 코드\Black Days\cocos2dx\platform\third_party\win32\OGLES" /I"C:\Users\솔\Desktop\솔의 작업파일\실전\Black Days\프로그래밍\메인 코드\Black Days\external" /I"C:\Users\솔\Desktop\솔의 작업파일\실전\Black Days\프로그래밍\메인 코드\Black Days\CocosDenshion\include" /nologo /W3 /WX- /O2 /Oy- /D WIN32 /D _WINDOWS /D STRICT /D _CRT_SECURE_NO_WARNINGS /D _SCL_SECURE_NO_WARNINGSNDEBUG /D _UNICODE /D UNICODE /Gm- /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release.win32\\" /Fd"Release.win32\vc120.pdb" /Gd /TP /wd4267 /wd4251 /wd4244 /analyze- /errorReport:prompt ..\Classes\Objects\Animate.cpp ..\Classes\Objects\CurveThrowObject.cpp ..\Classes\Objects\Effect.cpp ..\Classes\Objects\GameGraphicController.cpp ..\Classes\Objects\GameObject.cpp ..\Classes\Objects\HUDCollection.cpp ..\Classes\Objects\Map.cpp ..\Classes\Objects\Normal.cpp ..\Classes\Objects\ObjectController.cpp ..\Classes\Scene\GameScene.cpp ..\Classes\Scene\SceneManager.cpp ..\Classes\Scene\TouchLayer.cpp ..\Classes\StageManager.cpp
+         Animate.cpp
+     1>C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\xlocale(337): warning C4530: C++ 예외 처리기가 사용되었지만 해제 의미 체계가 활성화되지 않았습니다. /EHsc를 지정하십시오.
+     1>C:\cocos2d-x-2.2\cocos2d-x-2.2\cocos2dx\platform/CCSAXParser.h : warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+         CurveThrowObject.cpp
+     1>C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\xlocale(337): warning C4530: C++ 예외 처리기가 사용되었지만 해제 의미 체계가 활성화되지 않았습니다. /EHsc를 지정하십시오.
+     1>C:\cocos2d-x-2.2\cocos2d-x-2.2\cocos2dx\platform/CCSAXParser.h : warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+     1>..\Classes\Objects\CurveThrowObject.cpp(47): warning C4018: '<' : signed 또는 unsigned가 일치하지 않습니다.
+     1>..\Classes\Objects\CurveThrowObject.cpp(133): warning C4305: '초기화 중' : 'double'에서 'float'(으)로 잘립니다.
+     1>..\Classes\Objects\CurveThrowObject.cpp(136): warning C4305: '초기화 중' : 'double'에서 'float'(으)로 잘립니다.
+         Effect.cpp
+     1>C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\xlocale(337): warning C4530: C++ 예외 처리기가 사용되었지만 해제 의미 체계가 활성화되지 않았습니다. /EHsc를 지정하십시오.
+     1>C:\cocos2d-x-2.2\cocos2d-x-2.2\cocos2dx\platform/CCSAXParser.h : warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+         GameGraphicController.cpp
+     1>C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\xlocale(337): warning C4530: C++ 예외 처리기가 사용되었지만 해제 의미 체계가 활성화되지 않았습니다. /EHsc를 지정하십시오.
+     1>C:\cocos2d-x-2.2\cocos2d-x-2.2\cocos2dx\platform/CCSAXParser.h : warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+         GameObject.cpp
+     1>C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\xlocale(337): warning C4530: C++ 예외 처리기가 사용되었지만 해제 의미 체계가 활성화되지 않았습니다. /EHsc를 지정하십시오.
+     1>C:\cocos2d-x-2.2\cocos2d-x-2.2\cocos2dx\platform/CCSAXParser.h : warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+         HUDCollection.cpp
+     1>C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\xlocale(337): warning C4530: C++ 예외 처리기가 사용되었지만 해제 의미 체계가 활성화되지 않았습니다. /EHsc를 지정하십시오.
+     1>C:\cocos2d-x-2.2\cocos2d-x-2.2\cocos2dx\platform/CCSAXParser.h : warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+         Map.cpp
+     1>C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\xlocale(337): warning C4530: C++ 예외 처리기가 사용되었지만 해제 의미 체계가 활성화되지 않았습니다. /EHsc를 지정하십시오.
+     1>C:\cocos2d-x-2.2\cocos2d-x-2.2\cocos2dx\platform/CCSAXParser.h : warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+     1>..\Classes\Objects\Map.cpp(159): warning C4146: 단항 빼기 연산자가 부호 없는 형식에 적용되었습니다. 결과는 역시 unsigned입니다.
+     1>..\Classes\Objects\Map.cpp(189): warning C4146: 단항 빼기 연산자가 부호 없는 형식에 적용되었습니다. 결과는 역시 unsigned입니다.
+         Normal.cpp
+     1>C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\xlocale(337): warning C4530: C++ 예외 처리기가 사용되었지만 해제 의미 체계가 활성화되지 않았습니다. /EHsc를 지정하십시오.
+     1>C:\cocos2d-x-2.2\cocos2d-x-2.2\cocos2dx\platform/CCSAXParser.h : warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+         ObjectController.cpp
+     1>C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\xlocale(337): warning C4530: C++ 예외 처리기가 사용되었지만 해제 의미 체계가 활성화되지 않았습니다. /EHsc를 지정하십시오.
+     1>C:\cocos2d-x-2.2\cocos2d-x-2.2\cocos2dx\platform/CCSAXParser.h : warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+     1>..\Classes\Objects\ObjectController.cpp(141): warning C4018: '<' : signed 또는 unsigned가 일치하지 않습니다.
+     1>..\Classes\Objects\ObjectController.cpp(470): warning C4146: 단항 빼기 연산자가 부호 없는 형식에 적용되었습니다. 결과는 역시 unsigned입니다.
+     1>..\Classes\Objects\ObjectController.cpp(496): warning C4146: 단항 빼기 연산자가 부호 없는 형식에 적용되었습니다. 결과는 역시 unsigned입니다.
+     1>..\Classes\Objects\ObjectController.cpp(568): warning C4146: 단항 빼기 연산자가 부호 없는 형식에 적용되었습니다. 결과는 역시 unsigned입니다.
+     1>..\Classes\Objects\ObjectController.cpp(615): warning C4018: '<' : signed 또는 unsigned가 일치하지 않습니다.
+     1>..\Classes\Objects\ObjectController.cpp(636): warning C4018: '<' : signed 또는 unsigned가 일치하지 않습니다.
+         GameScene.cpp
+     1>C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\xlocale(337): warning C4530: C++ 예외 처리기가 사용되었지만 해제 의미 체계가 활성화되지 않았습니다. /EHsc를 지정하십시오.
+     1>C:\cocos2d-x-2.2\cocos2d-x-2.2\cocos2dx\platform/CCSAXParser.h : warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+         SceneManager.cpp
+     1>C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\xlocale(337): warning C4530: C++ 예외 처리기가 사용되었지만 해제 의미 체계가 활성화되지 않았습니다. /EHsc를 지정하십시오.
+     1>C:\cocos2d-x-2.2\cocos2d-x-2.2\cocos2dx\platform/CCSAXParser.h : warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+         TouchLayer.cpp
+     1>C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\xlocale(337): warning C4530: C++ 예외 처리기가 사용되었지만 해제 의미 체계가 활성화되지 않았습니다. /EHsc를 지정하십시오.
+     1>C:\cocos2d-x-2.2\cocos2d-x-2.2\cocos2dx\platform/CCSAXParser.h : warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+         StageManager.cpp
+     1>C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\xlocale(337): warning C4530: C++ 예외 처리기가 사용되었지만 해제 의미 체계가 활성화되지 않았습니다. /EHsc를 지정하십시오.
+     1>C:\cocos2d-x-2.2\cocos2d-x-2.2\cocos2dx\platform/CCSAXParser.h : warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+         코드를 생성하고 있습니다...
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\솔\Desktop\솔의 작업파일\실전\Black Days\프로그래밍\메인 코드\Black Days\Release.win32\Black Days.win32.exe" /INCREMENTAL /NOLOGO /LIBPATH:"C:\Users\솔\Desktop\솔의 작업파일\실전\Black Days\프로그래밍\메인 코드\Black Days\Release.win32\\" libcocos2d.lib libExtensions.lib opengl32.lib glew32.lib libBox2d.lib libCocosDenshion.lib lua51.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:"C:\Users\솔\Desktop\솔의 작업파일\실전\Black Days\프로그래밍\메인 코드\Black Days\Release.win32\Black Days.win32.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\솔\Desktop\솔의 작업파일\실전\Black Days\프로그래밍\메인 코드\Black Days\Release.win32\Black Days.win32.lib" /MACHINE:X86 /SAFESEH Release.win32\AppDelegate.obj
+         Release.win32\GraphicsController.obj
+         Release.win32\LuaCommunicator.obj
+         Release.win32\Animate.obj
+         Release.win32\CurveThrowObject.obj
+         Release.win32\Effect.obj
+         Release.win32\GameGraphicComponent.obj
+         Release.win32\GameGraphicController.obj
+         Release.win32\GameObject.obj
+         Release.win32\HUDCollection.obj
+         Release.win32\Map.obj
+         Release.win32\Normal.obj
+         Release.win32\ObjectController.obj
+         Release.win32\SkillController.obj
+         Release.win32\GameScene.obj
+         Release.win32\StageSelectScene.obj
+         Release.win32\TouchLayer.obj
+         Release.win32\SceneManager.obj
+         Release.win32\StartScene.obj
+         Release.win32\SoundManager.obj
+         Release.win32\StageManager.obj
+         Release.win32\SystemInfo.obj
+         Release.win32\BD_ActionMove.obj
+         Release.win32\BD_ActionScrolling.obj
+         Release.win32\BD_Background.obj
+         Release.win32\BD_Button.obj
+         Release.win32\BD_CheckBox.obj
+         Release.win32\BD_LayerAction.obj
+         Release.win32\BD_Message.obj
+         Release.win32\BD_PopupMessage.obj
+         Release.win32\BD_SlideControl.obj
+         Release.win32\BD_SlideSelector.obj
+         Release.win32\UIComponent.obj
+         Release.win32\UIController.obj
+         Release.win32\UILayer.obj
+         Release.win32\main.obj
+         Black Days.win32.vcxproj -> C:\Users\솔\Desktop\솔의 작업파일\실전\Black Days\프로그래밍\메인 코드\Black Days\Release.win32\Black Days.win32.exe
+     1>"C:\Users\솔\Desktop\솔의 작업파일\실전\Black Days\프로그래밍\메인 코드\Black Days\Black Days\proj.win32\Black Days.win32.vcxproj" 프로젝트를 빌드했습니다(Build 대상).
+
+빌드했습니다.
+
+경과 시간: 00:00:13.71

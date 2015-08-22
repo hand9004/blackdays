@@ -1,0 +1,334 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{473095E5-9B62-4864-828F-81C20EEBACBD}</ProjectGuid>
+    <SccProjectName>
+    </SccProjectName>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccProvider>
+    </SccProvider>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration).win32\</OutDir>
+    <IntDir>$(Configuration).win32\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>C:\cocos2d-x-2.2.6\cocos2d-x-2.2.6\scripting\lua\tolua;C:\cocos2d-x-2.2.6\cocos2d-x-2.2.6\scripting\lua\lua;C:\cocos2d-x-2.2.6\cocos2d-x-2.2.6\external;C:\cocos2d-x-2.2.6\cocos2d-x-2.2.6\cocos2dx\kazmath\include;C:\cocos2d-x-2.2.6\cocos2d-x-2.2.6\cocos2dx;C:\cocos2d-x-2.2.6\cocos2d-x-2.2.6\cocos2dx\platform\win32;C:\cocos2d-x-2.2.6\cocos2d-x-2.2.6\cocos2dx\platform\third_party\win32\OGLES;C:\cocos2d-x-2.2.6\cocos2d-x-2.2.6\cocos2dx\include;C:\cocos2d-x-2.2.6\cocos2d-x-2.2.6\CocosDenshion\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\cocos2d-x-2.2.6\cocos2d-x-2.2.6\Debug.win32;$(LibraryPath)</LibraryPath>
+    <SourcePath>$(SourcePath)</SourcePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration).win32\</OutDir>
+    <IntDir>$(Configuration).win32\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>C:\cocos2d-x-2.2\cocos2d-x-2.2\scripting\lua\tolua;C:\cocos2d-x-2.2\cocos2d-x-2.2\scripting\lua\lua;C:\cocos2d-x-2.2\cocos2d-x-2.2\external;C:\cocos2d-x-2.2\cocos2d-x-2.2\cocos2dx\kazmath\include;C:\cocos2d-x-2.2\cocos2d-x-2.2\cocos2dx;C:\cocos2d-x-2.2\cocos2d-x-2.2\cocos2dx\platform\win32;C:\cocos2d-x-2.2\cocos2d-x-2.2\cocos2dx\platform\third_party\win32\OGLES;C:\cocos2d-x-2.2\cocos2d-x-2.2\cocos2dx\include;C:\cocos2d-x-2.2\cocos2d-x-2.2\CocosDenshion\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\cocos2d-x-2.2\cocos2d-x-2.2\Debug.win32;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>.;..\Classes;$(SolutionDir)cocos2dx;$(SolutionDir)cocos2dx\include;$(SolutionDir)cocos2dx\kazmath\include;$(SolutionDir)cocos2dx\platform\win32;$(SolutionDir)cocos2dx\platform\third_party\win32;$(SolutionDir)cocos2dx\platform\third_party\win32\OGLES;$(SolutionDir)external;$(SolutionDir)CocosDenshion\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <MinimalRebuild>true</MinimalRebuild>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;STRICT;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS_DEBUG;COCOS2D_DEBUG=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <DisableSpecificWarnings>4267;4251;4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libcocos2d.lib;libExtensions.lib;opengl32.lib;glew32.lib;libBox2d.lib;libCocosDenshion.lib;lua51.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <StackReserveSize>
+      </StackReserveSize>
+      <HeapReserveSize>
+      </HeapReserveSize>
+    </Link>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <HeaderFileName>Black Days.h</HeaderFileName>
+      <InterfaceIdentifierFileName>Black Days_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>Black Days_p.c</ProxyFileName>
+      <GenerateStublessProxies>true</GenerateStublessProxies>
+      <TypeLibraryName>$(IntDir)/Black Days.tlb</TypeLibraryName>
+      <DllDataFileName>
+      </DllDataFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>.;..\Classes;$(SolutionDir)cocos2dx;$(SolutionDir)cocos2dx\include;$(SolutionDir)cocos2dx\kazmath\include;$(SolutionDir)cocos2dx\platform\win32;$(SolutionDir)cocos2dx\platform\third_party\win32;$(SolutionDir)cocos2dx\platform\third_party\win32\OGLES;$(SolutionDir)external;$(SolutionDir)CocosDenshion\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;STRICT;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGSNDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <DisableSpecificWarnings>4267;4251;4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalLibraryDirectories>$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libcocos2d.lib;libExtensions.lib;opengl32.lib;glew32.lib;libBox2d.lib;libCocosDenshion.lib;lua51.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <HeaderFileName>Black Days.h</HeaderFileName>
+      <InterfaceIdentifierFileName>Black Days_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>Black Days_p.c</ProxyFileName>
+      <GenerateStublessProxies>true</GenerateStublessProxies>
+      <TypeLibraryName>$(IntDir)/Black Days.tlb</TypeLibraryName>
+      <DllDataFileName>
+      </DllDataFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="..\..\Debug.win32\glew32.dll" />
+    <None Include="..\..\Debug.win32\iconv.dll" />
+    <None Include="..\..\Debug.win32\libcocos2d.dll" />
+    <None Include="..\..\Debug.win32\libCocosDenshion.dll" />
+    <None Include="..\..\Debug.win32\libcurl.dll" />
+    <None Include="..\..\Debug.win32\libtiff.dll" />
+    <None Include="..\..\Debug.win32\lua51.dll" />
+    <None Include="..\..\Debug.win32\mozjs.dll" />
+    <None Include="..\..\Debug.win32\pthreadVCE2.dll" />
+    <None Include="..\..\Debug.win32\zlib1.dll" />
+    <None Include="..\Resources\Characters\akiha.plist" />
+    <None Include="..\Resources\Characters\akiha.png" />
+    <None Include="..\Resources\Characters\akiha_effect.plist" />
+    <None Include="..\Resources\Characters\akiha_effect.png" />
+    <None Include="..\Resources\Characters\kohaku.plist" />
+    <None Include="..\Resources\Characters\kohaku.png" />
+    <None Include="..\Resources\Characters\len.plist" />
+    <None Include="..\Resources\Characters\len.png" />
+    <None Include="..\Resources\Characters\len_effect.plist" />
+    <None Include="..\Resources\Characters\len_effect.png" />
+    <None Include="..\Resources\Characters\sion.plist" />
+    <None Include="..\Resources\Characters\sion.png" />
+    <None Include="..\Resources\fonts\arial-unicode-26.fnt" />
+    <None Include="..\Resources\fonts\arial-unicode-26.png" />
+    <None Include="..\Resources\fonts\arial.ttf" />
+    <None Include="..\Resources\fonts\LBLACK.TTF" />
+    <None Include="..\Resources\Images\background.png" />
+    <None Include="..\Resources\Images\background1.png" />
+    <None Include="..\Resources\Images\checked.png" />
+    <None Include="..\Resources\Images\CloseNormal.png" />
+    <None Include="..\Resources\Images\CloseSelected.png" />
+    <None Include="..\Resources\Images\credits.png" />
+    <None Include="..\Resources\Images\credits_clicked.png" />
+    <None Include="..\Resources\Images\credits_message.png" />
+    <None Include="..\Resources\Images\exit_on.png" />
+    <None Include="..\Resources\Images\exit_un.png" />
+    <None Include="..\Resources\Images\explain_1.png" />
+    <None Include="..\Resources\Images\explain_2.png" />
+    <None Include="..\Resources\Images\explain_3.png" />
+    <None Include="..\Resources\Images\explain_4.png" />
+    <None Include="..\Resources\Images\explain_5.png" />
+    <None Include="..\Resources\Images\explain_6.png" />
+    <None Include="..\Resources\Images\flag.png" />
+    <None Include="..\Resources\Images\gallery.png" />
+    <None Include="..\Resources\Images\gallery_bg.png" />
+    <None Include="..\Resources\Images\gallery_clicked.png" />
+    <None Include="..\Resources\Images\hud.plist" />
+    <None Include="..\Resources\Images\hud.png" />
+    <None Include="..\Resources\Images\main_menu.png" />
+    <None Include="..\Resources\Images\marker.png" />
+    <None Include="..\Resources\Images\message_box_empty.png" />
+    <None Include="..\Resources\Images\message_box_empty_chained.png" />
+    <None Include="..\Resources\Images\setting.png" />
+    <None Include="..\Resources\Images\setting_clicked.png" />
+    <None Include="..\Resources\Images\shell.png" />
+    <None Include="..\Resources\Images\skill_image_1.png" />
+    <None Include="..\Resources\Images\skill_image_2.png" />
+    <None Include="..\Resources\Images\skill_image_3.png" />
+    <None Include="..\Resources\Images\slider.png" />
+    <None Include="..\Resources\Images\slider_bar.png" />
+    <None Include="..\Resources\Images\slide_selector.png" />
+    <None Include="..\Resources\Images\stage1.plist" />
+    <None Include="..\Resources\Images\stage1.png" />
+    <None Include="..\Resources\Images\stage_exit_background.png" />
+    <None Include="..\Resources\Images\stage_exit_no_onclicked.png" />
+    <None Include="..\Resources\Images\stage_exit_no_unclicked.png" />
+    <None Include="..\Resources\Images\stage_exit_yes_onclicked.png" />
+    <None Include="..\Resources\Images\stage_exit_yes_unclicked.png" />
+    <None Include="..\Resources\Images\starter.png" />
+    <None Include="..\Resources\Images\starter_clicked.png" />
+    <None Include="..\Resources\Images\talk_balloon.png" />
+    <None Include="..\Resources\Images\tutorial.png" />
+    <None Include="..\Resources\Images\tutorial_clicked.png" />
+    <None Include="..\Resources\Images\tutorial_message.png" />
+    <None Include="..\Resources\Images\unchecked.png" />
+    <None Include="..\Resources\Images\worldmap.png" />
+    <None Include="..\Resources\Script\Game.lua" />
+    <None Include="..\Resources\Script\Map\Map.lua" />
+    <None Include="..\Resources\Script\Object\GameObject.lua" />
+    <None Include="..\Resources\Script\Select.lua" />
+    <None Include="..\Resources\Script\Stage\Stage1.lua" />
+    <None Include="..\Resources\Script\Stage\Stage2.lua" />
+    <None Include="..\Resources\Script\Stage\Stage3.lua" />
+    <None Include="..\Resources\Script\Stage\StageManager.lua" />
+    <None Include="..\Resources\Script\Start.lua" />
+    <None Include="..\Resources\sounds\button_on_click.mp3" />
+    <None Include="..\Resources\sounds\check_box_on_click.mp3" />
+    <None Include="..\Resources\sounds\exit_button_on_click.mp3" />
+    <None Include="..\Resources\sounds\main_menu.mp3" />
+    <None Include="..\Resources\sounds\setting_button_on_click.mp3" />
+    <None Include="..\Resources\src_res\akiha.tps" />
+    <None Include="..\Resources\src_res\akiha_effect.tps" />
+    <None Include="..\Resources\src_res\character_select.png" />
+    <None Include="..\Resources\src_res\hp_frame.png" />
+    <None Include="..\Resources\src_res\hp_gauge.png" />
+    <None Include="..\Resources\src_res\hud.tps" />
+    <None Include="..\Resources\src_res\kohaku.tps" />
+    <None Include="..\Resources\src_res\len.tps" />
+    <None Include="..\Resources\src_res\len_effect.tps" />
+    <None Include="..\Resources\src_res\sion.tps" />
+    <None Include="..\Resources\src_res\stage1.tps" />
+    <None Include="..\Resources\src_res\target_select.png" />
+    <None Include="..\Resources\src_res\tree.png" />
+    <None Include="..\Resources\src_res\tree1.png" />
+    <None Include="ClassDiagram1.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Classes\AppDelegate.h" />
+    <ClInclude Include="..\Classes\Graphics\GraphicsController.h" />
+    <ClInclude Include="..\Classes\LuaCommunicator.h" />
+    <ClInclude Include="..\Classes\Objects\Animate.h" />
+    <ClInclude Include="..\Classes\Objects\CurveThrowObject.h" />
+    <ClInclude Include="..\Classes\Objects\Effect.h" />
+    <ClInclude Include="..\Classes\Objects\GameGraphicComponent.h" />
+    <ClInclude Include="..\Classes\Objects\GameGraphicController.h" />
+    <ClInclude Include="..\Classes\Objects\GameObject.h" />
+    <ClInclude Include="..\Classes\Objects\HUDCollection.h" />
+    <ClInclude Include="..\Classes\Objects\Map.h" />
+    <ClInclude Include="..\Classes\Objects\Normal.h" />
+    <ClInclude Include="..\Classes\Objects\ObjectController.h" />
+    <ClInclude Include="..\Classes\Objects\ObjectProtocol.h" />
+    <ClInclude Include="..\Classes\Objects\ParticleController.h" />
+    <ClInclude Include="..\Classes\Objects\SkillController.h" />
+    <ClInclude Include="..\Classes\Scene\GameScene.h" />
+    <ClInclude Include="..\Classes\Scene\StageSelectScene.h" />
+    <ClInclude Include="..\Classes\Scene\TouchLayer.h" />
+    <ClInclude Include="..\Classes\Scene\SceneManager.h" />
+    <ClInclude Include="..\Classes\Scene\StartScene.h" />
+    <ClInclude Include="..\Classes\SoundManager.h" />
+    <ClInclude Include="..\Classes\StageManager.h" />
+    <ClInclude Include="..\Classes\System\SystemInfo.h" />
+    <ClInclude Include="..\Classes\UI\BD_ActionMove.h" />
+    <ClInclude Include="..\Classes\UI\BD_ActionScrolling.h" />
+    <ClInclude Include="..\Classes\UI\BD_Background.h" />
+    <ClInclude Include="..\Classes\UI\BD_Button.h" />
+    <ClInclude Include="..\Classes\UI\BD_CheckBox.h" />
+    <ClInclude Include="..\Classes\UI\BD_LayerAction.h" />
+    <ClInclude Include="..\Classes\UI\BD_Message.h" />
+    <ClInclude Include="..\Classes\UI\BD_PopupMessage.h" />
+    <ClInclude Include="..\Classes\UI\BD_SlideControl.h" />
+    <ClInclude Include="..\Classes\UI\BD_SlideSelector.h" />
+    <ClInclude Include="..\Classes\UI\UIComponent.h" />
+    <ClInclude Include="..\Classes\UI\UIController.h" />
+    <ClInclude Include="..\Classes\UI\UILayer.h" />
+    <ClInclude Include="..\Classes\UI\UI_Def.h" />
+    <ClInclude Include="..\Classes\Utility\Utility.h" />
+    <ClInclude Include="main.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Classes\AppDelegate.cpp" />
+    <ClCompile Include="..\Classes\Graphics\GraphicsController.cpp" />
+    <ClCompile Include="..\Classes\LuaCommunicator.cpp" />
+    <ClCompile Include="..\Classes\Objects\Animate.cpp" />
+    <ClCompile Include="..\Classes\Objects\CurveThrowObject.cpp" />
+    <ClCompile Include="..\Classes\Objects\Effect.cpp" />
+    <ClCompile Include="..\Classes\Objects\GameGraphicComponent.cpp" />
+    <ClCompile Include="..\Classes\Objects\GameGraphicController.cpp" />
+    <ClCompile Include="..\Classes\Objects\GameObject.cpp" />
+    <ClCompile Include="..\Classes\Objects\HUDCollection.cpp" />
+    <ClCompile Include="..\Classes\Objects\Map.cpp" />
+    <ClCompile Include="..\Classes\Objects\Normal.cpp" />
+    <ClCompile Include="..\Classes\Objects\ObjectController.cpp" />
+    <ClCompile Include="..\Classes\Objects\ParticleController.cpp" />
+    <ClCompile Include="..\Classes\Objects\SkillController.cpp" />
+    <ClCompile Include="..\Classes\Scene\GameScene.cpp" />
+    <ClCompile Include="..\Classes\Scene\StageSelectScene.cpp" />
+    <ClCompile Include="..\Classes\Scene\TouchLayer.cpp" />
+    <ClCompile Include="..\Classes\Scene\SceneManager.cpp" />
+    <ClCompile Include="..\Classes\Scene\StartScene.cpp" />
+    <ClCompile Include="..\Classes\SoundManager.cpp" />
+    <ClCompile Include="..\Classes\StageManager.cpp" />
+    <ClCompile Include="..\Classes\System\SystemInfo.cpp" />
+    <ClCompile Include="..\Classes\UI\BD_ActionMove.cpp" />
+    <ClCompile Include="..\Classes\UI\BD_ActionScrolling.cpp" />
+    <ClCompile Include="..\Classes\UI\BD_Background.cpp" />
+    <ClCompile Include="..\Classes\UI\BD_Button.cpp" />
+    <ClCompile Include="..\Classes\UI\BD_CheckBox.cpp" />
+    <ClCompile Include="..\Classes\UI\BD_LayerAction.cpp" />
+    <ClCompile Include="..\Classes\UI\BD_Message.cpp" />
+    <ClCompile Include="..\Classes\UI\BD_PopupMessage.cpp" />
+    <ClCompile Include="..\Classes\UI\BD_SlideControl.cpp" />
+    <ClCompile Include="..\Classes\UI\BD_SlideSelector.cpp" />
+    <ClCompile Include="..\Classes\UI\UIComponent.cpp" />
+    <ClCompile Include="..\Classes\UI\UIController.cpp" />
+    <ClCompile Include="..\Classes\UI\UILayer.cpp" />
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

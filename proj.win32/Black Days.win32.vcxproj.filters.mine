@@ -1,0 +1,493 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="resource">
+      <UniqueIdentifier>{8b07c79a-0c9e-4b4b-b8df-f9bc203e8420}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;jpg;jpeg;jpe;png;manifest</Extensions>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{514b3cdb-f537-4de0-9c86-4f343fd54c53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main">
+      <UniqueIdentifier>{8cc32803-951d-4530-aeb9-0a7eb21acb57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lua">
+      <UniqueIdentifier>{ef5c90b5-a2cf-4956-a17f-49a4d03652af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{e1b8a4bb-90ee-4008-9256-f2ca096195cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\UIComponents">
+      <UniqueIdentifier>{0ef11999-0628-4320-b24d-cf7c6cfea597}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics">
+      <UniqueIdentifier>{c4b71879-424b-4259-a457-4f76ff7a5103}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AI">
+      <UniqueIdentifier>{7d33383c-4c5a-4fab-bdb2-a013a3e42235}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility">
+      <UniqueIdentifier>{8672ad78-3a6d-44dd-9da2-7ee751a3f300}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects">
+      <UniqueIdentifier>{64fe1db0-5066-4834-b312-86c9a0786c38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects\ObjectComponent">
+      <UniqueIdentifier>{bb77b476-ff57-4b77-8c71-6f54491a443a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects\GameGraphic">
+      <UniqueIdentifier>{8b4fc20d-d085-42c1-9657-6469f49f6acf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects\Protocol">
+      <UniqueIdentifier>{48b109ac-2d6d-4d7b-90b1-2c1883e3019a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects\Skill">
+      <UniqueIdentifier>{e3b2d270-212c-48e8-a721-f0abd8edfd60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resource\Characters">
+      <UniqueIdentifier>{16e2861d-f8ff-410e-ad1c-f0597d83d045}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resource\fonts">
+      <UniqueIdentifier>{1c92d18c-f10a-4f05-891a-b031708a1d43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System">
+      <UniqueIdentifier>{4d42662f-39d0-4e8a-9f49-1e70fee0eea9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resource\Script">
+      <UniqueIdentifier>{8fe5d7c1-6e15-433c-9e99-68db9a7badd2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\UILayer">
+      <UniqueIdentifier>{d7f07c12-6e8f-4572-a7b3-ae534207d9a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\UILayer\Actions">
+      <UniqueIdentifier>{4077d65e-64ef-4c4c-8a63-d25ce6035e44}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Stage">
+      <UniqueIdentifier>{8ed8eb71-f16b-4f7f-a497-e450e7289def}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sound">
+      <UniqueIdentifier>{ec2d7814-9c47-4e24-82bd-13fe8ee46d8a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
+    <None Include="..\Resources\Characters\len.plist">
+      <Filter>resource\Characters</Filter>
+    </None>
+    <None Include="..\Resources\Characters\len.png">
+      <Filter>resource\Characters</Filter>
+    </None>
+    <None Include="..\Resources\Characters\len_effect.plist">
+      <Filter>resource\Characters</Filter>
+    </None>
+    <None Include="..\Resources\Characters\len_effect.png">
+      <Filter>resource\Characters</Filter>
+    </None>
+    <None Include="..\Resources\Characters\sion.plist">
+      <Filter>resource\Characters</Filter>
+    </None>
+    <None Include="..\Resources\Characters\sion.png">
+      <Filter>resource\Characters</Filter>
+    </None>
+    <None Include="..\Resources\Characters\kohaku.plist">
+      <Filter>resource\Characters</Filter>
+    </None>
+    <None Include="..\Resources\Characters\kohaku.png">
+      <Filter>resource\Characters</Filter>
+    </None>
+    <None Include="..\Resources\background.png">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\Resources\background1.png">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\Resources\checked.png">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\Resources\CloseNormal.png">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\Resources\CloseSelected.png">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\Resources\credits.png">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\Resources\credits_clicked.png">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\Resources\credits_message.png">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\Resources\exit_on.png">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\Resources\exit_un.png">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\Resources\gallery.png">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\Resources\gallery_clicked.png">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\Resources\hud.plist">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\Resources\hud.png">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\Resources\main_menu.png">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\Resources\message_box_empty.png">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\Resources\message_box_empty_chained.png">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\Resources\message_box_test.png">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\Resources\setting.png">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\Resources\setting_clicked.png">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\Resources\shell.png">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\Resources\skill_image_1.png">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\Resources\skill_image_2.png">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\Resources\skill_image_3.png">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\Resources\slide_selector.png">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\Resources\slider.png">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\Resources\slider_bar.png">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\Resources\stage1.plist">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\Resources\stage1.png">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\Resources\stage1.tps">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\Resources\starter.png">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\Resources\starter_clicked.png">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\Resources\talk_balloon.png">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\Resources\tutorial.png">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\Resources\tutorial_clicked.png">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\Resources\tutorial_message.png">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\Resources\unchecked.png">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\Resources\Script\Game.lua">
+      <Filter>resource\Script</Filter>
+    </None>
+    <None Include="..\Resources\Script\Start.lua">
+      <Filter>resource\Script</Filter>
+    </None>
+    <None Include="..\Resources\Script\Map\Map.lua">
+      <Filter>resource\Script</Filter>
+    </None>
+    <None Include="..\Resources\Script\Object\GameObject.lua">
+      <Filter>resource\Script</Filter>
+    </None>
+    <None Include="..\Resources\fonts\arial.ttf">
+      <Filter>resource\fonts</Filter>
+    </None>
+    <None Include="..\Resources\Script\Stage\Stage1.lua">
+      <Filter>resource\Script</Filter>
+    </None>
+    <None Include="..\Resources\Script\Stage\StageManager.lua">
+      <Filter>resource\Script</Filter>
+    </None>
+    <None Include="..\Resources\Script\Stage\Stage2.lua">
+      <Filter>resource\Script</Filter>
+    </None>
+    <None Include="..\Resources\fonts\LBLACK.TTF">
+      <Filter>resource\fonts</Filter>
+    </None>
+    <None Include="..\Resources\bomb_explosion.mp3">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\Resources\flag.png">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\Resources\game_background_music.mp3">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\Resources\main_background_music.mp3">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\Resources\marker.png">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\Resources\worldmap.png">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\Resources\Script\Select.lua">
+      <Filter>resource\Script</Filter>
+    </None>
+    <None Include="..\Resources\fonts\arial-unicode-26.fnt">
+      <Filter>resource\fonts</Filter>
+    </None>
+    <None Include="..\Resources\fonts\arial-unicode-26.png">
+      <Filter>resource\fonts</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Classes\Scene\StartScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\AppDelegate.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="main.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Scene\SceneManager.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\LuaCommunicator.h">
+      <Filter>Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\UI\BD_Message.h">
+      <Filter>UI\UIComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\UI\BD_SlideControl.h">
+      <Filter>UI\UIComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\UI\UIComponent.h">
+      <Filter>UI\UIComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\UI\BD_Button.h">
+      <Filter>UI\UIComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\UI\BD_CheckBox.h">
+      <Filter>UI\UIComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\UI\UIController.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Graphics\GraphicsController.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\System\SystemInfo.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Utility\Utility.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\UI\UI_Def.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\UI\BD_Background.h">
+      <Filter>UI\UIComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Scene\GameScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Objects\Animate.h">
+      <Filter>Objects\GameGraphic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Objects\GameGraphicComponent.h">
+      <Filter>Objects\GameGraphic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Objects\GameGraphicController.h">
+      <Filter>Objects\GameGraphic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Objects\Normal.h">
+      <Filter>Objects\GameGraphic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Objects\GameObject.h">
+      <Filter>Objects\ObjectComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Objects\ObjectController.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Scene\TouchLayer.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Objects\Map.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Objects\HUDCollection.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Objects\Effect.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Objects\ObjectProtocol.h">
+      <Filter>Objects\Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Objects\CurveThrowObject.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\UI\BD_SlideSelector.h">
+      <Filter>UI\UIComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\UI\UILayer.h">
+      <Filter>UI\UILayer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\UI\BD_LayerAction.h">
+      <Filter>UI\UILayer\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\UI\BD_ActionMove.h">
+      <Filter>UI\UILayer\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Objects\SkillController.h">
+      <Filter>Objects\Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SoundManager.h">
+      <Filter>Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\StageManager.h">
+      <Filter>Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\UI\BD_PopupMessage.h">
+      <Filter>UI\UIComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Scene\StageSelectScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\UI\BD_ActionScrolling.h">
+      <Filter>UI\UILayer\Actions</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Classes\AppDelegate.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Scene\SceneManager.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\LuaCommunicator.cpp">
+      <Filter>Lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\UI\BD_SlideControl.cpp">
+      <Filter>UI\UIComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\UI\UIComponent.cpp">
+      <Filter>UI\UIComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\UI\BD_Button.cpp">
+      <Filter>UI\UIComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\UI\BD_CheckBox.cpp">
+      <Filter>UI\UIComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\UI\BD_Message.cpp">
+      <Filter>UI\UIComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\UI\UIController.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Graphics\GraphicsController.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\System\SystemInfo.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\UI\BD_Background.cpp">
+      <Filter>UI\UIComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Scene\GameScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Objects\Animate.cpp">
+      <Filter>Objects\GameGraphic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Objects\GameGraphicComponent.cpp">
+      <Filter>Objects\GameGraphic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Objects\GameGraphicController.cpp">
+      <Filter>Objects\GameGraphic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Objects\Normal.cpp">
+      <Filter>Objects\GameGraphic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Objects\GameObject.cpp">
+      <Filter>Objects\ObjectComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Objects\ObjectController.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Scene\TouchLayer.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Objects\Map.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Objects\HUDCollection.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Objects\Effect.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Objects\CurveThrowObject.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\UI\BD_SlideSelector.cpp">
+      <Filter>UI\UIComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\UI\UILayer.cpp">
+      <Filter>UI\UILayer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\UI\BD_ActionMove.cpp">
+      <Filter>UI\UILayer\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\UI\BD_LayerAction.cpp">
+      <Filter>UI\UILayer\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Objects\SkillController.cpp">
+      <Filter>Objects\Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SoundManager.cpp">
+      <Filter>Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\StageManager.cpp">
+      <Filter>Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Scene\StartScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\UI\BD_PopupMessage.cpp">
+      <Filter>UI\UIComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Scene\StageSelectScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\UI\BD_ActionScrolling.cpp">
+      <Filter>UI\UILayer\Actions</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
