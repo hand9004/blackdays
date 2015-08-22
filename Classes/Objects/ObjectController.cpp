@@ -243,13 +243,14 @@ void ObjectController::setObjectInfo(obj_info& p_obj_info)
 
 	if (table_size > 0)
 	{
-		strncpy(p_obj_info.object_name, lua_tostring(p_lua_st, -12), sizeof(p_obj_info.object_name));
-		p_obj_info.attack_point = lua_tointeger(p_lua_st, -11);
-		p_obj_info.defense_point = lua_tointeger(p_lua_st, -10);
-		p_obj_info.health_point = lua_tointeger(p_lua_st, -9);
-		p_obj_info.recognize_area = lua_tointeger(p_lua_st, -8);
-		p_obj_info.firing_area_X = lua_tointeger(p_lua_st, -7);
-		p_obj_info.firing_area_Y = lua_tointeger(p_lua_st, -6);
+		strncpy(p_obj_info.object_name, lua_tostring(p_lua_st, -13), sizeof(p_obj_info.object_name));
+		p_obj_info.attack_point = lua_tointeger(p_lua_st, -12);
+		p_obj_info.defense_point = lua_tointeger(p_lua_st, -11);
+		p_obj_info.health_point = lua_tointeger(p_lua_st, -10);
+		p_obj_info.recognize_area = lua_tointeger(p_lua_st, -9);
+		p_obj_info.firing_area_X = lua_tointeger(p_lua_st, -8);
+		p_obj_info.firing_area_Y = lua_tointeger(p_lua_st, -7);
+		p_obj_info.partol_delay_time = lua_tointeger(p_lua_st, -6);
 		p_obj_info.move_speed = lua_tonumber(p_lua_st, -5);
 		INTEGER_TO_BOOLEAN(p_obj_info.isEnemy, lua_toboolean(p_lua_st, -4));
 		INTEGER_TO_BOOLEAN(p_obj_info.isHero, lua_toboolean(p_lua_st, -3));

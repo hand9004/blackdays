@@ -5,8 +5,8 @@
 #include "Map.h"
 #include <math.h>
 
-GameObject::GameObject(void) : target(nullptr), current_event(SEARCHING_RECOGNIZE_AREA), current_index(0),
-			isSelected(false), isAttackingByEnemy(false), isLeft(false), isNonTargetAttacked(false), isCollidedToTarget(false), onDestroy(false)
+GameObject::GameObject(void) : target(nullptr), current_event(SEARCHING_RECOGNIZE_AREA), current_index(0), start_time(0), delta_time(0), end_time(0),
+								isSelected(false), isAttackingByEnemy(false), isLeft(false), isNonTargetAttacked(false), isCollidedToTarget(false), onDestroy(false)
 {
 }
 
@@ -41,6 +41,9 @@ void GameObject::Update()
 			break;
 		case SKILL:
 			skill_update();
+			break;
+		case PATROL:
+			patrol_update();
 			break;
 		case SEARCHING_RECOGNIZE_AREA:
 			search_update();
@@ -222,6 +225,23 @@ void GameObject::Skill()
 				skill_ctrl.setEvent(current_event);
 			}
 			graphic_ctrl.setActivateComponent(current_skill->ref_ani_name);
+		}
+	}
+}
+void GameObject::Patrol(cocos2d::CCPoint patrol_pt)
+{
+	if (!dead_check())
+	{
+		if (Map::Instance()->isInMovingArea(patrol_pt))
+		{
+			start_move_pos = object_info.pos;
+			dest_move_pos = patrol_pt;
+
+			create_move_list(patrol_pt);
+
+			graphic_ctrl.setActivateComponent("move");
+
+			current_event = PATROL;
 		}
 	}
 }
@@ -446,6 +466,50 @@ void GameObject::skill_update()
 			}
 		}
 		skill_ctrl.Update();
+	}
+}
+void GameObject::patrol_update()
+{
+	if (!dead_check())
+	{
+		unsigned int move_pt_size = move_line_pt.size();
+		bool isListEmpty = move_line_pt.empty();
+
+		if (current_index < move_pt_size)
+		{
+
+		}
+		else
+		{
+			if (start_time > 0)
+			{
+				delta_time = end_time - start_time;
+
+				if (delta_time > object_info.partol_delay_time)
+				{
+					Move(start_move_pos);
+					delta_time = 0;
+					current_index = 0;
+
+					start_time = get_ms_onSystem();
+					end_time = get_ms_onSystem();
+				}
+				else
+				{
+					graphic_ctrl.setActivateComponent("stand");
+
+					float recognize_width = object_info.recognize_area;
+
+					CCRect recognize_area = CCRect(object_info.pos.x - recognize_width, object_info.pos.y - 10,
+						object_info.pos.x + (recognize_width * 2), object_info.pos.y + 20);
+				}
+			}
+			else
+			{
+				start_time = get_ms_onSystem();
+				end_time = get_ms_onSystem();
+			}
+		}
 	}
 }
 void GameObject::search_update()

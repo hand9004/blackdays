@@ -24,9 +24,9 @@ typedef enum OBJECT_EVENT
 	MOVE,
 	ATTACK,
 	SKILL,
+	PATROL,
 	SEARCHING_RECOGNIZE_AREA,
 	DEAD,
-	PATROL,
 }obj_event;
 
 // 파티클 정보
@@ -119,7 +119,7 @@ typedef struct OBJECT_INFO
 	unsigned int defense_point;
 	unsigned int recognize_area;
 	unsigned int firing_area_X, firing_area_Y;
-	float move_speed;
+	float move_speed, partol_delay_time;
 	char object_name[256];
 	bool isEnemy, isHero, isControllable, isAreaAttack;
 	cocos2d::CCPoint pos;

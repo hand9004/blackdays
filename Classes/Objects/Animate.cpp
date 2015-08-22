@@ -93,7 +93,7 @@ void Animate::animation_Play()
 {
 	bool isChangeAnimationFrame = false;
 	unsigned int aniframe_size = anim_frame_list.size();
-	if(start_time != 0)
+	if(start_time <= 0)
 	{
 		long delta_time = end_time - start_time;
 		if(delta_time > (frame_interval_time * 1000))

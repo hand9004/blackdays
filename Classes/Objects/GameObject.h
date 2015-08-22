@@ -60,6 +60,7 @@ public:
 	void Move(cocos2d::CCPoint dest_pt);
 	void Attack(GameObject* target);
 	void Skill();
+	void Patrol(cocos2d::CCPoint patrol_pt);
 	void SetAllObjectList(std::vector<GameObject*>all_object_list);
 public:
 	bool dead_check();
@@ -68,6 +69,7 @@ private:
 	void move_update();
 	void attack_update();
 	void skill_update();
+	void patrol_update();
 	void search_update(); 
 	void dead_update();
 
@@ -95,7 +97,8 @@ private:
 	std::vector<CurveThrowObject*>throwing_object_list;
 	std::vector<GameObject*>all_object_list;
 
-	cocos2d::CCPoint dest_move_pos;
+	cocos2d::CCPoint dest_move_pos, start_move_pos;
+	long start_time, delta_time, end_time;
 	float moved_delta_x;
 };
 
