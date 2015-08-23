@@ -2,6 +2,8 @@ local stage2 = {}
 local isVictorious = false
 local isStageOver = false
 
+local GameObject_ID = {}
+
 function stage2.stage_init(GameObject, Map)
 	local object_table = {}
 	local map_table = {}
@@ -61,6 +63,10 @@ function stage2.isStageOverStat()
 	end
 
 	return stage_over_status
+end
+
+function stage2.setGameObject_ID_List(list)
+	GameObject_ID = list
 end
 
 return stage2

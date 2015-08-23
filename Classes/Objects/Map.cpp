@@ -67,7 +67,7 @@ void Map::Init()
 			in_map_particle_spr->addChild(iter);
 		}
 	}
-	in_map_particle_spr->setZOrder(3);
+	in_map_particle_spr->setZOrder(2);
 
 	ObjectController::Instance()->addChild(in_map_particle_spr);
 }
@@ -208,10 +208,12 @@ void Map::set_Map_Info()
 
 			in_map_info* in_map_obj = new in_map_info;
 
-			in_map_obj->obj_pos.x = lua_tonumber(p_lua_st, -4);
-			in_map_obj->obj_pos.y = lua_tonumber(p_lua_st, -3);
-			in_map_obj->ref_list = lua_tostring(p_lua_st, -2);
-			in_map_obj->ref_key = lua_tostring(p_lua_st, -1);
+			in_map_obj->obj_pos.x = lua_tonumber(p_lua_st, -5);
+			in_map_obj->obj_pos.y = lua_tonumber(p_lua_st, -4);
+			in_map_obj->ref_list = lua_tostring(p_lua_st, -3);
+			in_map_obj->ref_key = lua_tostring(p_lua_st, -2);
+			in_map_obj->in_map_obj_type = (map_obj_type)lua_tointeger(p_lua_st, -1);
+
 			BD_CCLog("%f %f %s %s", in_map_obj->obj_pos.x, in_map_obj->obj_pos.y, in_map_obj->ref_list, in_map_obj->ref_key);
 
 			map_piece_data.in_map_info_list.push_back(in_map_obj);
@@ -327,6 +329,9 @@ void Map::set_Map(map_piece_info& map_piece_data_info)
 		GraphicsController::Instance()->getSprite(in_map_obj_data->obj_spr, cache->spriteFrameByName(in_map_obj_info_iter->ref_key));
 		in_map_obj_data->obj_spr->setAnchorPoint(cocos2d::CCPoint(0.5f, 0.0f));
 		in_map_obj_data->obj_spr->setPosition(cocos2d::CCPoint(in_obj_X, in_obj_Y));
+		CCSize spr_size = in_map_obj_data->obj_spr->getContentSize();
+
+		in_map_obj_data->collision_area = CCRect(in_obj_X - (spr_size.width / 2), in_obj_Y, spr_size.width, spr_size.height);
 
 		BD_CCLog("%s", in_map_obj_info_iter->ref_key);
 
@@ -411,7 +416,11 @@ void Map::setUpdateScrolling(float delta_x)
 
 			CCPoint obj_pos = in_map_obj_iter->obj_spr->getPosition();
 
+			CCSize obj_size = in_map_obj_iter->obj_spr->getContentSize();
+
 			obj_pos.x += delta_x;
+			
+			in_map_obj_iter->collision_area.setRect(obj_pos.x - (obj_size.width / 2), obj_pos.y, obj_size.width, obj_size.height);
 
 			in_map_obj_iter->obj_spr->setPosition(obj_pos);
 		}

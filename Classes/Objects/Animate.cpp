@@ -6,8 +6,10 @@
 USING_NS_CC;
 
 #include <algorithm>
-Animate::Animate(void) : canSendMessage(false), isAnimateEnd(false), start_time(0), end_time(0), ani_index(0)
+Animate::Animate(void) : canSendMessage(false), isAnimateEnd(false), ani_index(0)
 {
+	start_time = get_ms_onSystem();
+	end_time = get_ms_onSystem();
 }
 
 
@@ -93,45 +95,37 @@ void Animate::animation_Play()
 {
 	bool isChangeAnimationFrame = false;
 	unsigned int aniframe_size = anim_frame_list.size();
-	if(start_time <= 0)
+	long delta_time = end_time - start_time;
+	if (delta_time > (frame_interval_time * 1000))
 	{
-		long delta_time = end_time - start_time;
-		if(delta_time > (frame_interval_time * 1000))
+		// 애니메이션의 반복 구역을 정했을 경우와 안 정했을 경우의 처리.
+		if (rep_start_index > 0 && rep_end_index > 0)
 		{
-			// 애니메이션의 반복 구역을 정했을 경우와 안 정했을 경우의 처리.
-			if(rep_start_index > 0 && rep_end_index > 0)
-			{
-				if(ani_index < rep_end_index)
-					isChangeAnimationFrame = true;
-				else
-				{
-					if(!isOnePlay)
-						ani_index = rep_start_index;
-				}
-			}
+			if (ani_index < rep_end_index)
+				isChangeAnimationFrame = true;
 			else
 			{
-				if(ani_index < aniframe_size)
-					isChangeAnimationFrame = true;
-				else
-				{
-					if(!isOnePlay)
-						ani_index = 0;
-				}
+				if (!isOnePlay)
+					ani_index = rep_start_index;
 			}
-			start_time = get_ms_onSystem();
-			end_time = get_ms_onSystem();
-			canSendMessage = true;
 		}
 		else
 		{
-			canSendMessage = false;
-			end_time = get_ms_onSystem();
+			if (ani_index < aniframe_size)
+				isChangeAnimationFrame = true;
+			else
+			{
+				if (!isOnePlay)
+					ani_index = 0;
+			}
 		}
+		start_time = get_ms_onSystem();
+		end_time = get_ms_onSystem();
+		canSendMessage = true;
 	}
 	else
 	{
-		start_time = get_ms_onSystem();
+		canSendMessage = false;
 		end_time = get_ms_onSystem();
 	}
 
@@ -140,8 +134,8 @@ void Animate::animation_Play()
 }
 void Animate::animation_Stop()
 {
-	start_time = 0;
-	end_time = 0;
+	start_time = get_ms_onSystem();
+	end_time = get_ms_onSystem();
 	ani_index = 0;
 }
 void Animate::check_AnimationEnd()

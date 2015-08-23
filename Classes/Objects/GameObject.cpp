@@ -5,9 +5,14 @@
 #include "Map.h"
 #include <math.h>
 
-GameObject::GameObject(void) : target(nullptr), current_event(SEARCHING_RECOGNIZE_AREA), current_index(0), start_time(0), delta_time(0), end_time(0),
-								isSelected(false), isAttackingByEnemy(false), isLeft(false), isNonTargetAttacked(false), isCollidedToTarget(false), onDestroy(false)
+const int following_dist = 600;
+
+GameObject::GameObject(void) : target(nullptr), current_event(SEARCHING_RECOGNIZE_AREA), current_index(0),
+isSelected(false), isAttackingByEnemy(false), isLeft(false), isNonTargetAttacked(false), 
+isCollidedToTarget(false), onDestroy(false)
 {
+	start_time = get_ms_onSystem();
+	end_time = get_ms_onSystem();
 }
 
 GameObject::~GameObject(void)
@@ -143,11 +148,18 @@ void GameObject::change_PosList_On_Scrolling(float delta_x)
 {
 	if (!dead_check())
 	{
-		if (current_event == MOVE)
+		switch (current_event)
 		{
+		case MOVE:
+		case PATROL:
+			start_move_pos.x += delta_x;
+			dest_move_pos.x += delta_x;
+			patrol_select_pos.x += delta_x;
+			enemy_encountered_pos.x += delta_x;
 			unsigned int pos_size = move_line_pt.size();
 			for (unsigned int i = 0; i < pos_size; ++i)
 				move_line_pt.at(i).x += delta_x;
+			break;
 		}
 	}
 }
@@ -181,6 +193,7 @@ void GameObject::Move(cocos2d::CCPoint dest_pt)
 
 			graphic_ctrl.setActivateComponent("move");
 
+			prev_event = current_event;
 			current_event = MOVE;
 		}
 	}
@@ -190,7 +203,8 @@ void GameObject::Attack(GameObject* target)
 	if(!dead_check())
 	{
 		this->target = target;
-
+		 
+		prev_event = current_event;
 		if(!target->dead_check())
 			current_event = ATTACK;
 	}
@@ -210,6 +224,7 @@ void GameObject::Skill()
 				{
 					if(!target->dead_check())
 					{
+						prev_event = current_event;
 						current_event = SKILL;
 						skill_ctrl.setDirection(isLeft);
 						skill_ctrl.setStartSkillPos(object_info.pos);
@@ -219,6 +234,7 @@ void GameObject::Skill()
 			}
 			else
 			{
+				prev_event = current_event;
 				current_event = SKILL;
 				skill_ctrl.setDirection(isLeft);
 				skill_ctrl.setStartSkillPos(object_info.pos);
@@ -236,11 +252,13 @@ void GameObject::Patrol(cocos2d::CCPoint patrol_pt)
 		{
 			start_move_pos = object_info.pos;
 			dest_move_pos = patrol_pt;
+			patrol_select_pos = dest_move_pos;
 
-			create_move_list(patrol_pt);
+			create_move_list(patrol_select_pos);
 
 			graphic_ctrl.setActivateComponent("move");
 
+			prev_event = current_event;
 			current_event = PATROL;
 		}
 	}
@@ -289,17 +307,18 @@ void GameObject::move_update()
 }
 void GameObject::attack_update()
 {
-	if(!dead_check())
+	if (!dead_check())
 	{
-		if(target != nullptr)
+		if (target != nullptr)
 		{
-			if(check_firing_area(target))
+			cocos2d::CCPoint target_pos = target->getObjectPos();
+
+			if (check_firing_area(target))
 			{
 				graphic_ctrl.setActivateComponent("attack");
-				cocos2d::CCPoint target_pos = target->getObjectPos();
-				float delta_x = target_pos.x - object_info.pos.x;
 
-				if(delta_x >= 0.0f)
+				float delta_x = object_info.pos.x - target_pos.x;
+				if (delta_x <= 0.0f)
 					isLeft = false;
 				else
 					isLeft = true;
@@ -308,11 +327,11 @@ void GameObject::attack_update()
 				grap_to_obj_packet recv_packet = graphic_ctrl.get_Message();
 				grap_to_obj_animate* ani_packet = static_cast<grap_to_obj_animate*>(recv_packet.data);
 
-				if(ani_packet->isAnimationFinish)
+				if (ani_packet->isAnimationFinish)
 				{
-					if(!target->dead_check())
+					if (!target->dead_check())
 					{
-						if(!object_info.isAreaAttack)
+						if (!object_info.isAreaAttack)
 							target->decrease_HealthPoint(object_info.attack_point);
 						else
 						{
@@ -340,13 +359,13 @@ void GameObject::attack_update()
 				// 공격인 상태가 끝나지 않았다면 공격 애니메이션이
 				// 끝날 때까지 기다린 후, 끝났을 경우, 다시 움직일 수 있도록 한다.
 				const char* current_ani_stat = graphic_ctrl.getActiveGraphicComp();
-				if(!strcmp(current_ani_stat, "attack"))
+				if (!strcmp(current_ani_stat, "attack"))
 				{
 					graphic_ctrl.send_Message("attack");
 					grap_to_obj_packet recv_packet = graphic_ctrl.get_Message();
 					grap_to_obj_animate* ani_packet = static_cast<grap_to_obj_animate*>(recv_packet.data);
 
-					if(ani_packet->isAnimationFinish)
+					if (ani_packet->isAnimationFinish)
 						isAttackOver = true;
 
 					SAFE_DELETE(ani_packet);
@@ -360,7 +379,7 @@ void GameObject::attack_update()
 				// 고로 현재 애니메이션의 상태를 보고, 공격 애니메이션을 실행중이라면, 타겟이 범위 안에 들었던 것이므로, 
 				// 끝날때 까지는 객체가 이동해서는 안된다. 이동 여부를 알려주는 로직이다. 구분하지 않을 경우,
 				// 애니메이션이 계속 초기화되어 움직임이 어색해짐
-				if(isAttackOver)
+				if (isAttackOver)
 				{
 					graphic_ctrl.setActivateComponent("move");
 					cocos2d::CCPoint target_pos = target->getObjectPos();
@@ -374,8 +393,6 @@ void GameObject::attack_update()
 						target_pos.x += target_image_width;
 
 					create_move_to_dest_pos(target_pos);
-
-//					BD_CCLog("%s = %f %f %f %f", object_info.object_name, object_info.pos.x, object_info.pos.y, target_pos.x, target_pos.y);
 				}
 			}
 		}
@@ -477,39 +494,44 @@ void GameObject::patrol_update()
 
 		if (current_index < move_pt_size)
 		{
+			cocos2d::CCPoint move_pos = move_line_pt.at(current_index++);
+			object_info.pos = move_pos;
 
+			start_time = get_ms_onSystem();
+			end_time = get_ms_onSystem();
 		}
 		else
 		{
-			if (start_time > 0)
+			long delta_time = end_time - start_time;
+
+			if (delta_time > object_info.partol_delay_time)
 			{
-				delta_time = end_time - start_time;
+				vector_clear(move_line_pt);
 
-				if (delta_time > object_info.partol_delay_time)
-				{
-					Move(start_move_pos);
-					delta_time = 0;
-					current_index = 0;
-
-					start_time = get_ms_onSystem();
-					end_time = get_ms_onSystem();
-				}
+				graphic_ctrl.setActivateComponent("move");
+				
+				if (patrol_select_pos.x == start_move_pos.x)
+					patrol_select_pos = dest_move_pos;
 				else
-				{
-					graphic_ctrl.setActivateComponent("stand");
+					patrol_select_pos = start_move_pos;
 
-					float recognize_width = object_info.recognize_area;
+				delta_time = 0;
+				current_index = 0;
 
-					CCRect recognize_area = CCRect(object_info.pos.x - recognize_width, object_info.pos.y - 10,
-						object_info.pos.x + (recognize_width * 2), object_info.pos.y + 20);
-				}
+				start_time = get_ms_onSystem();
+				end_time = get_ms_onSystem();
+
+				create_move_list(patrol_select_pos);
 			}
 			else
 			{
-				start_time = get_ms_onSystem();
+				graphic_ctrl.setActivateComponent("stand");
+
 				end_time = get_ms_onSystem();
 			}
 		}
+
+		search_update();
 	}
 }
 void GameObject::search_update()
@@ -537,9 +559,19 @@ void GameObject::search_update()
 						float delta_y = fabs(object_info.pos.y - target_pos.y);
 						float current_to_other_delta = sqrt(delta_x * delta_x) + sqrt(delta_y * delta_y);
 
-						cocos2d::CCRect recognize_area = cocos2d::CCRect(object_info.pos.x - object_info.recognize_area, 
-							object_info.pos.y - object_info.recognize_area,
-							(object_info.recognize_area * 2), (object_info.recognize_area * 2));
+						cocos2d::CCRect recognize_area = CCRect(0.f, 0.f, 0.f, 0.f);
+							
+						if (obj_iter->getIsLeft())
+						{
+							recognize_area.setRect(object_info.pos.x - object_info.recognize_area,
+								object_info.pos.y - (object_info.recognize_area / 2),
+								object_info.recognize_area, object_info.recognize_area);
+						}
+						else
+						{
+							recognize_area.setRect(object_info.pos.x, object_info.pos.y - (object_info.recognize_area / 2),
+								object_info.recognize_area, object_info.recognize_area);
+						}
 
 						if(recognize_area.containsPoint(target_pos))
 						{
@@ -563,12 +595,16 @@ void GameObject::search_update()
 		}
 
 		if(closest_obj != nullptr)
-		{
-			current_event = ATTACK;
 			Attack(closest_obj);
+		else
+		{
+			switch (current_event)
+			{
+			case SEARCHING_RECOGNIZE_AREA:
+				graphic_ctrl.setActivateComponent("stand");
+				break;
+			}
 		}
-
-		graphic_ctrl.setActivateComponent("stand");
 	}
 }
 void GameObject::dead_update()
@@ -738,7 +774,7 @@ bool GameObject::check_firing_area(GameObject* target)
 // 실시간 계산 아님.
 void GameObject::create_move_list(cocos2d::CCPoint& dest_pt)
 {
-	if(!move_line_pt.empty())
+	if (!move_line_pt.empty())
 	{
 		current_index = 0;
 		vector_clear(move_line_pt);

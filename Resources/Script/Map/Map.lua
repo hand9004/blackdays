@@ -1,16 +1,22 @@
 stage1 = {
 			{"Images/stage1.plist"},
 
+			--
 			{
 				index = -1,
 				background = "Images/background1.png",
 				move_area = {0, 0, 800, 200},
+
 			},
 
 			{
 				index = 0,
 				background = "Images/background1.png",
 				move_area = {0, 0, 800, 200},
+
+				{0, 200, "Images/stage1.plist", "tree1.png", 0},
+				{0, 0, "Images/stage1.plist", "tree.png", 0},
+				{200, 100, "Images/stage1.plist", "tree1.png", 0},
 			},
 
 			{
@@ -42,9 +48,9 @@ stage2 = {
 				background = "Images/background1.png",
 				move_area = {0, 0, 800, 200},
 
-				{100, 200, "Images/stage1.plist", "tree1.png"},
-				{50, 0, "Images/stage1.plist", "tree.png"},
-				{200, 100, "Images/stage1.plist", "tree1.png"},
+				{100, 200, "Images/stage1.plist", "tree1.png", 0},
+				{50, 0, "Images/stage1.plist", "tree.png", 0},
+				{200, 100, "Images/stage1.plist", "tree1.png", 0},
 			},
 
 			{

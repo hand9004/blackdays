@@ -1,10 +1,18 @@
 #pragma once
 #include <cocos2d.h>
 
+typedef enum MAP_OBJECT_TYPE
+{
+	OBSTACLE_OBJECT,
+	HIDE_OBJECT,
+	HELPER_OBJECT,
+}map_obj_type;
+
 typedef struct IN_MAP_INFO
 {
 	cocos2d::CCPoint obj_pos;
 	const char* ref_list, *ref_key;
+	map_obj_type in_map_obj_type;
 }in_map_info;
 
 typedef struct MAP_INFO
@@ -18,6 +26,8 @@ typedef struct MAP_INFO
 typedef struct IN_MAP_OBJECT
 {
 	cocos2d::CCSprite* obj_spr;
+	map_obj_type in_map_obj_type;
+	cocos2d::CCRect collision_area;
 }in_map_obj;
 
 typedef struct MAP_PIECE
@@ -61,6 +71,8 @@ public:
 	cocos2d::CCPoint getMapEndPoint();
 
 	void setUpdateScrolling(float delta_x);
+
+	std::vector<map_piece*>getMapPieceList() { return map_piece_list; }
 public:
 	void setLuaState(lua_State* lua_st) { p_lua_st = lua_st; }
 private:

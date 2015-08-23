@@ -37,7 +37,7 @@ public:
 	}
 
 public:
-	void add_Object(int obj_x, int obj_y);
+	GameObject* add_Object(int obj_x, int obj_y);
 	void update_Object();
 	void update_Dead_Object();
 	void clear_Object();
@@ -56,6 +56,26 @@ public:
 	bool getIsObjectDead(const char* object_name);
 	unsigned int getEnemyObjectCnt();
 	unsigned int getAllyObjectCnt();
+
+	GameObject* getObject(unsigned int find_id)
+	{
+		GameObject* ret_obj = nullptr;
+		unsigned int obj_cnt = game_object_list.size();
+
+		for (unsigned int i = 0; i < obj_cnt; ++i)
+		{
+			GameObject* obj_iter = game_object_list.at(i);
+
+			unsigned int obj_mem_number = (int)obj_iter;
+			if (find_id == obj_mem_number)
+			{
+				ret_obj = obj_iter;
+				break;
+			}
+		}
+
+		return ret_obj;
+	}
 public:
 	void setLuaState(lua_State* lua_st) { p_lua_st = lua_st; }
 private:

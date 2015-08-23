@@ -25,7 +25,7 @@ private:
 	const char* ani_name;
 	unsigned int rep_start_index, rep_end_index;
 	std::vector<cocos2d::CCSpriteFrame*>anim_frame_list;
-	int start_time, end_time;
+	long start_time, end_time;
 	float frame_interval_time;
 	unsigned long ani_index;
 };

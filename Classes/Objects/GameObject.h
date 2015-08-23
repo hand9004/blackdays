@@ -91,14 +91,14 @@ private:
 private:
 	GameObject* target;
 	bool isLeft, isSelected, isAttackingByEnemy, isNonTargetAttacked, isCollidedToTarget, onDestroy;
-	obj_event current_event;
+	obj_event current_event, prev_event;
 	unsigned int current_index;
 	std::vector<cocos2d::CCPoint>move_line_pt;
 	std::vector<CurveThrowObject*>throwing_object_list;
 	std::vector<GameObject*>all_object_list;
 
-	cocos2d::CCPoint dest_move_pos, start_move_pos;
-	long start_time, delta_time, end_time;
+	cocos2d::CCPoint dest_move_pos, start_move_pos, patrol_select_pos, enemy_encountered_pos;
+	long start_time, end_time;
 	float moved_delta_x;
 };
 

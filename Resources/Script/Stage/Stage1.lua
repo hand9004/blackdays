@@ -2,6 +2,8 @@ local stage1 = {}
 local isVictorious = false
 local isStageOver = false
 
+local GameObject_ID = {}
+
 function stage1.stage_init(GameObject, Map)
 	local object_table = {}
 	local map_table = {}
@@ -19,14 +21,21 @@ function stage1.stage_init(GameObject, Map)
 
 	add_map(map_table[1])
 
-	add_object(object_table[1], 0, 200)
+	table.insert(GameObject_ID, add_object(object_table[1], 0, 200))
 --	add_object(object_table[2], 0, 100)
 
-	add_object(object_table[3], 1000, 200)
-	add_object(object_table[4], 1000, 0)
+	table.insert(GameObject_ID, add_object(object_table[3], 1000, 200))
+	table.insert(GameObject_ID, add_object(object_table[4], 1000, 0))
 
 --	load_background_music("sounds/main_menu.mp3")
 	play_background_music("sounds/main_menu.mp3", true)
+
+	for key, value in ipairs(GameObject_ID) do
+		LOG("Object Unique_ID = " .. value)
+	end
+
+	command_to_object(GameObject_ID[2], "Patrol", 500, 200)
+	command_to_object(GameObject_ID[3], "Patrol", 500, 0)
 end
 
 function stage1.stage_update()

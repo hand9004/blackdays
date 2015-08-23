@@ -1,7 +1,7 @@
 --[[ info {name, atk_pt, def_pt, hp, recognize_area, attack_range_X, attack_range_Y, partol_delay_time(ms)
 			move_speed, isEnemy, isHero, isControllable, isAreaAttack} ]]--
 
-player = {info = {"player", 20, 5, 400, 300, 100, 10, 5000, 4.0, false, true, true, false},
+player = {info = {"player", 20, 5, 400, 300, 70, 10, 5000, 4.0, false, true, true, false},
 
 			main_image = {"Characters/len.png"},
 
@@ -218,7 +218,7 @@ player = {info = {"player", 20, 5, 400, 300, 100, 10, 5000, 4.0, false, true, tr
 					},
 		}
 
-player1 = {info = {"player1", 30, 5, 400, 300, 100, 1, 5000, 4.0, false, true, true, false},
+player1 = {info = {"player1", 30, 5, 400, 300, 70, 10, 5000, 4.0, false, true, true, false},
 
 			main_image = {"Characters/akiha.png"},
 
@@ -501,7 +501,7 @@ player1 = {info = {"player1", 30, 5, 400, 300, 100, 1, 5000, 4.0, false, true, t
 					},
 		}
 
-enemy = {info = {"enemy", 15, 5, 200, 400, 400, 100, 5000, 2.0, true, false, false, true},
+enemy = {info = {"enemy", 15, 5, 200, 400, 400, 100, 2500, 2.0, true, false, false, true},
 
 			main_image = {"Characters/sion.png"},
 
@@ -605,7 +605,7 @@ enemy = {info = {"enemy", 15, 5, 200, 400, 400, 100, 5000, 2.0, true, false, fal
 			skill = {},
 		}
 
-enemy1 = {info = {"enemy1", 10, 5, 200, 300, 100, 10, 5000, 3.0, true, false, false, false},
+enemy1 = {info = {"enemy1", 10, 5, 200, 300, 100, 10, 2500, 3.0, true, false, false, false},
 
 			main_image = {"Characters/kohaku.png"},
 

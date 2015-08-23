@@ -23,9 +23,11 @@ int l_add_Object(lua_State* L)
 	lua_getglobal(L, table_name);
 	CCAssert(lua_istable(L, -1), "Error : Wasn't Lua Table Type.");
 
-	ObjectController::Instance()->add_Object(posX, posY);
+	GameObject* created_obj = ObjectController::Instance()->add_Object(posX, posY);
 
-	return 0;
+	lua_pushinteger(L, (int)created_obj);
+
+	return 1;
 }
 
 int l_update_Object(lua_State* L)
@@ -35,6 +37,39 @@ int l_update_Object(lua_State* L)
 
 int l_remove_Object(lua_State* L)
 {
+	return 0;
+}
+
+int l_command_to_Object(lua_State* L)
+{
+	unsigned int object_id = lua_tointeger(L, 1);
+	const char* command_str = lua_tostring(L, 2);
+
+	GameObject* finded_obj = ObjectController::Instance()->getObject(object_id);
+
+	if (!strcmp(command_str, "Move"))
+	{
+		int pos_X = lua_tointeger(L, 3);
+		int pos_Y = lua_tointeger(L, 4);
+
+		CCPoint dest_pt = CCPoint(pos_X, pos_Y);
+
+		finded_obj->Move(dest_pt);
+	}
+	else if (!strcmp(command_str, "Skill"))
+	{
+		
+	}
+	else if (!strcmp(command_str, "Patrol"))
+	{
+		int pos_X = lua_tointeger(L, 3);
+		int pos_Y = lua_tointeger(L, 4);
+
+		CCPoint dest_pt = CCPoint(pos_X, pos_Y);
+
+		finded_obj->Patrol(dest_pt);
+	}
+
 	return 0;
 }
 
@@ -69,7 +104,7 @@ ObjectController::~ObjectController(void)
 {
 }
 
-void ObjectController::add_Object(int obj_x, int obj_y)
+GameObject* ObjectController::add_Object(int obj_x, int obj_y)
 {
 	obj_info input_data;
 
@@ -85,6 +120,8 @@ void ObjectController::add_Object(int obj_x, int obj_y)
 	add_GameObject->Init(&input_data);
 
 	game_object_list.push_back(add_GameObject);
+
+	return add_GameObject;
 }
 void ObjectController::update_Object()
 {
@@ -172,6 +209,7 @@ void ObjectController::register_ObjectFunction()
 	LuaCommunicator::Instance()->Register_CFunction("add_object", l_add_Object);
 	LuaCommunicator::Instance()->Register_CFunction("update_object", l_update_Object);
 	LuaCommunicator::Instance()->Register_CFunction("remove_object", l_remove_Object);
+	LuaCommunicator::Instance()->Register_CFunction("command_to_object", l_command_to_Object);
 	LuaCommunicator::Instance()->Register_CFunction("bindUI_on_game_object", l_bindUI_On_GameObject);
 }
 
@@ -768,37 +806,37 @@ void ObjectController::setUpdateScrolling(float delta_x)
 				{
 					GameObject* obj_iter = game_object_list.at(i);
 
-					if (!obj_iter->getIsEnemy())
+					GameObject* obj_iter_target = obj_iter->getTarget();
+
+					CCPoint obj_pos = obj_iter->getObjectPos();
+					CCPoint obj_dest_pos = obj_iter->getDestMovePos();
+					float moved_delta_x = obj_iter->getMovedDeltaX();
+
+					obj_dest_pos.x += moved_delta_x;
+
+					obj_event obj_ev = obj_iter->getEvent();
+
+					switch (obj_ev)
 					{
-						GameObject* obj_iter_target = obj_iter->getTarget();
-
-						CCPoint obj_pos = obj_iter->getObjectPos();
-						CCPoint obj_dest_pos = obj_iter->getDestMovePos();
-						float moved_delta_x = obj_iter->getMovedDeltaX();
-
-						obj_dest_pos.x += moved_delta_x;
-
-						obj_event obj_ev = obj_iter->getEvent();
-
-						switch (obj_ev)
-						{
-						case MOVE:
-							obj_iter->Move(obj_dest_pos);
-							obj_iter->change_PosList_On_Scrolling(delta_x);
-							break;
-						case ATTACK:
-							obj_iter->Attack(obj_iter_target);
-							break;
-						case SKILL:
-							obj_iter->Skill();
-							break;
-						default:
-							break;
-						}
-
-						obj_iter->change_ThrowPosList_On_Scrolling(delta_x);
-						obj_iter->change_SkillPos_On_Scrolling(delta_x);
+					case MOVE:
+						obj_iter->Move(obj_dest_pos);
+						obj_iter->change_PosList_On_Scrolling(delta_x);
+						break;
+					case ATTACK:
+						obj_iter->Attack(obj_iter_target);
+						break;
+					case SKILL:
+						obj_iter->Skill();
+						break;
+					case PATROL:
+						obj_iter->change_PosList_On_Scrolling(delta_x);
+						break;
+					default:
+						break;
 					}
+
+					obj_iter->change_ThrowPosList_On_Scrolling(delta_x);
+					obj_iter->change_SkillPos_On_Scrolling(delta_x);
 				}
 			}
 			else
@@ -821,15 +859,23 @@ void ObjectController::setUpdateScrolling(float delta_x)
 					// 이동 명령시에는, 리스트를 직접 제작하여, 그에 맞춰 움직이지만,
 					// 공격 명령시에는, 타겟을 계속 쫓아가야하므로 실시간으로 계산을 하게 된다.
 					// 두 케이스는 스크롤시 처리 방법이 다르기 때문에, 케이스로 나눈다.
-					if (obj_ev != MOVE)
+					switch (obj_ev)
 					{
+					case MOVE:
+						obj_iter->change_PosList_On_Scrolling(delta_x);
+						break;
+					case PATROL:
+						obj_pos.x += delta_x;
+						obj_iter->change_PosList_On_Scrolling(delta_x);
+						break;
+					default:
 						obj_pos.x += delta_x;
 						obj_iter->setMovedDeltaX(0.0f);
 						obj_iter->setObjectPos(obj_pos);
+						break;
 					}
-					else
-						obj_iter->change_PosList_On_Scrolling(delta_x);
 
+					obj_iter->setObjectPos(obj_pos);
 					obj_iter->change_ThrowPosList_On_Scrolling(delta_x);
 					obj_iter->change_SkillPos_On_Scrolling(delta_x);
 				}
@@ -882,6 +928,7 @@ void ObjectController::setUpdateScrolling(float delta_x)
 				obj_iter->setObjectPos(obj_pos);
 				obj_iter->change_PosList_On_Scrolling(dist_x_to_screen_mid_x);
 				obj_iter->change_ThrowPosList_On_Scrolling(dist_x_to_screen_mid_x);
+
 				Map::Instance()->setUpdateScrolling(dist_x_to_screen_mid_x);
 				for (unsigned int j = 0; j < obj_size; ++j)
 				{
@@ -891,6 +938,7 @@ void ObjectController::setUpdateScrolling(float delta_x)
 					if (other_obj_iter != obj_iter)
 					{
 						other_obj_pos.x += dist_x_to_screen_mid_x;
+						other_obj_iter->change_PosList_On_Scrolling(dist_x_to_screen_mid_x);
 						other_obj_iter->change_ThrowPosList_On_Scrolling(dist_x_to_screen_mid_x);
 						other_obj_iter->setObjectPos(other_obj_pos);
 					}
@@ -906,6 +954,7 @@ void ObjectController::setUpdateScrolling(float delta_x)
 				switch (obj_ev)
 				{
 				case MOVE:
+				case PATROL:
 					obj_iter->addMovedDeltaX(move_speed);
 					break;
 				case ATTACK:
@@ -944,6 +993,7 @@ void ObjectController::setUpdateScrolling(float delta_x)
 						{
 							other_obj_pos.x += move_speed;
 							other_obj_iter->change_ThrowPosList_On_Scrolling(move_speed);
+							other_obj_iter->change_PosList_On_Scrolling(move_speed);
 							other_obj_iter->setObjectPos(other_obj_pos);
 						}
 					}
