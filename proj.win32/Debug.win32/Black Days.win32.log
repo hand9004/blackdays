@@ -1,23 +1,17 @@
-﻿  GameObject.cpp
+﻿  Map.cpp
+c:\cocos2d-x-2.2.6\cocos2d-x-2.2.6\cocos2dx\script_support\ccscriptsupport.h(187): warning C4100: 'nHandler' : 참조되지 않은 정식 매개 변수입니다.
+c:\cocos2d-x-2.2.6\cocos2d-x-2.2.6\cocos2dx\script_support\ccscriptsupport.h(190): warning C4100: 'nHandler' : 참조되지 않은 정식 매개 변수입니다.
+c:\cocos2d-x-2.2.6\cocos2d-x-2.2.6\cocos2dx\script_support\ccscriptsupport.h(245): warning C4100: 'pArgs' : 참조되지 않은 정식 매개 변수입니다.
+c:\cocos2d-x-2.2.6\cocos2d-x-2.2.6\cocos2dx\script_support\ccscriptsupport.h(245): warning C4100: 'nHandler' : 참조되지 않은 정식 매개 변수입니다.
 c:\cocos2d-x-2.2.6\cocos2d-x-2.2.6\cocos2dx\platform\ccsaxparser.h : warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
-  코드를 생성하고 있습니다...
-  컴파일하고 있습니다...
-  Map.cpp
-c:\cocos2d-x-2.2.6\cocos2d-x-2.2.6\cocos2dx\platform\ccsaxparser.h : warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
-c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackdays\classes\objects\map.cpp(189): warning C4146: 단항 빼기 연산자가 부호 없는 형식에 적용되었습니다. 결과는 역시 unsigned입니다.
-c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackdays\classes\objects\map.cpp(221): warning C4146: 단항 빼기 연산자가 부호 없는 형식에 적용되었습니다. 결과는 역시 unsigned입니다.
-c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackdays\classes\objects\map.cpp(269): warning C4146: 단항 빼기 연산자가 부호 없는 형식에 적용되었습니다. 결과는 역시 unsigned입니다.
-  코드를 생성하고 있습니다...
-  건너뛰고 있습니다... (관련된 변경 내용 없음)
-  StageManager.cpp
-  TouchLayer.cpp
-  SceneManager.cpp
-  GameScene.cpp
-  ObjectController.cpp
-  Normal.cpp
-  HUDCollection.cpp
-  GameGraphicController.cpp
-  Effect.cpp
-  CurveThrowObject.cpp
-  Animate.cpp
+c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackdays\classes\objects\map.cpp(94): warning C4100: 'pEvent' : 참조되지 않은 정식 매개 변수입니다.
+c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackdays\classes\objects\map.cpp(94): warning C4100: 'pTouch' : 참조되지 않은 정식 매개 변수입니다.
+c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackdays\classes\objects\map.cpp(97): warning C4100: 'pEvent' : 참조되지 않은 정식 매개 변수입니다.
+c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackdays\classes\objects\map.cpp(97): warning C4100: 'pTouch' : 참조되지 않은 정식 매개 변수입니다.
+c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackdays\classes\objects\map.cpp(100): warning C4100: 'pEvent' : 참조되지 않은 정식 매개 변수입니다.
+c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackdays\classes\objects\map.cpp(100): warning C4100: 'pTouch' : 참조되지 않은 정식 매개 변수입니다.
+c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackdays\classes\objects\map.cpp(182): warning C4146: 단항 빼기 연산자가 부호 없는 형식에 적용되었습니다. 결과는 역시 unsigned입니다.
+c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackdays\classes\objects\map.cpp(214): warning C4146: 단항 빼기 연산자가 부호 없는 형식에 적용되었습니다. 결과는 역시 unsigned입니다.
+c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackdays\classes\objects\map.cpp(253): warning C4146: 단항 빼기 연산자가 부호 없는 형식에 적용되었습니다. 결과는 역시 unsigned입니다.
+c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackdays\classes\objects\map.cpp(301): warning C4146: 단항 빼기 연산자가 부호 없는 형식에 적용되었습니다. 결과는 역시 unsigned입니다.
   Black Days.win32.vcxproj -> C:\Users\솔\Desktop\work\actual\BlackDays\Programming\MainCode\BlackDays\BlackDays\proj.win32\Debug.win32\Black Days.win32.exe

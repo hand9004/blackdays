@@ -71,6 +71,7 @@ void Animate::Update()
 	else
 		animation_Stop();
 
+	grap_effect.setTargetPos(target_pos);
 	grap_effect.setEffectVisible(isSpriteVisible);
 	grap_effect.setObjectPos(draw_spr->getPosition());
 	grap_effect.syncWithEffectFrameIndex(ani_index);

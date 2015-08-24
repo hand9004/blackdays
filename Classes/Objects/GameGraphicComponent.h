@@ -27,6 +27,7 @@ public:
 		draw_spr->setFlipY(isFlip); 
 		grap_effect.setGraphicFlipY(isFlip);
 	}
+	void setTargetPosition(cocos2d::CCPoint& tar_pos) { target_pos = tar_pos; }
 	void setPosition(cocos2d::CCPoint& pos) { CCAssert(draw_spr != nullptr, "Sprite Is NULL. Can't setPosition"); draw_spr->setPosition(pos); }
 	void setVisible(bool isVisible){ CCAssert(draw_spr != nullptr, "Sprite Is NULL. Can't setVisible"); draw_spr->setVisible(isVisible); }
 	void setAlphaValue(unsigned char value) { CCAssert(draw_spr != nullptr, "Sprite Is NULL. Can't setOpacity"); draw_spr->setOpacity(value); }
@@ -36,6 +37,7 @@ public:
 	cocos2d::CCRect getContentRect() { return content_rect; }
 	unsigned char getAlphaValue() { CCAssert(draw_spr != nullptr, "Sprite Is NULL. Can't getOpacity"); return draw_spr->getOpacity(); }
 protected:
+	cocos2d::CCPoint target_pos;
 	cocos2d::CCSprite* draw_spr;
 	cocos2d::CCRect content_rect;
 	Effect grap_effect;

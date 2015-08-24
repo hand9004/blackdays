@@ -35,6 +35,19 @@ int l_get_ally_cnt(lua_State* L)
 	return 1;
 }
 
+int l_get_collided_trigger(lua_State* L)
+{
+	const char* ret_str = nullptr;
+
+	const char* target_obj_name = lua_tostring(L, 1);
+
+	ret_str = ObjectController::Instance()->getCollidedTrigger(target_obj_name);
+
+	lua_pushstring(L, ret_str);
+
+	return 1;
+}
+
 int l_send_stage_flag(lua_State* L)
 {
 	bool isStageClear = false, isVictorious = false;
@@ -79,6 +92,13 @@ int l_recv_stage_index(lua_State* L)
 	return 1;
 }
 
+int l_set_object_stat(lua_State* L)
+{
+
+
+	return 0;
+}
+
 StageManager::StageManager(void) : isStageStart(false), isStageClear(false), isVictorious(false), isStageAllClear(false), isStageUpdateLock(false)
 {
 }
@@ -92,6 +112,7 @@ void StageManager::register_StageFunction()
 	LuaCommunicator::Instance()->Register_CFunction("get_is_object_alive", l_get_is_object_alive);
 	LuaCommunicator::Instance()->Register_CFunction("get_enemy_cnt", l_get_enemy_cnt);
 	LuaCommunicator::Instance()->Register_CFunction("get_ally_cnt", l_get_ally_cnt);
+	LuaCommunicator::Instance()->Register_CFunction("get_collided_trigger", l_get_collided_trigger);
 	LuaCommunicator::Instance()->Register_CFunction("send_stage_flag", l_send_stage_flag);
 	LuaCommunicator::Instance()->Register_CFunction("send_stage_AllClear", l_send_stage_AllClear);
 	LuaCommunicator::Instance()->Register_CFunction("send_stage_index", l_send_stage_index);

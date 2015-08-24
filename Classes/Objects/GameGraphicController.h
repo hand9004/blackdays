@@ -20,10 +20,9 @@ public:
 	void setObjectFlipX(bool isFlip) { isGraphicFlip = isFlip; }
 	void setActivateComponent(const char* key) { active_component_key = key; }
 	void setPosition(cocos2d::CCPoint pos) { draw_pos = pos; }
+	void setTargetPosition(cocos2d::CCPoint tar_pos) { target_pos = tar_pos; }
 	void send_Message(const char* target_str)
 	{
-		unsigned int graphic_list_size = game_graphic_list.size();
-
 		auto begin = game_graphic_list.begin();
 		auto end = game_graphic_list.end();
 		auto i = game_graphic_list.begin();
@@ -41,7 +40,7 @@ private:
 	grap_to_obj_packet request_packet;
 	std::map<const char*, GameGraphicComponent*>game_graphic_list;
 	const char* active_component_key;
-	cocos2d::CCPoint draw_pos;
+	cocos2d::CCPoint draw_pos, target_pos;
 	bool isGraphicFlip;
 };
 

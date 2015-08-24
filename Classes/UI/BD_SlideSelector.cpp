@@ -58,7 +58,7 @@ void BD_SlideSelector::setTouchEvent(TouchEvent t_event, cocos2d::CCPoint t_pt)
 			{
 				touch_delta_Y = t_pt.y - touch_begin_pt.y;
 
-				if(touch_delta_Y > 0.0f)
+				if (touch_delta_Y > swipe_disable_range)
 				{
 					if(current_index > 0)
 						--current_index;
@@ -67,7 +67,7 @@ void BD_SlideSelector::setTouchEvent(TouchEvent t_event, cocos2d::CCPoint t_pt)
 
 					isSwipeMode = true;
 				}
-				else if(touch_delta_Y < 0.0f)
+				else if (touch_delta_Y < -swipe_disable_range)
 				{
 					if(current_index < list_size - 1)
 						++current_index;
@@ -83,7 +83,7 @@ void BD_SlideSelector::setTouchEvent(TouchEvent t_event, cocos2d::CCPoint t_pt)
 			{
 				touch_delta_X = t_pt.x - touch_begin_pt.x;
 
-				if(touch_delta_X > 0.0f)
+				if (touch_delta_X > swipe_disable_range)
 				{
 					if(current_index < list_size - 1)
 						++current_index;
@@ -92,7 +92,7 @@ void BD_SlideSelector::setTouchEvent(TouchEvent t_event, cocos2d::CCPoint t_pt)
 
 					isSwipeMode = true;
 				}
-				else if(touch_delta_X < 0.0f)
+				else if (touch_delta_X < -swipe_disable_range)
 				{
 					if(current_index > 0)
 						--current_index;

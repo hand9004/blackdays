@@ -78,6 +78,8 @@ private:
 	void check_non_target_attacked();
 	void check_is_attacked();
 private:
+	cocos2d::CCPoint is_intersect_line_to_line(CCPoint pt1, CCPoint pt2, CCPoint pt3, CCPoint pt4);
+
 	void create_move_list(cocos2d::CCPoint& dest_pt);
 	void create_move_to_dest_pos(cocos2d::CCPoint& dest_pt);
 

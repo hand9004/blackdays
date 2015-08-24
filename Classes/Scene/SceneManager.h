@@ -1,14 +1,12 @@
 #pragma once
 #include <cocos2d.h>
 
-enum SCENE_TYPE
+typedef enum SCENE_TYPE
 {
 	MAIN,
 	SELECT,
 	GAME,
-};
-
-typedef SCENE_TYPE scene_type;
+}scene_type;
 
 class SceneManager
 {

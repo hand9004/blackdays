@@ -21,11 +21,11 @@ function stage1.stage_init(GameObject, Map)
 
 	add_map(map_table[1])
 
-	table.insert(GameObject_ID, add_object(object_table[1], 0, 200))
+	table.insert(GameObject_ID, add_object(object_table[2], 200, 200))
 --	add_object(object_table[2], 0, 100)
 
-	table.insert(GameObject_ID, add_object(object_table[3], 1000, 200))
-	table.insert(GameObject_ID, add_object(object_table[4], 1000, 0))
+	table.insert(GameObject_ID, add_object(object_table[3], 2000, 200))
+	table.insert(GameObject_ID, add_object(object_table[4], 2000, 0))
 
 --	load_background_music("sounds/main_menu.mp3")
 	play_background_music("sounds/main_menu.mp3", true)
@@ -34,17 +34,18 @@ function stage1.stage_init(GameObject, Map)
 		LOG("Object Unique_ID = " .. value)
 	end
 
-	command_to_object(GameObject_ID[2], "Patrol", 500, 200)
-	command_to_object(GameObject_ID[3], "Patrol", 500, 0)
+	command_to_object(GameObject_ID[2], "Patrol", 1500, 200)
+	command_to_object(GameObject_ID[3], "Patrol", 1500, 0)
 end
 
 function stage1.stage_update()
 	enemy_cnt = get_enemy_cnt()
 	ally_cnt = get_ally_cnt()
 
+	collided_trigger_str = get_collided_trigger("player")
 --	LOG("enemy_cnt = " .. enemy_cnt .. " ally_cnt = " .. ally_cnt)
 
-	if enemy_cnt <= 0 then
+	if collided_trigger_str == "stage_clear" then
 		isStageOver = true
 		isVictorious = true
 	elseif ally_cnt <= 0 then

@@ -72,6 +72,8 @@ void GameObject::Update()
 
 		graphic_ctrl.setObjectFlipX(isLeft);
 		graphic_ctrl.setPosition(object_info.pos);
+		if (target != nullptr)
+			graphic_ctrl.setTargetPosition(target->getObjectPos());
 		graphic_ctrl.update_Object();
 	}
 }
@@ -385,7 +387,6 @@ void GameObject::attack_update()
 					cocos2d::CCPoint target_pos = target->getObjectPos();
 					float delta_x = target_pos.x - object_info.pos.x;
 					float target_image_width = target->getObjectRect(target_pos).getMaxX() - target->getObjectRect(target_pos).getMinX();
-					float obj_image_width = getObjectRect(object_info.pos).getMaxX() - getObjectRect(object_info.pos).getMinX();
 
 					if (delta_x >= 0.0f)
 						target_pos.x -= target_image_width;
@@ -490,7 +491,6 @@ void GameObject::patrol_update()
 	if (!dead_check())
 	{
 		unsigned int move_pt_size = move_line_pt.size();
-		bool isListEmpty = move_line_pt.empty();
 
 		if (current_index < move_pt_size)
 		{
@@ -536,7 +536,7 @@ void GameObject::patrol_update()
 }
 void GameObject::search_update()
 {
-	if(!dead_check())
+	if (!dead_check())
 	{
 		target = nullptr;
 
@@ -544,50 +544,111 @@ void GameObject::search_update()
 
 		GameObject* closest_obj = nullptr;
 		unsigned int closest_delta = 0;
-		for(unsigned int i = 0; i < object_list_size; ++i)
+		for (unsigned int i = 0; i < object_list_size; ++i)
 		{
 			GameObject* obj_iter = all_object_list.at(i);
 
-			if(obj_iter != this)
+			if (obj_iter != this)
 			{
-				if(!obj_iter->dead_check())
+				if (!obj_iter->dead_check())
 				{
-					if(obj_iter->getIsEnemy() != object_info.isEnemy)
+					if (obj_iter->getIsEnemy() != object_info.isEnemy)
 					{
 						cocos2d::CCPoint target_pos = obj_iter->getObjectPos();
 						float delta_x = fabs(object_info.pos.x - target_pos.x);
 						float delta_y = fabs(object_info.pos.y - target_pos.y);
-						float current_to_other_delta = sqrt(delta_x * delta_x) + sqrt(delta_y * delta_y);
+						float current_to_other_delta = sqrt(delta_x * delta_x + delta_y * delta_y);
 
 						cocos2d::CCRect recognize_area = CCRect(0.f, 0.f, 0.f, 0.f);
-							
-						if (obj_iter->getIsLeft())
+
+						if (isLeft)
 						{
 							recognize_area.setRect(object_info.pos.x - object_info.recognize_area,
-								object_info.pos.y - (object_info.recognize_area / 2),
-								object_info.recognize_area, object_info.recognize_area);
+								object_info.pos.y - (object_info.recognize_area / 4),
+								object_info.recognize_area, object_info.recognize_area / 2);
 						}
 						else
 						{
-							recognize_area.setRect(object_info.pos.x, object_info.pos.y - (object_info.recognize_area / 2),
-								object_info.recognize_area, object_info.recognize_area);
+							recognize_area.setRect(object_info.pos.x, object_info.pos.y - (object_info.recognize_area / 4),
+								object_info.recognize_area, object_info.recognize_area / 2);
 						}
 
-						if(recognize_area.containsPoint(target_pos))
+						if (recognize_area.containsPoint(target_pos))
 						{
-							if(closest_delta <= 0)
+							auto map_piece_collector = Map::Instance()->getMapPieceList();
+							unsigned int map_piece_cnt = map_piece_collector.size();
+
+							bool is_intersect = false;
+							for (unsigned int j = 0; j < map_piece_cnt; ++j)
 							{
-								closest_delta = current_to_other_delta;
-								closest_obj = obj_iter;
+								map_piece* map_piece_iter = map_piece_collector.at(j);
+
+								unsigned int in_map_piece_size = map_piece_iter->in_map_obj_list.size();
+								for (unsigned int k = 0; k < in_map_piece_size; ++k)
+								{
+									in_map_obj* in_map_obj_iter = map_piece_iter->in_map_obj_list.at(k);
+
+									float x = in_map_obj_iter->collision_area.origin.x;
+									float y = in_map_obj_iter->collision_area.origin.y;
+
+									float width = in_map_obj_iter->collision_area.getMaxX() - in_map_obj_iter->collision_area.getMinX();
+									float height = in_map_obj_iter->collision_area.getMaxY() - in_map_obj_iter->collision_area.getMinY();
+
+									CCPoint rect_vert_pt1 = CCPoint(x + (width / 2), y);
+									CCPoint rect_vert_pt2 = CCPoint(x + (width / 2), y + height);
+
+									CCPoint intersect_Y = is_intersect_line_to_line(rect_vert_pt1, rect_vert_pt2, object_info.pos, target_pos);
+
+									bool is_intersect_Y = false;
+
+									is_intersect_Y = in_map_obj_iter->collision_area.containsPoint(intersect_Y);
+
+									if (is_intersect_Y)
+									{
+										is_intersect = true;
+										break;
+									}
+									else
+										is_intersect = false;
+								}
+							}
+
+							if (is_intersect)
+							{
+								closest_obj = nullptr;
+								BD_CCLog("Can't Finded_Object!");
 							}
 							else
 							{
-								if(closest_delta >= current_to_other_delta)
+								if (closest_delta <= 0)
 								{
 									closest_delta = current_to_other_delta;
 									closest_obj = obj_iter;
 								}
+								else
+								{
+									if (closest_delta >= current_to_other_delta)
+									{
+										closest_delta = current_to_other_delta;
+										closest_obj = obj_iter;
+									}
+								}
+								BD_CCLog("Finded_Object!");
 							}
+
+							//if (closest_delta <= 0)
+							//{
+							//	closest_delta = current_to_other_delta;
+							//	closest_obj = obj_iter;
+							//}
+							//else
+							//{
+							//	if (closest_delta >= current_to_other_delta)
+							//	{
+							//		closest_delta = current_to_other_delta;
+							//		closest_obj = obj_iter;
+							//	}
+							//}
 						}
 					}
 				}
@@ -715,6 +776,12 @@ void GameObject::check_non_target_attacked()
 					}
 				}
 			}
+			switch (current_event)
+			{
+			case SKILL:
+				current_event = SEARCHING_RECOGNIZE_AREA;
+				break;
+			}
 		}
 	}
 }
@@ -770,6 +837,67 @@ bool GameObject::check_firing_area(GameObject* target)
 
 	return isCollidedToTarget;
 }
+CCPoint GameObject::is_intersect_line_to_line(CCPoint pt1, CCPoint pt2, CCPoint pt3, CCPoint pt4)
+{
+	bool isintersect = false;
+	CCPoint res_pt = CCPoint(0.f, 0.f);
+
+	float A1 = pt2.y - pt1.y;
+	float B1 = pt1.x - pt2.x;
+	float C1 = A1 * pt1.x + B1 * pt1.y;
+
+	float A2 = pt4.y - pt3.y;
+	float B2 = pt3.x - pt4.x;
+	float C2 = A2 * pt3.x + B2 * pt3.y;
+
+	float under = A1 * B2 - A2 * B1;
+
+	if (under == 0)
+		return res_pt;
+
+	float t = B2 * C1 - B1 * C2;
+	float s = A1 * C2 - A2 * C1;
+
+	res_pt.x = t / under;
+	res_pt.y = s / under;
+
+	if (res_pt.x >= 0.f	&& res_pt.x <= 1.f &&
+		res_pt.y >= 0.f && res_pt.y <= 1.f)
+		isintersect = true;
+	else
+		isintersect = false;
+
+	BD_CCLog("intersect x = %f, y = %f", res_pt.x, res_pt.y);
+
+	return res_pt;
+
+	//double t;
+
+	//double s;
+
+	//double under = (pt4.y - pt3.y)*(pt2.x - pt1.x) - (pt4.x - pt3.x)*(pt2.y - pt1.y);
+
+	//if (under == 0) return false;
+
+
+
+	//double _t = (pt4.x - pt3.x)*(pt1.y - pt3.y) - (pt4.y - pt3.y)*(pt1.x - pt3.x);
+
+	//double _s = (pt2.x - pt1.x)*(pt1.y - pt3.y) - (pt2.y - pt1.y)*(pt1.x - pt3.x);
+
+
+
+	//t = _t / under;
+
+	//s = _s / under;
+
+
+
+	//if (t<0.0 || t>1.0 || s<0.0 || s>1.0) return false;
+
+	//if (_t == 0 && _s == 0) return false;
+}
+
 // 이동시에 사용된다. 미리 리스트를 쭉 만들어 놓고 리스트에 맞춰 이동한다.
 // 실시간 계산 아님.
 void GameObject::create_move_list(cocos2d::CCPoint& dest_pt)
@@ -858,6 +986,8 @@ void GameObject::create_move_to_dest_pos(cocos2d::CCPoint& dest_pt)
 }
 void GameObject::skill_to_pos(const char* skill_name, cocos2d::CCPoint& skill_dest_pos)
 {
+
+
 }
 void GameObject::skill_to_target(const char* skill_name, GameObject* target)
 {

@@ -60,9 +60,16 @@ typedef struct IN_PARTICLE_DATA
 }in_particle_data;
 
 // ¿Ã∆Â∆Æ ¡§∫∏
+typedef enum EFFECT_DRAW_TYPE
+{
+	DRAW_TO_ME,
+	DRAW_TO_TARGET,
+}eff_draw_type;
+
 typedef struct EFFECT_SET_INFO
 {
 	const char* key;
+	eff_draw_type draw_type;
 	unsigned int applying_index;
 	cocos2d::CCPoint relative_distance;
 }effect_set_info;

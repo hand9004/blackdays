@@ -42,34 +42,13 @@ Map::~Map(void)
 
 void Map::Init()
 {
-	in_map_particle_spr = cocos2d::CCSprite::create();
-
 	set_In_Map_Object_Resource_Info();
 
 	set_Map_Info();
 
 	sort_Map_On_Index();
 
-	unsigned int map_total_width = abs(getMapEndPoint().x - getMapStartPoint().x);
-	unsigned int map_total_height = cocos2d::CCDirector::sharedDirector()->getWinSize().height;
-
-	in_map_particle_spr->setPosition(cocos2d::CCPoint(getMapStartPoint().x, 0.f));
-	in_map_particle_spr->setAnchorPoint(cocos2d::CCPoint(0.f, 0.f));
-	in_map_particle_spr->setContentSize(cocos2d::CCSize(map_total_width, map_total_height));
-
-	unsigned int particle_cnt = ParticleController::Instance()->get_Particle_Cnt();
-	if (particle_cnt > 0)
-	{
-		for (unsigned int i = 0; i < particle_cnt; ++i)
-		{
-			auto iter = ParticleController::Instance()->get_Particle(i);
-
-			in_map_particle_spr->addChild(iter);
-		}
-	}
-	in_map_particle_spr->setZOrder(2);
-
-	ObjectController::Instance()->addChild(in_map_particle_spr);
+	set_In_Map_Particle();
 }
 void Map::Update()
 {
@@ -99,6 +78,7 @@ void Map::Destroy()
 		SAFE_DELETE(map_piece_iter);
 	}
 	vector_clear(map_piece_list);
+	map_clear(trigger_list);
 
 	if (in_map_particle_spr != nullptr)
 	{
@@ -127,8 +107,6 @@ bool Map::isInMovingArea(cocos2d::CCPoint src_pt)
 	cocos2d::CCPoint start_pt = getMapStartPoint();
 	cocos2d::CCPoint end_pt = getMapEndPoint();
 
-	int end_index = map_piece_list.size() - 1;
-
 	bool isCanMove = false;
 	unsigned int map_size = map_piece_list.size();
 	for(unsigned int i = 0; i < map_size; ++i)
@@ -143,13 +121,28 @@ bool Map::isInMovingArea(cocos2d::CCPoint src_pt)
 
 	return isCanMove;
 }
+const char* Map::get_collided_trigger(cocos2d::CCPoint src_pt)
+{
+	const char* ret_str = nullptr;
+
+	auto trig_begin = trigger_list.begin();
+	auto trig_end = trigger_list.end();
+
+	for (auto j = trig_begin; j != trig_end; ++j)
+	{
+		if (j->second->trigger_rect.containsPoint(src_pt))
+			ret_str = j->first;
+	}
+
+	return ret_str;
+}
 void Map::set_Map_Info()
 {
 	const int constant_data_size = 3;
 	unsigned int map_piece_size = LuaCommunicator::Instance()->getTableSize(1);
 
 	// 맵의 실제 정보로부터 시작한다. 1번째는 맵에 들어갈 오브젝트들을 레퍼런스할 plist가 들어가 있다.
-	for(unsigned int i = 2; i <= map_piece_size - 1; ++i)
+	for(unsigned int i = 2; i <= map_piece_size - 2; ++i)
 	{
 		lua_pushinteger(p_lua_st, i);
 		lua_gettable(p_lua_st, 1);
@@ -223,6 +216,44 @@ void Map::set_Map_Info()
 			// end In Map Object Info
 			lua_pop(p_lua_st, 1);
 		}
+		lua_pop(p_lua_st, 1);
+
+		lua_pushstring(p_lua_st, "trigger_data");
+		lua_gettable(p_lua_st, 1);
+
+		unsigned int map_trigger_cnt = LuaCommunicator::Instance()->getTableSize(2);
+
+		for (unsigned int i = 1; i <= map_trigger_cnt; ++i)
+		{
+			lua_pushinteger(p_lua_st, i);
+			lua_gettable(p_lua_st, 2);
+
+			unsigned int map_trigger_attri_cnt = LuaCommunicator::Instance()->getTableSize(3);
+			for (unsigned int j = 1; j <= map_trigger_attri_cnt; ++j)
+			{
+				lua_pushinteger(p_lua_st, j);
+				lua_gettable(p_lua_st, 3);
+			}
+
+			int x = 0, y = 0, width = 0, height = 0;
+
+			x = lua_tointeger(p_lua_st, -5);
+			y = lua_tointeger(p_lua_st, -4);
+			width = lua_tointeger(p_lua_st, -3);
+			height = lua_tointeger(p_lua_st, -2);
+			const char* trigger_name = lua_tostring(p_lua_st, -1);
+
+			map_trig_info* add_trigger_info = new map_trig_info;
+
+			add_trigger_info->trigger_pos = CCPoint(x, y);
+			add_trigger_info->trigger_rect = CCRect(x, y, width, height);
+
+			map_piece_data.trigger_list[trigger_name] = add_trigger_info;
+
+			lua_pop(p_lua_st, map_trigger_attri_cnt);
+
+			lua_pop(p_lua_st, 1);
+		}
 
 		set_Map(map_piece_data);
 
@@ -231,6 +262,7 @@ void Map::set_Map_Info()
 		for(unsigned int j = 0; j < in_obj_size; ++j)
 			SAFE_DELETE(map_piece_data.in_map_info_list[j]);
 		
+		map_clear(map_piece_data.trigger_list);
 		vector_clear(map_piece_data.in_map_info_list);
 
 		lua_pop(p_lua_st, 1);
@@ -275,6 +307,31 @@ void Map::sort_Map_On_Index()
 {
 	std::sort(map_piece_list.begin(), map_piece_list.end(), sort_map_index);
 }
+void Map::set_In_Map_Particle()
+{
+	in_map_particle_spr = cocos2d::CCSprite::create();
+
+	unsigned int map_total_width = abs(getMapEndPoint().x - getMapStartPoint().x);
+	unsigned int map_total_height = cocos2d::CCDirector::sharedDirector()->getWinSize().height;
+
+	in_map_particle_spr->setPosition(cocos2d::CCPoint(getMapStartPoint().x, 0.f));
+	in_map_particle_spr->setAnchorPoint(cocos2d::CCPoint(0.f, 0.f));
+	in_map_particle_spr->setContentSize(cocos2d::CCSize(map_total_width, map_total_height));
+
+	unsigned int particle_cnt = ParticleController::Instance()->get_Particle_Cnt();
+	if (particle_cnt > 0)
+	{
+		for (unsigned int i = 0; i < particle_cnt; ++i)
+		{
+			auto iter = ParticleController::Instance()->get_Particle(i);
+
+			in_map_particle_spr->addChild(iter);
+		}
+	}
+	in_map_particle_spr->setZOrder(2);
+
+	ObjectController::Instance()->addChild(in_map_particle_spr);
+}
 void Map::set_In_Map_Object_Resource_Info()
 {
 	lua_pushinteger(p_lua_st, 1);
@@ -308,15 +365,36 @@ void Map::set_Map(map_piece_info& map_piece_data_info)
 	piece_of_map->background_image->setAnchorPoint(cocos2d::CCPoint(0.0f, 0.0f));
 
 	cocos2d::CCSize background_img_size = piece_of_map->background_image->getContentSize();
-	float map_X = map_piece_data_info.map_index * background_img_size.width, map_Y = 0.0f;
+	float map_X = 0.f, map_Y = 0.f;
+
+	if (!map_piece_list.empty())
+	{
+		float prev_piece_X = 0.f, prev_piece_img_width = 0.f;
+		unsigned int map_piece_cnt = map_piece_list.size();
+		for (unsigned int i = 0; i < map_piece_cnt; ++i)
+		{
+			map_piece* prev_piece_iter = map_piece_list.at(i);
+
+			if (prev_piece_iter->map_index == piece_of_map->map_index - 1)
+			{
+				prev_piece_X = prev_piece_iter->background_image->getPositionX();
+				prev_piece_img_width = prev_piece_iter->background_image->getContentSize().width;
+				break;
+			}
+		}
+		map_X = (prev_piece_X + prev_piece_img_width);
+	}
+	else
+		map_X = map_piece_data_info.map_index * background_img_size.width;
 
 	cocos2d::CCPoint image_pt = cocos2d::CCPoint(map_X, map_Y);
 	piece_of_map->background_image->setPosition(image_pt);
 
 	ObjectController::Instance()->addChild(piece_of_map->background_image);
 
-	unsigned int in_object_size = map_piece_data_info.in_map_info_list.size();
+	trigger_list = map_piece_data_info.trigger_list;
 
+	unsigned int in_object_size = map_piece_data_info.in_map_info_list.size();
 	cocos2d::CCSpriteFrameCache* cache = cocos2d::CCSpriteFrameCache::sharedSpriteFrameCache();
 
 	BD_CCLog("%d", in_object_size);
@@ -399,7 +477,6 @@ cocos2d::CCPoint Map::getMapEndPoint()
 void Map::setUpdateScrolling(float delta_x)
 {
 	unsigned int obj_size = map_piece_list.size();
-	unsigned int start_map_index = 0, end_map_index = obj_size - 1;
 
 	for (unsigned int i = 0; i < obj_size; ++i)
 	{
@@ -413,7 +490,7 @@ void Map::setUpdateScrolling(float delta_x)
 		for (unsigned int j = 0; j < in_map_obj_size; ++j)
 		{
 			in_map_obj* in_map_obj_iter = map_piece_iter->in_map_obj_list[j];
-
+			
 			CCPoint obj_pos = in_map_obj_iter->obj_spr->getPosition();
 
 			CCSize obj_size = in_map_obj_iter->obj_spr->getContentSize();
@@ -427,6 +504,24 @@ void Map::setUpdateScrolling(float delta_x)
 
 		map_piece_iter->background_image->setPosition(background_pos);
 	}
+
+	auto trig_begin = trigger_list.begin();
+	auto trig_end = trigger_list.end();
+
+	for (auto j = trig_begin; j != trig_end; ++j)
+	{
+		auto trig_iter = j->second;
+
+		CCPoint trig_iter_pos = trig_iter->trigger_pos;
+		CCSize trig_iter_size = trig_iter->trigger_rect.size;
+
+		trig_iter_pos.x += delta_x;
+		trig_iter->trigger_pos = trig_iter_pos;
+
+		trig_iter->trigger_rect.setRect(trig_iter_pos.x, trig_iter_pos.y, trig_iter_size.width, trig_iter_size.height);
+		BD_CCLog("trigger_name = %s %f %f %f %f %f", j->first, trig_iter_pos.x, trig_iter_pos.y, trig_iter_size.width, trig_iter_size.height, delta_x);
+	}
+
 
 	CCPoint particle_pt = in_map_particle_spr->getPosition();
 	particle_pt.x += delta_x;

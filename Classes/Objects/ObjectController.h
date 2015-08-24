@@ -56,6 +56,7 @@ public:
 	bool getIsObjectDead(const char* object_name);
 	unsigned int getEnemyObjectCnt();
 	unsigned int getAllyObjectCnt();
+	const char* getCollidedTrigger(const char* obj_name);
 
 	GameObject* getObject(unsigned int find_id)
 	{
@@ -68,6 +69,26 @@ public:
 
 			unsigned int obj_mem_number = (int)obj_iter;
 			if (find_id == obj_mem_number)
+			{
+				ret_obj = obj_iter;
+				break;
+			}
+		}
+
+		return ret_obj;
+	}
+
+	GameObject* getObject(const char* obj_name)
+	{
+		GameObject* ret_obj = nullptr;
+		unsigned int obj_cnt = game_object_list.size();
+
+		for (unsigned int i = 0; i < obj_cnt; ++i)
+		{
+			GameObject* obj_iter = game_object_list.at(i);
+
+			const char* in_obj_name = obj_iter->getObjectInfo().object_name;
+			if (!strcmp(obj_name, in_obj_name))
 			{
 				ret_obj = obj_iter;
 				break;

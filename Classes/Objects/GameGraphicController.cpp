@@ -48,8 +48,6 @@ GameGraphicController::~GameGraphicController(void)
 }
 void GameGraphicController::add_Object(obj_info& game_obj_info)
 {
-	unsigned int main_image_size = game_obj_info.main_image.size();
-
 	// 메인으로 사용되는 Sprite 이미지들을 로드한다.
 	std::map<const char*, const char*>::iterator i;
 	std::map<const char*, const char*>::iterator begin = game_obj_info.main_image.begin();
@@ -141,8 +139,6 @@ void GameGraphicController::update_Object()
 {
 	CCAssert(active_component_key != nullptr, "Can't Update Object. active_component_key is NULL.");
 
-	unsigned int graphic_list_size = game_graphic_list.size();
-
 	auto begin = game_graphic_list.begin();
 	auto end = game_graphic_list.end();
 	auto i = game_graphic_list.begin();
@@ -159,6 +155,7 @@ void GameGraphicController::update_Object()
 		else
 			i->second->setVisible(false);
 
+		i->second->setTargetPosition(target_pos);
 		i->second->setPosition(draw_pos);
 		i->second->Update();
 	}

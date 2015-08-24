@@ -523,7 +523,8 @@ void ObjectController::setEffect(obj_info& p_obj_info)
 
 			effect_set_info* effect_set_data = new effect_set_info;
 
-			effect_set_data->key = lua_tostring(p_lua_st, -4);
+			effect_set_data->key = lua_tostring(p_lua_st, -5);
+			effect_set_data->draw_type = (!strcmp(lua_tostring(p_lua_st, -4), "draw_to_me")) ? DRAW_TO_ME : DRAW_TO_TARGET;
 			effect_set_data->relative_distance.x = lua_tointeger(p_lua_st, -3);
 			effect_set_data->relative_distance.y = lua_tointeger(p_lua_st, -2);
 			effect_set_data->applying_index = lua_tointeger(p_lua_st, -1);
@@ -910,9 +911,6 @@ void ObjectController::setUpdateScrolling(float delta_x)
 					CCPoint map_start_pt = Map::Instance()->getMapStartPoint();
 					CCPoint map_end_pt = Map::Instance()->getMapEndPoint();
 
-					float first_map_collision_x = screen_mid_x - map_start_pt.x;
-					float last_map_collision_x = map_end_pt.x - screen_mid_x;
-
 					if (obj_pos.x >= screen_mid_x && map_end_pt.x > win_size.width)
 					{
 						dist_x_to_screen_mid_x = screen_mid_x - obj_pos.x;
@@ -928,6 +926,7 @@ void ObjectController::setUpdateScrolling(float delta_x)
 				obj_iter->setObjectPos(obj_pos);
 				obj_iter->change_PosList_On_Scrolling(dist_x_to_screen_mid_x);
 				obj_iter->change_ThrowPosList_On_Scrolling(dist_x_to_screen_mid_x);
+				obj_iter->change_SkillPos_On_Scrolling(dist_x_to_screen_mid_x);
 
 				Map::Instance()->setUpdateScrolling(dist_x_to_screen_mid_x);
 				for (unsigned int j = 0; j < obj_size; ++j)
@@ -964,8 +963,10 @@ void ObjectController::setUpdateScrolling(float delta_x)
 					obj_iter->setMovedDeltaX(move_speed);
 					break;
 				case SKILL:
-					if (strcmp(curr_skill->skill_type, "Charge"))
+					if (!strcmp(curr_skill->skill_type, "Charge"))
 						move_speed *= charge_speed;
+					else
+						move_speed = 0.f;
 
 					obj_iter->setMovedDeltaX(move_speed);
 					break;
@@ -983,6 +984,8 @@ void ObjectController::setUpdateScrolling(float delta_x)
 				{
 					obj_iter->change_PosList_On_Scrolling(move_speed);
 					obj_iter->change_ThrowPosList_On_Scrolling(move_speed);
+					obj_iter->change_SkillPos_On_Scrolling(move_speed);
+
 					Map::Instance()->setUpdateScrolling(move_speed);
 					for (unsigned int j = 0; j < obj_size; ++j)
 					{
@@ -994,6 +997,7 @@ void ObjectController::setUpdateScrolling(float delta_x)
 							other_obj_pos.x += move_speed;
 							other_obj_iter->change_ThrowPosList_On_Scrolling(move_speed);
 							other_obj_iter->change_PosList_On_Scrolling(move_speed);
+							other_obj_iter->change_SkillPos_On_Scrolling(move_speed);
 							other_obj_iter->setObjectPos(other_obj_pos);
 						}
 					}
@@ -1057,6 +1061,20 @@ unsigned int ObjectController::getAllyObjectCnt()
 	}
 
 	return ret_cnt;
+}
+const char* ObjectController::getCollidedTrigger(const char* obj_name)
+{
+	const char* ret_str = nullptr;
+
+	if (obj_name != nullptr)
+	{
+		GameObject* player_obj = getObject(obj_name);
+
+		if (player_obj != nullptr)
+			ret_str = Map::Instance()->get_collided_trigger(player_obj->getObjectPos());
+	}
+
+	return ret_str;
 }
 void ObjectController::setTouchBegan(cocos2d::CCTouch* pTouch, cocos2d::CCEvent* pEvent)
 {

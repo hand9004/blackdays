@@ -95,6 +95,6 @@ void HUDCollection::attacked_update()
 //		attacked_select->setVisible(false);
 	}
 
-	float select_X = game_obj_info->pos.x, select_Y = game_obj_info->pos.y + current_image_size.height;
+//	float select_X = game_obj_info->pos.x, select_Y = game_obj_info->pos.y + current_image_size.height;
 //	attacked_select->setPosition(cocos2d::CCPoint(select_X, select_Y));
 }

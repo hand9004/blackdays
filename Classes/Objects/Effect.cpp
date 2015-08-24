@@ -14,6 +14,8 @@ void Effect::Init(effect_info* eff_info)
 {
 	if(eff_info != nullptr)
 	{
+		this->eff_info = eff_info;
+
 		cocos2d::CCSpriteFrameCache* cache = cocos2d::CCSpriteFrameCache::sharedSpriteFrameCache();
 
 		cache->addSpriteFramesWithFile(eff_info->effect_list_name);
@@ -21,16 +23,17 @@ void Effect::Init(effect_info* eff_info)
 
 		for(unsigned int i = 0; i < effect_set_size; ++i)
 		{
-			eff_draw_type* eff_draw_data = new eff_draw_type;
+			eff_draw_data* eff_draw_dat = new eff_draw_data;
 
-			eff_draw_data->eff_set_info = eff_info->effect_set_list[i];
+			eff_draw_dat->eff_set_info = eff_info->effect_set_list[i];
 
-			eff_draw_data->eff_sprFrame = cache->spriteFrameByName(eff_draw_data->eff_set_info->key);
+			eff_draw_dat->eff_sprFrame = cache->spriteFrameByName(eff_draw_dat->eff_set_info->key);
 
-			effect_frame.push_back(eff_draw_data);
+			effect_frame.push_back(eff_draw_dat);
 		}
 
-		GraphicsController::Instance()->getSprite(effect_spr, effect_frame.at(0)->eff_sprFrame);
+		CCSpriteFrame* first_eff_frame = effect_frame.at(0)->eff_sprFrame;
+		GraphicsController::Instance()->getSprite(effect_spr, first_eff_frame);
 		effect_spr->setAnchorPoint(cocos2d::CCPoint(0.5f, 0.0f));
 		effect_spr->setVisible(false);
 
@@ -46,7 +49,7 @@ void Effect::Update()
 	{
 		if(selected_index >= 0 && selected_index < effect_draw_size)
 		{
-			eff_draw_type* eff_draw_iter = effect_frame.at(selected_index);
+			eff_draw_data* eff_draw_iter = effect_frame.at(selected_index);
 
 			if(isEffectOn)
 				effect_spr->setVisible(true);
@@ -64,7 +67,16 @@ void Effect::Update()
 			else
 				effect_spr->setFlipX(false);
 
-			effect_spr->setPosition(cocos2d::CCPoint(object_pos.x + relative_dist_X, object_pos.y + relative_dist_Y));
+			switch (eff_draw_iter->eff_set_info->draw_type)
+			{
+			case DRAW_TO_ME:
+				effect_spr->setPosition(CCPoint(object_pos.x + relative_dist_X, object_pos.y + relative_dist_Y));
+				break;
+			case DRAW_TO_TARGET:
+				effect_spr->setPosition(CCPoint(target_pos.x + relative_dist_X, target_pos.y + relative_dist_Y));
+				break;
+			}
+
 			effect_spr->setDisplayFrame(eff_draw_iter->eff_sprFrame);
 		}
 	}
@@ -105,7 +117,7 @@ void Effect::syncWithEffectFrameIndex(unsigned int frame_index)
 
 	for(unsigned int i = 0; i < effect_draw_size; ++i)
 	{
-		eff_draw_type* effect_draw_iter = effect_frame.at(i);
+		eff_draw_data* effect_draw_iter = effect_frame.at(i);
 
 		if(effect_draw_iter->eff_set_info->applying_index == frame_index)
 		{

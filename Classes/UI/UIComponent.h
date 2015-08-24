@@ -5,6 +5,8 @@
 
 USING_NS_CC;
 
+const float swipe_disable_range = 5.0f;
+
 class UIComponent : public cocos2d::CCLayer
 {
 public:

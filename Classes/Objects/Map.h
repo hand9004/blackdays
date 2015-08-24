@@ -8,6 +8,12 @@ typedef enum MAP_OBJECT_TYPE
 	HELPER_OBJECT,
 }map_obj_type;
 
+typedef struct MAP_TRIGGER_INFO
+{
+	cocos2d::CCPoint trigger_pos;
+	cocos2d::CCRect trigger_rect;
+}map_trig_info;
+
 typedef struct IN_MAP_INFO
 {
 	cocos2d::CCPoint obj_pos;
@@ -21,6 +27,7 @@ typedef struct MAP_INFO
 	cocos2d::CCRect moving_area;
 	const char* background_image_name;
 	std::vector<in_map_info*>in_map_info_list;
+	std::map<const char*, map_trig_info*>trigger_list;
 }map_piece_info;
 
 typedef struct IN_MAP_OBJECT
@@ -64,6 +71,8 @@ public:
 	void setTouchMoved(cocos2d::CCTouch* pTouch, cocos2d::CCEvent* pEvent);
 	void setTouchEnded(cocos2d::CCTouch* pTouch, cocos2d::CCEvent* pEvent);
 	bool isInMovingArea(cocos2d::CCPoint src_pt);
+
+	const char* get_collided_trigger(cocos2d::CCPoint src_pt);
 	void reset_MapCoordinate();
 
 	bool getIsCanScrolling();
@@ -71,18 +80,19 @@ public:
 	cocos2d::CCPoint getMapEndPoint();
 
 	void setUpdateScrolling(float delta_x);
-
 	std::vector<map_piece*>getMapPieceList() { return map_piece_list; }
 public:
 	void setLuaState(lua_State* lua_st) { p_lua_st = lua_st; }
 private:
 	void set_Map_Info();
 	void sort_Map_On_Index();
+	void set_In_Map_Particle();
 	void set_In_Map_Object_Resource_Info();
 	void set_Map(map_piece_info& map_piece_data_info);
 private:
 	cocos2d::CCSprite* in_map_particle_spr;
 	std::vector<map_piece*>map_piece_list;
+	std::map<const char*, map_trig_info*>trigger_list;
 	lua_State* p_lua_st;
 };
 

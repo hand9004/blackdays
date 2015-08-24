@@ -48,6 +48,7 @@ void CurveThrowObject::Init(cocos2d::CCPoint start_pt, cocos2d::CCPoint end_pt)
 	{
 		effect_set_info* effect_frame_data = new effect_set_info;
 
+		effect_frame_data->draw_type = DRAW_TO_ME;
 		effect_frame_data->applying_index = 0;
 		effect_frame_data->key = effect_frame_name_list.at(i).c_str();
 		effect_frame_data->relative_distance = cocos2d::CCPoint(0.0f, 0.0f);
@@ -137,7 +138,7 @@ void CurveThrowObject::create_bezier_to_pos(cocos2d::CCPoint start_pt, cocos2d::
 	float atan_val_degree_90 = atan(degree_90);
 
 	float atan_vertical_of_radient = atan_val_radient + atan_val_degree_90;
-	float total_atan_val = atan_val_radient + atan_val_degree_30;
+//	float total_atan_val = atan_val_radient + atan_val_degree_30;
 
 	float line_size_X = (end_pt.x > start_pt.x) ? end_pt.x - start_pt.x : start_pt.x - end_pt.x;
 	float line_size_Y = (end_pt.y > start_pt.y) ? end_pt.y - start_pt.y : start_pt.y - end_pt.y;
