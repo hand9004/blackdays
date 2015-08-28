@@ -48,8 +48,10 @@ function StageManager.init_Stage()
 		set_Camera_Is_Fixed(0)
 		send_message("CHECK_BOX", camera_hold_check_box.id, false)
 
-		bindUI_on_game_object("skill_slide_selector", "skill")
-		bindUI_on_game_object("object_slide_selector", "object")
+		bindUI_on_game_object("skill_button_1", "skill_1")
+		bindUI_on_game_object("skill_button_2", "skill_2")
+		bindUI_on_game_object("skill_button_3", "skill_3")
+		bindUI_on_game_object("skill_button_4", "skill_4")
 
 		local platform_type = get_platform_type()
 		StageManager.load_stageModule(platform_type)

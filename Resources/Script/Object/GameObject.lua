@@ -1,6 +1,7 @@
 --[[ info {name, atk_pt, def_pt, hp, recognize_area, attack_range_X, attack_range_Y, partol_delay_time(ms)
 			move_speed, isEnemy, isHero, isControllable, isAreaAttack} ]]--
 
+--[[ skill = {}]]
 player = {info = {"player", 20, 5, 400, 100, 70, 10, 5000, 4.0, false, true, true, false},
 
 			main_image = {"Characters/len.png"},
@@ -502,6 +503,373 @@ player1 = {info = {"player", 30, 5, 400, 300, 70, 10, 5000, 4.0, false, true, tr
 					},
 		}
 
+player2 = {info = {"player", 30, 5, 400, 300, 70, 10, 5000, 6.0, false, true, true, false},
+
+			main_image = {"Characters/shiki.png"},
+
+			image_frame = {},
+
+			ani_image_frame = {
+								{
+									"Characters/shiki.png",
+									"Characters/shiki.plist",
+									"stand",
+
+									{ "7sh00_000.png", 1 },
+									{ "7sh00_001.png", 2 },
+									{ "7sh00_002.png", 3 },
+									{ "7sh00_003.png", 4 },
+									{ "7sh00_004.png", 5 },
+									{ "7sh00_005.png", 6 },
+									{ "7sh00_006.png", 7 },
+									{ "7sh00_007.png", 8 },
+									{ "7sh00_008.png", 9 },
+									{ "7sh00_009.png", 10 },
+									{ "7sh00_010.png", 11 },
+									{ "7sh00_011.png", 12 },
+									{ "7sh00_012.png", 13 },
+									{ "7sh00_013.png", 14 },
+									{ "7sh00_014.png", 15 },
+									{ "7sh00_015.png", 16 },
+								},
+
+								{
+									"Characters/shiki.png",
+									"Characters/shiki.plist",
+									"move",
+
+									{ "shi26_000.png", 1 },
+									{ "shi26_001.png", 2 },
+									{ "shi26_002.png", 3 },
+									{ "shi26_003.png", 4 },
+									{ "shi26_004.png", 5 },
+									{ "shi26_005.png", 6 },
+									{ "shi26_006.png", 7 },
+									{ "shi26_007.png", 8 },
+									{ "shi26_008.png", 9 },
+									{ "shi26_009.png", 10 },
+									{ "shi26_010.png", 11 },
+									{ "shi26_011.png", 12 },
+								},
+
+								{
+									"Characters/shiki.png",
+									"Characters/shiki.plist",
+									"attack",
+
+									{ "shi02_010.png", 1 },
+									{ "shi02_011.png", 2 },
+									{ "shi02_012.png", 3 },
+									{ "shi02_013.png", 4 },
+									{ "shi02_014.png", 5 },
+									{ "shi02_015.png", 6 },
+									{ "shi02_016.png", 7 },
+									{ "shi02_017.png", 8 },
+									{ "shi02_018.png", 9 },
+									{ "shi02_019.png", 10 },
+									{ "shi02_020.png", 11 },
+									{ "shi02_021.png", 12 },
+								},
+
+								{
+									"Characters/shiki.png",
+									"Characters/shiki.plist",
+									"dead",
+
+									{ "shi24_007.png", 1 },
+									{ "shi24_008.png", 2 },
+									{ "shi24_009.png", 3 },
+									{ "shi24_010.png", 4 },
+									{ "shi24_011.png", 5 },
+									{ "shi24_012.png", 6 },
+									{ "shi24_013.png", 7 },
+									{ "shi24_014.png", 8 },
+									{ "shi24_015.png", 9 },
+								},
+
+							  },
+
+			ani_frame_set = {
+								{"stand", 0.02, 0, 0, false},
+								{"move", 0.02, 4, 11, false},
+								{"attack", 0.04, 0, 0, false},
+								{"dead", 0.02, 0, 0, true},
+							},
+			effect_set = {
+							{
+								"Characters/shiki_effect.plist",
+								"attack",
+
+								{"7sh7500.png", "draw_to_me", 0, -50, 4},
+								{"7sh7501.png", "draw_to_me", 0, -50, 5},
+								{"7sh7502.png", "draw_to_me", 0, -50, 6},
+								{"7sh7503.png", "draw_to_me", 0, -50, 7},
+								{"7sh7504.png", "draw_to_me", 0, -50, 8},
+								{"7sh7505.png", "draw_to_me", 0, -50, 9},
+								{"7sh7506.png", "draw_to_me", 0, -50, 10},
+							},
+						 },
+			skill = {
+					},
+		}
+
+player3 = {info = {"player", 30, 5, 400, 300, 70, 10, 5000, 6.0, false, true, true, false},
+
+			main_image = {"Characters/arcueid.png"},
+
+			image_frame = {},
+
+			ani_image_frame = {
+								{
+									"Characters/arcueid.png",
+									"Characters/arcueid.plist",
+									"stand",
+
+									{ "arc0000.png", 1 },
+									{ "arc0001.png", 2 },
+									{ "arc0002.png", 3 },
+									{ "arc0003.png", 4 },
+									{ "arc0004.png", 5 },
+									{ "arc0005.png", 6 },
+									{ "arc0006.png", 7 },
+									{ "arc0007.png", 8 },
+									{ "arc0008.png", 9 },
+									{ "arc0009.png", 10 },
+									{ "arc0010.png", 11 },
+									{ "arc0011.png", 12 },
+									{ "arc0012.png", 13 },
+									{ "arc0013.png", 14 },
+									{ "arc0014.png", 15 },
+									{ "arc0015.png", 16 },
+									{ "arc0016.png", 17 },
+									{ "arc0017.png", 18 },
+									{ "arc0018.png", 19 },
+									{ "arc0019.png", 20 },
+									{ "arc0020.png", 21 },
+									{ "arc0021.png", 22 },
+									{ "arc0022.png", 23 },
+									{ "arc0023.png", 24 },
+								},
+
+								{
+									"Characters/arcueid.png",
+									"Characters/arcueid.plist",
+									"move",
+
+									{ "arc2600.png", 1 },
+									{ "arc2601.png", 2 },
+									{ "arc2602.png", 3 },
+									{ "arc2603.png", 4 },
+									{ "arc2604.png", 5 },
+									{ "arc2605.png", 6 },
+									{ "arc2606.png", 7 },
+									{ "arc2607.png", 8 },
+									{ "arc2608.png", 9 },
+									{ "arc2609.png", 10 },
+									{ "arc2610.png", 11 },
+									{ "arc2611.png", 12 },
+								},
+
+								{
+									"Characters/arcueid.png",
+									"Characters/arcueid.plist",
+									"attack",
+
+									{ "arc0201.png", 1 },
+									{ "arc0202.png", 2 },
+									{ "arc0203.png", 3 },
+									{ "arc0204.png", 4 },
+									{ "arc0205.png", 5 },
+									{ "arc0206.png", 6 },
+									{ "arc0207.png", 7 },
+									{ "arc0208.png", 8 },
+									{ "arc0209.png", 9 },
+									{ "arc0210.png", 10 },
+									{ "arc0211.png", 11 },
+									{ "arc0212.png", 12 },
+									{ "arc0213.png", 13 },
+									{ "arc0214.png", 14 },
+									{ "arc0215.png", 15 },
+									{ "arc0216.png", 16 },
+									{ "arc0217.png", 17 },
+									{ "arc0218.png", 18 },
+									{ "arc0219.png", 19 },
+								},
+
+								{
+									"Characters/arcueid.png",
+									"Characters/arcueid.plist",
+									"dead",
+
+									{ "arc2430.png", 1 },
+									{ "arc2431.png", 2 },
+									{ "arc2432.png", 3 },
+									{ "arc2433.png", 4 },
+									{ "arc2434.png", 5 },
+									{ "arc2435.png", 6 },
+									{ "arc2436.png", 7 },
+									{ "arc2437.png", 8 },
+									{ "arc2438.png", 9 },
+									{ "arc2439.png", 10 },
+									{ "arc2440.png", 11 },
+								},
+
+								{
+									"Characters/arcueid.png",
+									"Characters/arcueid.plist",
+									"run",
+
+									{ "arc1301.png", 1 },
+									{ "arc1302.png", 2 },
+									{ "arc1303.png", 3 },
+									{ "arc1310.png", 4 },
+									{ "arc1311.png", 5 },
+									{ "arc1312.png", 6 },
+									{ "arc1313.png", 7 },
+									{ "arc1314.png", 8 },
+									{ "arc1315.png", 9 },
+									{ "arc1316.png", 10 },
+									{ "arc1317.png", 11 },
+									{ "arc1318.png", 12 },
+									{ "arc1319.png", 13 },
+									{ "arc1320.png", 14 },
+									{ "arc1321.png", 15 },
+								},
+
+								{
+									"Characters/arcueid.png",
+									"Characters/arcueid.plist",
+									"hide",
+
+									{ "arc9300.png", 1 },
+									{ "arc9301.png", 2 },
+									{ "arc9302.png", 3 },
+									{ "arc9303.png", 4 },
+									{ "arc9304.png", 5 },
+									{ "arc9305.png", 6 },
+									{ "arc9306.png", 7 },
+									{ "arc9307.png", 8 },
+									{ "arc9308.png", 9 },
+									{ "arc9309.png", 10 },
+								},
+
+								{
+									"Characters/arcueid.png",
+									"Characters/arcueid.plist",
+									"threat_off",
+
+									{ "arc8100.png", 1 },
+									{ "arc8101.png", 2 },
+									{ "arc8102.png", 3 },
+									{ "arc8103.png", 4 },
+									{ "arc8104.png", 5 },
+									{ "arc8105.png", 6 },
+								},
+
+								{
+									"Characters/arcueid.png",
+									"Characters/arcueid.plist",
+									"sleep_target",
+
+									{ "arc4600.png", 1 },
+									{ "arc4601.png", 2 },
+									{ "arc4602.png", 3 },
+									{ "arc4603.png", 4 },
+									{ "arc4604.png", 5 },
+									{ "arc4605.png", 6 },
+									{ "arc4606.png", 7 },
+								},
+							  },
+
+			ani_frame_set = {
+								{"stand", 0.02, 0, 0, false},
+								{"move", 0.02, 1, 12, false},
+								{"attack", 0.04, 0, 0, false},
+								{"dead", 0.02, 0, 0, true},
+
+								{"run", 0.025, 4, 15, false},
+								{"hide", 0.02, 0, 0, true},
+								{"threat_off", 0.04, 0, 0, true},
+								{"sleep_target", 0.02, 0, 0, true},
+							},
+			effect_set = {
+							{
+								"Characters/arcueid_effect.plist",
+								"attack",
+
+								{"arc0220.png", "draw_to_me", 0, -40, 3},
+								{"arc0221.png", "draw_to_me", 0, -40, 4},
+								{"arc0222.png", "draw_to_me", 0, -40, 5},
+								{"arc0223.png", "draw_to_me", 0, -40, 6},
+								{"arc0224.png", "draw_to_me", 0, -40, 7},
+								{"arc0225.png", "draw_to_me", 0, -40, 8},
+								{"arc0226.png", "draw_to_me", 0, -40, 9},
+								{"arc0227.png", "draw_to_me", 0, -40, 10},
+								{"arc0228.png", "draw_to_me", 0, -40, 11},
+								{"arc0229.png", "draw_to_me", 0, -40, 12},
+								{"arc0230.png", "draw_to_me", 0, -40, 13},
+								{"arc0231.png", "draw_to_me", 0, -40, 14},
+								{"arc0232.png", "draw_to_me", 0, -40, 15},
+								{"arc0233.png", "draw_to_me", 0, -40, 16},
+								{"arc0234.png", "draw_to_me", 0, -40, 17},
+							},
+						 },
+			skill = {
+						{
+							"Images/skill_image_1.png",
+							"run",
+							"n_run",
+
+							"Melee",
+							"Run",
+
+							charge_dist = 0,
+							power_percent = 3.0,
+							chain_hit_frame = {},
+							particle_data = {},
+						},
+						{
+							"Images/skill_image_2.png",
+							"hide",
+							"n_hide",
+
+							"Melee",
+							"Hide",
+
+							charge_dist = 0,
+							power_percent = 3.0,
+							chain_hit_frame = {},
+							particle_data = {},
+						},
+						{
+							"Images/skill_image_3.png",
+							"threat_off",
+							"n_threat_off",
+
+							"Melee",
+							"Threat_off",
+
+							charge_dist = 0,
+							power_percent = 0.0,
+							chain_hit_frame = {},
+							particle_data = {},
+						},
+						{
+							"Images/skill_image_4.png",
+							"sleep_target",
+							"n_sleep_target",
+
+							"Melee",
+							"Sleep_target",
+
+							charge_dist = 0,
+							power_percent = 3.0,
+							chain_hit_frame = {},
+							particle_data = {},
+						},
+					},
+		}
+
 enemy = {info = {"enemy", 15, 5, 200, 400, 500, 100, 2500, 2.0, true, false, false, true},
 
 			main_image = {"Characters/sion.png"},
@@ -710,7 +1078,7 @@ enemy1 = {info = {"enemy1", 10, 5, 200, 300, 100, 10, 2500, 3.0, true, false, fa
 local GameObject = {}
 
 function GameObject.getVarString()
-	return {"player", "player1", "enemy", "enemy1"}
+	return {"player", "player1", "player2", "player3", "enemy", "enemy1"}
 end
 
 return GameObject

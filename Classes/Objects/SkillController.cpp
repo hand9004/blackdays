@@ -5,8 +5,8 @@
 
 #include <algorithm> 
 
-SkillController::SkillController(void) : isSelected(false), isSkillFinish(false), current_skill(0), chain_index(0),
-										target_obj_info(nullptr), game_obj_info(nullptr)
+SkillController::SkillController(void) : isSkillFinish(false), current_skill(0), chain_index(0),
+										target_obj_info(nullptr), game_obj_info(nullptr), obj_spr(nullptr)
 {
 }
 
@@ -20,16 +20,7 @@ void SkillController::Init(obj_info& object_info)
 
 	unsigned int skill_size = game_obj_info->skill_list.size();
 
-	for(unsigned int i = 0; i < skill_size; ++i)
-	{
-		skill_info* skill_iter = game_obj_info->skill_list[i];
-
-		skill_image_icon_list.push_back(cocos2d::CCSprite::create(skill_iter->skill_image_name));
-
-		skill_image_icon_list.at(i)->setVisible(false);
-
-		UIController::Instance()->addChild(skill_image_icon_list.at(i));
-	}
+	skill_cnt = skill_size;
 }
 void SkillController::Update()
 {
@@ -43,8 +34,16 @@ void SkillController::Update()
 			updateCharge();
 		else if(!strcmp(skill_type, "Power"))
 			updatePower();
-		else if(!strcmp(skill_type, "Chain"))
+		else if (!strcmp(skill_type, "Chain"))
 			updateChain();
+		else if (!strcmp(skill_type, "Run"))
+			updateRun();
+		else if (!strcmp(skill_type, "Hide"))
+			updateHide();
+		else if (!strcmp(skill_type, "Threat_off"))
+			updateThreatOff();
+		else if (!strcmp(skill_type, "Sleep_target"))
+			updateSleepTarget();
 	}
 
 	if(isSkillFinish)
@@ -55,30 +54,9 @@ void SkillController::Update()
 }
 void SkillController::Update_UI()
 {
-	unsigned int skill_icon_size = skill_image_icon_list.size();
-	for(unsigned int i = 0; i < skill_icon_size; ++i)
-	{
-		cocos2d::CCSprite* spr_iter = skill_image_icon_list.at(i);
-
-		if(isSelected)
-		{
-			if(i == current_skill)
-				spr_iter->setVisible(true);
-			else
-				spr_iter->setVisible(false);
-		}
-		else
-			spr_iter->setVisible(false);
-	}
 }
 void SkillController::Destroy()
 {
-	unsigned int skill_img_size = skill_image_icon_list.size();
-	for(unsigned int i = 0; i < skill_img_size; ++i)
-		UIController::Instance()->removeChild(skill_image_icon_list.at(i), true);
-
-	vector_clear(skill_image_icon_list);
-
 	game_obj_ev = nullptr, game_obj_info = nullptr, target_obj_info = nullptr;
 }
 void SkillController::update_Scrolling(float delta_x)
@@ -179,4 +157,19 @@ void SkillController::updateChain()
 	}
 	else
 		prev_skill_index = 0;
+}
+void SkillController::updateRun()
+{
+
+}
+void SkillController::updateHide()
+{
+}
+void SkillController::updateThreatOff()
+{
+
+}
+void SkillController::updateSleepTarget()
+{
+
 }

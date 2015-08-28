@@ -4,6 +4,7 @@
 #include "ParticleController.h"
 #include "ObjectController.h"
 #include "../Graphics/GraphicsController.h"
+#include "../StageManager.h"
 
 USING_NS_CC;
 
@@ -32,7 +33,7 @@ bool sort_map_index(map_piece* fir, map_piece* sec)
 	return fir->map_index < sec->map_index;
 }
 
-Map::Map(void) : in_map_particle_spr(nullptr)
+Map::Map(void) : in_map_particle_spr(nullptr), trigger_draw_node(nullptr)
 {
 }
 
@@ -86,6 +87,10 @@ void Map::Destroy()
 
 		ParticleController::Instance()->destroy_Particle();
 	}
+
+	if (trigger_draw_node != nullptr)
+		trigger_draw_node->removeFromParentAndCleanup(true);
+	
 }
 void Map::register_MapFunction()
 {
@@ -142,7 +147,7 @@ void Map::set_Map_Info()
 	unsigned int map_piece_size = LuaCommunicator::Instance()->getTableSize(1);
 
 	// 맵의 실제 정보로부터 시작한다. 1번째는 맵에 들어갈 오브젝트들을 레퍼런스할 plist가 들어가 있다.
-	for(unsigned int i = 2; i <= map_piece_size - 2; ++i)
+	for(unsigned int i = 2; i <= map_piece_size - 3; ++i)
 	{
 		lua_pushinteger(p_lua_st, i);
 		lua_gettable(p_lua_st, 1);
@@ -310,6 +315,7 @@ void Map::sort_Map_On_Index()
 void Map::set_In_Map_Particle()
 {
 	in_map_particle_spr = cocos2d::CCSprite::create();
+	trigger_draw_node = CCDrawNode::create();
 
 	unsigned int map_total_width = abs(getMapEndPoint().x - getMapStartPoint().x);
 	unsigned int map_total_height = cocos2d::CCDirector::sharedDirector()->getWinSize().height;
@@ -329,14 +335,24 @@ void Map::set_In_Map_Particle()
 		}
 	}
 	in_map_particle_spr->setZOrder(2);
+	trigger_draw_node->setZOrder(2);
 
 	ObjectController::Instance()->addChild(in_map_particle_spr);
+	ObjectController::Instance()->addChild(trigger_draw_node);
 }
 void Map::set_In_Map_Object_Resource_Info()
 {
+	// stage_type
 	lua_pushinteger(p_lua_st, 1);
 	lua_gettable(p_lua_st, 1);
 
+	lua_getfield(p_lua_st, 1, "stage_type");
+	const char* ret_stage_type = lua_tostring(p_lua_st, -1);
+	StageManager::Instance()->setStageType(ret_stage_type);
+
+	lua_pop(p_lua_st, 1);
+
+	// in_map_object_sprite files.
 	unsigned int in_map_res_list_size = LuaCommunicator::Instance()->getTableSize(2);
 
 	cocos2d::CCSpriteFrameCache* cache = cocos2d::CCSpriteFrameCache::sharedSpriteFrameCache();
@@ -505,23 +521,45 @@ void Map::setUpdateScrolling(float delta_x)
 		map_piece_iter->background_image->setPosition(background_pos);
 	}
 
+	trigger_draw_node->clear();
+
 	auto trig_begin = trigger_list.begin();
 	auto trig_end = trigger_list.end();
 
-	for (auto j = trig_begin; j != trig_end; ++j)
+	if (trigger_list.empty())
 	{
-		auto trig_iter = j->second;
-
-		CCPoint trig_iter_pos = trig_iter->trigger_pos;
-		CCSize trig_iter_size = trig_iter->trigger_rect.size;
-
-		trig_iter_pos.x += delta_x;
-		trig_iter->trigger_pos = trig_iter_pos;
-
-		trig_iter->trigger_rect.setRect(trig_iter_pos.x, trig_iter_pos.y, trig_iter_size.width, trig_iter_size.height);
-		BD_CCLog("trigger_name = %s %f %f %f %f %f", j->first, trig_iter_pos.x, trig_iter_pos.y, trig_iter_size.width, trig_iter_size.height, delta_x);
+		trigger_draw_node->setVisible(false);
+		trigger_draw_node->setContentSize(cocos2d::CCSize(0.f, 0.f));
 	}
+	else
+	{
+		trigger_draw_node->setVisible(true);
+		for (auto j = trig_begin; j != trig_end; ++j)
+		{
+			auto trig_iter = j->second;
 
+			CCPoint trig_iter_pos = trig_iter->trigger_pos;
+			CCSize trig_iter_size = trig_iter->trigger_rect.size;
+
+			trig_iter_pos.x += delta_x;
+			trig_iter->trigger_pos = trig_iter_pos;
+
+			trig_iter->trigger_rect.setRect(trig_iter_pos.x, trig_iter_pos.y, trig_iter_size.width, trig_iter_size.height);
+
+			CCPoint draw_rect_pos[4] =
+			{
+				CCPoint(trig_iter_pos.x, trig_iter_pos.y),
+				CCPoint(trig_iter_pos.x + trig_iter_size.width, trig_iter_pos.y),
+				CCPoint(trig_iter_pos.x + trig_iter_size.width, trig_iter_pos.y + trig_iter_size.height),
+				CCPoint(trig_iter_pos.x, trig_iter_pos.y + trig_iter_size.height)
+			};
+
+			ccColor4F fill_color = ccc4f(0.67f, 1.f, 0.18f, 0.3f);
+			ccColor4F border_color = ccc4f(0.5f, 1.f, 0.83f, 0.5f);
+
+			trigger_draw_node->drawPolygon(draw_rect_pos, 4, fill_color, 1, border_color);
+		}
+	}
 
 	CCPoint particle_pt = in_map_particle_spr->getPosition();
 	particle_pt.x += delta_x;

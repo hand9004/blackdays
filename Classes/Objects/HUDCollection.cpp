@@ -22,6 +22,9 @@ void HUDCollection::Init_HUD(obj_info& game_object_info)
 	GraphicsController::Instance()->getSprite(hp_gauge, cache->spriteFrameByName("hp_gauge.png"));
 	hp_frame->setOpacity(128);
 	hp_gauge->setOpacity(128);
+	
+	hp_frame->setAnchorPoint(cocos2d::CCPoint(0.5f, 0.0f));
+	hp_gauge->setAnchorPoint(cocos2d::CCPoint(0.5f, 0.0f));
 
 	ObjectController::Instance()->addChild(hp_frame);
 	ObjectController::Instance()->addChild(hp_gauge);
@@ -31,8 +34,6 @@ void HUDCollection::Init_HUD(obj_info& game_object_info)
 		GraphicsController::Instance()->getSprite(current_select, cache->spriteFrameByName("character_select.png"));
 //		GraphicsController::Instance()->getSprite(attacked_select, cache->spriteFrameByName("target_select.png"));
 
-		hp_frame->setAnchorPoint(cocos2d::CCPoint(0.5f, 0.0f));
-		hp_gauge->setAnchorPoint(cocos2d::CCPoint(0.5f, 0.0f));
 		current_select->setAnchorPoint(cocos2d::CCPoint(0.5f, 0.0f));
 //		attacked_select->setAnchorPoint(cocos2d::CCPoint(0.5f, 0.0f));
 
@@ -66,7 +67,7 @@ void HUDCollection::hp_update()
 
 	float hp_percentage = (float)game_obj_info->health_point / (float)game_obj_info->max_health_point;
 
-	float hp_X = game_obj_info->pos.x, hp_Y = game_obj_info->pos.y - hp_ui_size.height;
+	float hp_X = game_obj_info->pos.x, hp_Y = game_obj_info->pos.y + current_image_size.height;
 	hp_frame->setPosition(cocos2d::CCPoint(hp_X, hp_Y));
 	hp_gauge->setPosition(cocos2d::CCPoint(hp_X, hp_Y));
 
@@ -79,7 +80,9 @@ void HUDCollection::selected_update()
 	else
 		current_select->setVisible(false);
 
-	float select_X = game_obj_info->pos.x, select_Y = game_obj_info->pos.y + current_image_size.height;
+	CCSize hp_frame_size = hp_frame->getContentSize();
+
+	float select_X = game_obj_info->pos.x, select_Y = game_obj_info->pos.y + current_image_size.height + hp_frame_size.height;
 	current_select->setPosition(cocos2d::CCPoint(select_X, select_Y));
 }
 void HUDCollection::attacked_update()

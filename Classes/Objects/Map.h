@@ -90,6 +90,7 @@ private:
 	void set_In_Map_Object_Resource_Info();
 	void set_Map(map_piece_info& map_piece_data_info);
 private:
+	cocos2d::CCDrawNode* trigger_draw_node;
 	cocos2d::CCSprite* in_map_particle_spr;
 	std::vector<map_piece*>map_piece_list;
 	std::map<const char*, map_trig_info*>trigger_list;

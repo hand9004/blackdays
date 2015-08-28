@@ -22,4 +22,5 @@ private:
 	virtual void setResource(void* packet);
 private:
 	cocos2d::CCSprite* button_image, *pressed_button_image;
+	bool isClicked;
 };

@@ -24,11 +24,11 @@ function stage2.stage_init(GameObject, Map)
 	add_object(object_table[1], 900, 200)
 --	add_object(object_table[2], 700, 100)
 
-	add_object(object_table[3], 1500, 150)
-	add_object(object_table[4], 1300, 100)
+	add_object(object_table[5], 1500, 150)
+	add_object(object_table[6], 1300, 100)
 
-	add_object(object_table[3], 2300, 100)
-	add_object(object_table[4], 2000, 50)
+	add_object(object_table[5], 2300, 100)
+	add_object(object_table[6], 2000, 50)
 
 --	load_background_music("sounds/main_menu.mp3")
 	play_background_music("sounds/main_menu.mp3", true)

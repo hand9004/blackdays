@@ -22,7 +22,7 @@ public:
 		grap_effect.setGraphicFlipX(isFlip);
 	}
 	void setSpriteFlipY(bool isFlip)
-	{ 
+	{
 		CCAssert(draw_spr != nullptr, "Sprite Is NULL. Can't setFlipY");
 		draw_spr->setFlipY(isFlip); 
 		grap_effect.setGraphicFlipY(isFlip);
@@ -32,10 +32,11 @@ public:
 	void setVisible(bool isVisible){ CCAssert(draw_spr != nullptr, "Sprite Is NULL. Can't setVisible"); draw_spr->setVisible(isVisible); }
 	void setAlphaValue(unsigned char value) { CCAssert(draw_spr != nullptr, "Sprite Is NULL. Can't setOpacity"); draw_spr->setOpacity(value); }
 
-	cocos2d::CCPoint& getPosition() { CCAssert(draw_spr != nullptr, "Sprite Is NULL. Can't getPosition"); draw_spr->getPosition(); }
 	void setContentRect(cocos2d::CCRect src_rect){ content_rect = src_rect; }
-	cocos2d::CCRect getContentRect() { return content_rect; }
 	unsigned char getAlphaValue() { CCAssert(draw_spr != nullptr, "Sprite Is NULL. Can't getOpacity"); return draw_spr->getOpacity(); }
+	cocos2d::CCPoint& getPosition() { CCAssert(draw_spr != nullptr, "Sprite Is NULL. Can't getPosition"); draw_spr->getPosition(); }
+	cocos2d::CCRect getContentRect() { return content_rect; }
+	cocos2d::CCSprite* getSprite() { CCAssert(draw_spr != nullptr, "Sprite Is NULL. Can't getSprite"); return draw_spr; }
 protected:
 	cocos2d::CCPoint target_pos;
 	cocos2d::CCSprite* draw_spr;

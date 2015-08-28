@@ -35,9 +35,10 @@ public:
 	bool getIsSelected() { return isSelected; }
 	bool getIsCollidedToTarget() { return isCollidedToTarget; }
 	bool getIsLeft() { return isLeft; }
+	bool getIsChargeAttacked() { return isNonTargetAttacked; }
+	bool getIsHide() { return onHide; }
 	float getMoveSpeed() { return object_info.move_speed; }
 	float getMovedDeltaX() { return moved_delta_x; }
-	bool getIsChargeAttacked() { return isNonTargetAttacked; }
 	obj_event getEvent(){ return current_event; }
 	obj_info& getObjectInfo() { return object_info; }
 	GameObject* getTarget() { return target; }
@@ -52,9 +53,8 @@ public:
 	void setTarget(GameObject* target) { this->target = target; }
 	void setIsSelected(bool isSelected) { this->isSelected = isSelected; }
 public:
-	std::vector<cocos2d::CCSprite*>& getSkillIconList() { return skill_ctrl.getSkillIconList(); }
-	void setSkillIconSelect(unsigned int selected_index) { skill_ctrl.setSkillIconSelect(selected_index); }
-	
+	void setSkillSelect(unsigned int selected_index) { skill_ctrl.setSkillSelect(selected_index); }
+
 	SkillController* getSkillController() { return &skill_ctrl; }
 public:
 	void Move(cocos2d::CCPoint dest_pt);
@@ -70,11 +70,13 @@ private:
 	void attack_update();
 	void skill_update();
 	void patrol_update();
-	void search_update(); 
+	void search_update();
 	void dead_update();
+	void hide_update();
 
 	void throw_object_update();
 	bool check_firing_area(GameObject* target);
+	bool check_has_map_object_in_line(CCPoint curr_pos, CCPoint target_pos);
 	void check_non_target_attacked();
 	void check_is_attacked();
 private:
@@ -92,15 +94,15 @@ private:
 	SkillController skill_ctrl;
 private:
 	GameObject* target;
-	bool isLeft, isSelected, isAttackingByEnemy, isNonTargetAttacked, isCollidedToTarget, onDestroy;
+	bool isLeft, isSelected, isAttackingByEnemy, isNonTargetAttacked, isCollidedToTarget, onHide, onDestroy;
 	obj_event current_event, prev_event;
-	unsigned int current_index;
+	unsigned int current_pos_index;
 	std::vector<cocos2d::CCPoint>move_line_pt;
 	std::vector<CurveThrowObject*>throwing_object_list;
 	std::vector<GameObject*>all_object_list;
 
-	cocos2d::CCPoint dest_move_pos, start_move_pos, patrol_select_pos, enemy_encountered_pos;
-	long start_time, end_time;
+	cocos2d::CCPoint dest_move_pos, start_move_pos, *patrol_select_pos;
+	long patrol_start_time, patrol_end_time, hide_start_time, hide_end_time;
 	float moved_delta_x;
 };
 

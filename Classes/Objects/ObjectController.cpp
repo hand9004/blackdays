@@ -130,6 +130,9 @@ void ObjectController::update_Object()
 	for (unsigned int i = 0; i < game_obj_size; ++i)
 	{
 		GameObject* game_obj_iter = game_object_list.at(i);
+		
+		if (!game_obj_iter->getIsEnemy() && game_obj_iter->getControllable())
+			selected_Object = game_obj_iter;
 
 		game_obj_iter->SetAllObjectList(game_object_list);
 		game_obj_iter->Update();
@@ -150,20 +153,8 @@ void ObjectController::update_Dead_Object()
 		bool isDead = game_obj_iter->dead_check();
 		bool isDestroy = game_obj_iter->destroy_check();
 
-		if (isDead)
-		{
-			// 현재 선택되어 있던 객체가 죽게 될 경우,
-			// 죽어가는 객체가 선택되어져 있는 상태라면
-			// 메모리를 잘못 가르킬 수 있으므로, 커서의 참조를 없앤다.
-			if (selected_Object == game_obj_iter)
-				selected_Object = nullptr;
-		}
-
 		if (isDestroy)
 		{
-			if (selected_Object == game_obj_iter)
-				selected_Object = nullptr;
-
 			BD_CCLog("Index %x Object Deleted", game_obj_iter);
 
 			GameObject* deleted_obj_address = *finded_iter;
@@ -200,8 +191,6 @@ void ObjectController::clear_Object()
 		SAFE_DELETE(game_obj_iter);
 	}
 	vector_clear(game_object_list);
-
-	selected_Object = nullptr;
 }
 
 void ObjectController::register_ObjectFunction()
@@ -223,47 +212,29 @@ void ObjectController::update_BindUI()
 	auto begin = binded_ui_list.begin();
 	auto end = binded_ui_list.end();
 
-	UIComponent* skill_iter = nullptr, *object_iter = nullptr;
-
-	for (; begin != end; ++begin)
+	for (auto i = begin; i != end; ++i)
 	{
-		if (!strncmp(begin->first, "skill", sizeof(begin->first)))
-			skill_iter = begin->second;
-		else if (!strncmp(begin->first, "object", sizeof(begin->first)))
-			object_iter = begin->second;
-	}
-
-	// 스킬 UI 셋팅
-	if (selected_Object != nullptr)
-	{
-		if (!selected_Object->dead_check())
+		bool bind_msg_iter = static_cast<bool>(i->second->send_message_main());
+	
+		if (selected_Object != nullptr)
 		{
-			std::vector<cocos2d::CCSprite*> list_pt = selected_Object->getSkillIconList();
-			slidesel_msg_recv msg;
-
-			msg.list_size = list_pt.size();
-			msg.current_index = -1;
-			skill_iter->recv_message_main((void*)&msg);
-
-			unsigned int skill_selected_index = skill_iter->get_Message();
-			update_Skill_UI(skill_selected_index, skill_iter);
-
-			if (!skill_iter->getIsSwipeMode())
+			if (bind_msg_iter)
 			{
-				skill_iter->setIsSwipeMode(true);
+				if (!strcmp(i->first, "skill_1"))
+					selected_Object->setSkillSelect(0);
+				else if (!strcmp(i->first, "skill_2"))
+					selected_Object->setSkillSelect(1);
+				else if (!strcmp(i->first, "skill_3"))
+					selected_Object->setSkillSelect(2);
+				else if (!strcmp(i->first, "skill_4"))
+					selected_Object->setSkillSelect(3);
+
+				i->second->recv_message_main(false);
+
 				selected_Object->Skill();
 			}
 		}
 	}
-
-	// 오브젝트 선택 UI 셋팅
-	slidesel_msg_recv msg;
-	unsigned int object_selected_index = object_iter->get_Message();
-	update_Object_UI(object_selected_index, object_iter);
-
-	msg.list_size = game_object_list.size();
-	msg.current_index = object_selected_index;
-	object_iter->recv_message_main((void*)&msg);
 }
 
 void ObjectController::setObjectInfo(obj_info& p_obj_info)
@@ -657,133 +628,7 @@ void ObjectController::setSkill(obj_info& p_obj_info)
 	}
 	lua_pop(p_lua_st, 1);
 }
-void ObjectController::update_Skill_UI(unsigned int index, UIComponent* current_ui)
-{
-	selected_Object->setSkillIconSelect(index);
 
-	slidesel_msg_send* send_slide_sel_msg = (slidesel_msg_send*)current_ui->send_message_main();
-
-	unsigned int game_obj_size = game_object_list.size();
-	for (unsigned int i = 0; i < game_obj_size; ++i)
-	{
-		GameObject* game_iter = game_object_list.at(i);
-
-		auto skill_list = game_iter->getSkillIconList();
-		unsigned int selected_skill_size = skill_list.size();
-		for (unsigned int j = 0; j < selected_skill_size; ++j)
-		{
-			cocos2d::CCSprite* skill_spr_iter = skill_list[j];
-
-			skill_spr_iter->setAnchorPoint(cocos2d::CCPoint(0.5f, 0.5f));
-			skill_spr_iter->setPosition(send_slide_sel_msg->linked_element_pos);
-		}
-	}
-
-	SAFE_DELETE(send_slide_sel_msg);
-}
-void ObjectController::update_Object_UI(unsigned int& index, UIComponent* current_ui)
-{
-	unsigned int obj_size = game_object_list.size();
-
-	if (selected_Object != nullptr)
-	{
-		slidesel_msg_send* send_slide_sel_msg = (slidesel_msg_send*)current_ui->send_message_main();
-		// 터치로 객체가 선택됬을 경우, 그 객체를 찾아서 SlideSelector의 index를 유지시켜줘야한다.
-		// 그래야 SlideSelector의 인덱스에 영향을 받지 않고, 선택될 수 있기 때문이다.
-		// 터치를 통해 선택되지 않았을 경우, SlideSelector를 통하여 객체를 선택할 수 있게 된다.
-		if (isTouchSelected)
-		{
-			for (unsigned int i = 0; i < obj_size; ++i)
-			{
-				GameObject* obj_iter = game_object_list.at(i);
-
-				if (obj_iter == selected_Object)
-				{
-					selected_Object = obj_iter;
-					index = i;
-					break;
-				}
-			}
-
-			isTouchSelected = false;
-		}
-		else
-		{
-			GameObject* finded_iter = game_object_list.at(index);
-			if (!finded_iter->dead_check())
-			{
-				if (finded_iter != selected_Object)
-				{
-					for (unsigned int i = 0; i < obj_size; ++i)
-					{
-						GameObject* obj_iter = game_object_list.at(i);
-						if (finded_iter == obj_iter)
-						{
-							if (!finded_iter->getIsEnemy())
-							{
-								selected_Object = obj_iter;
-								obj_iter->setIsSelected(true);
-							}
-							else
-							{
-								cocos2d::CCPoint slide_direction = send_slide_sel_msg->slide_direction_vec;
-
-								// Index를 갱신 시킴과 동시에, 이전에 선택되었던 아군 객체로 돌아갔으므로,
-								// 선택된 객체의 선택 표식을 다시 켜줘야만 한다.
-
-								// UI객체로부터 어느 방향으로 슬라이드 이벤트를 일으켰나를 확인.
-								// 방향에 따라서 index를 관리해 준다.
-								if (send_slide_sel_msg->isVertical)
-								{
-									if (slide_direction.y > 0)
-									{
-										selected_Object->setIsSelected(true);
-										++index;
-									}
-									else if (slide_direction.y < 0)
-									{
-										selected_Object->setIsSelected(true);
-										--index;
-									}
-								}
-								else
-								{
-									if (slide_direction.x > 0)
-									{
-										selected_Object->setIsSelected(true);
-										++index;
-									}
-									else if (slide_direction.x < 0)
-									{
-										selected_Object->setIsSelected(true);
-										--index;
-									}
-								}
-								obj_iter->setIsSelected(false);
-							}
-						}
-						else
-							obj_iter->setIsSelected(false);
-					}
-				}
-				else
-				{
-				}
-			}
-		}
-		SAFE_DELETE(send_slide_sel_msg);
-	}
-	else
-	{
-		GameObject* selected_obj_iter = game_object_list.at(index);
-		if (!selected_obj_iter->getIsEnemy())
-		{
-			selected_Object = game_object_list.at(index);
-
-			selected_Object->setIsSelected(true);
-		}
-	}
-}
 void ObjectController::setUpdateScrolling(float delta_x)
 {
 	unsigned int obj_size = game_object_list.size();
@@ -821,7 +666,6 @@ void ObjectController::setUpdateScrolling(float delta_x)
 					{
 					case MOVE:
 						obj_iter->Move(obj_dest_pos);
-						obj_iter->change_PosList_On_Scrolling(delta_x);
 						break;
 					case ATTACK:
 						obj_iter->Attack(obj_iter_target);
@@ -830,12 +674,12 @@ void ObjectController::setUpdateScrolling(float delta_x)
 						obj_iter->Skill();
 						break;
 					case PATROL:
-						obj_iter->change_PosList_On_Scrolling(delta_x);
 						break;
 					default:
 						break;
 					}
 
+					obj_iter->change_PosList_On_Scrolling(delta_x);
 					obj_iter->change_ThrowPosList_On_Scrolling(delta_x);
 					obj_iter->change_SkillPos_On_Scrolling(delta_x);
 				}
@@ -863,11 +707,9 @@ void ObjectController::setUpdateScrolling(float delta_x)
 					switch (obj_ev)
 					{
 					case MOVE:
-						obj_iter->change_PosList_On_Scrolling(delta_x);
 						break;
 					case PATROL:
 						obj_pos.x += delta_x;
-						obj_iter->change_PosList_On_Scrolling(delta_x);
 						break;
 					default:
 						obj_pos.x += delta_x;
@@ -877,6 +719,7 @@ void ObjectController::setUpdateScrolling(float delta_x)
 					}
 
 					obj_iter->setObjectPos(obj_pos);
+					obj_iter->change_PosList_On_Scrolling(delta_x);
 					obj_iter->change_ThrowPosList_On_Scrolling(delta_x);
 					obj_iter->change_SkillPos_On_Scrolling(delta_x);
 				}
@@ -963,10 +806,13 @@ void ObjectController::setUpdateScrolling(float delta_x)
 					obj_iter->setMovedDeltaX(move_speed);
 					break;
 				case SKILL:
-					if (!strcmp(curr_skill->skill_type, "Charge"))
-						move_speed *= charge_speed;
-					else
-						move_speed = 0.f;
+					if (curr_skill != nullptr)
+					{
+						if (!strcmp(curr_skill->skill_type, "Charge"))
+							move_speed *= charge_speed;
+						else
+							move_speed = 0.f;
+					}
 
 					obj_iter->setMovedDeltaX(move_speed);
 					break;

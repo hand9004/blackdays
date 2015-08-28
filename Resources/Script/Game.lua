@@ -5,11 +5,10 @@ local LemonChiffon = {255, 250, 205}
 local AquaMarine = {127, 255, 212}
 local OliveDrab = {107, 142, 35}
 
-skill_slide_selector = {id = 0, slide_sel_background = "Images/slide_selector.png", talk_balloon = "Images/talk_balloon.png"
-				, posX = 0, posY = 0, isVertical = true}
-
-object_slide_selector = {id = 0, slide_sel_background = "Images/slide_selector.png", talk_balloon = "Images/talk_balloon.png"
-				, posX = 0, posY = 0, isVertical = true}
+skill_button_1 = {id = 0, untouched = "Images/button.png", touched = "Images/button.png", posX = 500, posY = 0}
+skill_button_2 = {id = 0, untouched = "Images/button.png", touched = "Images/button.png", posX = 575, posY = 0}
+skill_button_3 = {id = 0, untouched = "Images/button.png", touched = "Images/button.png", posX = 650, posY = 0}
+skill_button_4 = {id = 0, untouched = "Images/button.png", touched = "Images/button.png", posX = 725, posY = 0}
 
 stage_message = {id = 0, message = "test", font_name = "Lucida Blackletter", mode = "toast"
 				, posX = 0, posY = 0, delay_time_ms = 3000, font_size = 90, color = LemonChiffon}
@@ -43,18 +42,22 @@ function ui_Init()
 	stage_message.posX = screen_width / 2
 	stage_message.posY = screen_height / 2
 
-	skill_slide_selector.posX = screen_width - 100
+	skill_button_1.id = create_UI("skill_button_1", 1)
+	skill_button_2.id = create_UI("skill_button_2", 1)
+	skill_button_3.id = create_UI("skill_button_3", 1)
+	skill_button_4.id = create_UI("skill_button_4", 1)
+
 	camera_hold_check_box.posY = screen_height - 45
 
-	skill_slide_selector.id = create_UI("skill_slide_selector", 5)
-	object_slide_selector.id = create_UI("object_slide_selector", 5)
+--	skill_slide_selector.id = create_UI("skill_slide_selector", 5)
+--	object_slide_selector.id = create_UI("object_slide_selector", 5)
 	stage_message.id = create_UI("stage_message", 7)
 	camera_hold_check_box.id = create_UI("camera_hold_check_box", 2)
 
 	local notice_string = "Init ID = "
 
-	LOG(notice_string .. skill_slide_selector.id)
-	LOG(notice_string .. object_slide_selector.id)
+--	LOG(notice_string .. skill_slide_selector.id)
+--	LOG(notice_string .. object_slide_selector.id)
 	LOG(notice_string .. stage_message.id)
 	LOG(notice_string .. camera_hold_check_box.id)
 

@@ -5,14 +5,19 @@
 #include "Map.h"
 #include <math.h>
 
-const int following_dist = 600;
+const unsigned int opacity_limit = 255;
+const unsigned int hide_opacity_speed = 2;
+const float hide_opacity_limit = 0.2f;
 
-GameObject::GameObject(void) : target(nullptr), current_event(SEARCHING_RECOGNIZE_AREA), current_index(0),
+GameObject::GameObject(void) : target(nullptr), current_event(SEARCHING_RECOGNIZE_AREA), current_pos_index(0),
 isSelected(false), isAttackingByEnemy(false), isLeft(false), isNonTargetAttacked(false), 
-isCollidedToTarget(false), onDestroy(false)
+isCollidedToTarget(false), onDestroy(false), onHide(false)
 {
-	start_time = get_ms_onSystem();
-	end_time = get_ms_onSystem();
+	patrol_start_time = get_ms_onSystem();
+	patrol_end_time = get_ms_onSystem();
+	
+	hide_start_time = get_ms_onSystem();
+	hide_end_time = get_ms_onSystem();
 }
 
 GameObject::~GameObject(void)
@@ -24,8 +29,11 @@ void GameObject::Init(obj_info* obj_info)
 	object_info = *obj_info;
 
 	skill_ctrl.Init(object_info);
+
+	isSelected = object_info.isEnemy ? false : true;
 	hud_ctrl.Init_HUD(object_info);
 
+	graphic_ctrl.init();
 	graphic_ctrl.add_Object(object_info);
 	graphic_ctrl.setPosition(object_info.pos);
 }
@@ -58,8 +66,8 @@ void GameObject::Update()
 			break;
 		}
 
-		skill_ctrl.setIsSelected(isSelected);
 		skill_ctrl.Update_UI();
+		skill_ctrl.setObjectSprite(graphic_ctrl.getActiveSprite());
 
 		check_non_target_attacked();
 		check_is_attacked();
@@ -74,7 +82,9 @@ void GameObject::Update()
 		graphic_ctrl.setPosition(object_info.pos);
 		if (target != nullptr)
 			graphic_ctrl.setTargetPosition(target->getObjectPos());
+
 		graphic_ctrl.update_Object();
+		hide_update();
 	}
 }
 void GameObject::Destroy()
@@ -150,18 +160,13 @@ void GameObject::change_PosList_On_Scrolling(float delta_x)
 {
 	if (!dead_check())
 	{
-		switch (current_event)
+		start_move_pos.x += delta_x;
+		dest_move_pos.x += delta_x;
+		if (!move_line_pt.empty())
 		{
-		case MOVE:
-		case PATROL:
-			start_move_pos.x += delta_x;
-			dest_move_pos.x += delta_x;
-			patrol_select_pos.x += delta_x;
-			enemy_encountered_pos.x += delta_x;
 			unsigned int pos_size = move_line_pt.size();
 			for (unsigned int i = 0; i < pos_size; ++i)
 				move_line_pt.at(i).x += delta_x;
-			break;
 		}
 	}
 }
@@ -191,12 +196,24 @@ void GameObject::Move(cocos2d::CCPoint dest_pt)
 		{
 			dest_move_pos = dest_pt;
 
-			create_move_list(dest_pt);
-
-			graphic_ctrl.setActivateComponent("move");
-
-			prev_event = current_event;
 			current_event = MOVE;
+			bool is_intersect = check_has_map_object_in_line(object_info.pos, dest_move_pos);
+
+			BD_CCLog("is_intersect = %d", is_intersect);
+
+			if (!is_intersect)
+			{
+				create_move_list(dest_pt);
+
+				graphic_ctrl.setActivateComponent("move");
+
+				prev_event = current_event;
+			}
+			else
+			{
+				graphic_ctrl.setActivateComponent("stand");
+				current_event = SEARCHING_RECOGNIZE_AREA;
+			}
 		}
 	}
 }
@@ -205,7 +222,7 @@ void GameObject::Attack(GameObject* target)
 	if(!dead_check())
 	{
 		this->target = target;
-		 
+		
 		prev_event = current_event;
 		if(!target->dead_check())
 			current_event = ATTACK;
@@ -254,9 +271,9 @@ void GameObject::Patrol(cocos2d::CCPoint patrol_pt)
 		{
 			start_move_pos = object_info.pos;
 			dest_move_pos = patrol_pt;
-			patrol_select_pos = dest_move_pos;
+			patrol_select_pos = &dest_move_pos;
 
-			create_move_list(patrol_select_pos);
+			create_move_list(*patrol_select_pos);
 
 			graphic_ctrl.setActivateComponent("move");
 
@@ -282,9 +299,9 @@ void GameObject::move_update()
 	{
 		if(!isListEmpty)
 		{
-			if (current_index < move_pt_size)
+			if (current_pos_index < move_pt_size)
 			{
-				cocos2d::CCPoint move_pos = move_line_pt.at(current_index++);
+				cocos2d::CCPoint move_pos = move_line_pt.at(current_pos_index++);
 				/* 카메라의 상태가 고정일 경우 => x,y 좌표 모두 갱신,
 				   카메라의 상태가 비고정일 경우 => y 좌표만 갱신 */
 				if (!SceneManager::Instance()->getIsCameraFixed())
@@ -299,10 +316,11 @@ void GameObject::move_update()
 			}
 			else
 			{
-				current_index = 0;
+				current_pos_index = 0;
 				dest_move_pos = cocos2d::CCPoint(0.f, 0.f);
 				vector_clear(move_line_pt);
 				current_event = SEARCHING_RECOGNIZE_AREA;
+				graphic_ctrl.setActivateComponent("stand");
 			}
 		}
 	}
@@ -313,88 +331,114 @@ void GameObject::attack_update()
 	{
 		if (target != nullptr)
 		{
-			cocos2d::CCPoint target_pos = target->getObjectPos();
-
-			if (check_firing_area(target))
+			if (!target->getIsHide())
 			{
-				graphic_ctrl.setActivateComponent("attack");
+				cocos2d::CCPoint target_pos = target->getObjectPos();
 
-				float delta_x = object_info.pos.x - target_pos.x;
-				if (delta_x <= 0.0f)
-					isLeft = false;
-				else
-					isLeft = true;
-
-				graphic_ctrl.send_Message("attack");
-				grap_to_obj_packet recv_packet = graphic_ctrl.get_Message();
-				grap_to_obj_animate* ani_packet = static_cast<grap_to_obj_animate*>(recv_packet.data);
-
-				if (ani_packet->isAnimationFinish)
+				if (check_firing_area(target))
 				{
-					if (!target->dead_check())
-					{
-						if (!object_info.isAreaAttack)
-							target->decrease_HealthPoint(object_info.attack_point);
-						else
-						{
-							cocos2d::CCRect frame_area = graphic_ctrl.get_Active_Area();
-							float max_X = frame_area.getMaxX(), min_X = frame_area.getMinX();
-							float fire_X = (isLeft == true) ? min_X : max_X, fire_Y = frame_area.getMidY();
-							cocos2d::CCPoint fire_pos = cocos2d::CCPoint(fire_X, fire_Y);
+					graphic_ctrl.setActivateComponent("attack");
 
-							CurveThrowObject* throw_obj = new CurveThrowObject;
-							throw_obj->Init(fire_pos, target->getObjectPos());
-							throwing_object_list.push_back(throw_obj);
-						}
-					}
+					float delta_x = object_info.pos.x - target_pos.x;
+					if (delta_x <= 0.0f)
+						isLeft = false;
 					else
-						current_event = SEARCHING_RECOGNIZE_AREA;
-				}
+						isLeft = true;
 
-				SAFE_DELETE(ani_packet);
-			}
-			else
-			{
-				bool isAttackOver = false;
-
-				// 현재 자신의 그래픽 출력 상태를 따져보았을 때,
-				// 공격인 상태가 끝나지 않았다면 공격 애니메이션이
-				// 끝날 때까지 기다린 후, 끝났을 경우, 다시 움직일 수 있도록 한다.
-				const char* current_ani_stat = graphic_ctrl.getActiveGraphicComp();
-				if (!strcmp(current_ani_stat, "attack"))
-				{
 					graphic_ctrl.send_Message("attack");
 					grap_to_obj_packet recv_packet = graphic_ctrl.get_Message();
 					grap_to_obj_animate* ani_packet = static_cast<grap_to_obj_animate*>(recv_packet.data);
 
 					if (ani_packet->isAnimationFinish)
-						isAttackOver = true;
+					{
+						if (!target->dead_check())
+						{
+							if (!object_info.isAreaAttack)
+								target->decrease_HealthPoint(object_info.attack_point);
+							else
+							{
+								cocos2d::CCRect frame_area = graphic_ctrl.get_Active_Area();
+								float max_X = frame_area.getMaxX(), min_X = frame_area.getMinX();
+								float fire_X = (isLeft == true) ? min_X : max_X, fire_Y = frame_area.getMidY();
+								cocos2d::CCPoint fire_pos = cocos2d::CCPoint(fire_X, fire_Y);
+
+								CurveThrowObject* throw_obj = new CurveThrowObject;
+								throw_obj->Init(fire_pos, target->getObjectPos());
+								throwing_object_list.push_back(throw_obj);
+							}
+						}
+						else
+						{
+							if (prev_event == PATROL)
+								current_event = PATROL;
+							else
+								current_event = SEARCHING_RECOGNIZE_AREA;
+						}
+					}
 
 					SAFE_DELETE(ani_packet);
 				}
 				else
-					isAttackOver = true;
-
-				// 상태값을 사용하지 않은 이유 - Attack안에는 타겟 객체가 범위 안에 있어서 공격해야할 경우,
-				// 타겟 객체가 범위 밖에 있어서 공격하기 위해 타겟 객체를 따라 움직여야 하는 상태가 존재한다.
-				// Attack 상태는 위의 2가지 경우를 모두 포함한 것이므로, 정확한 세부 케이스는 가려낼 수 없다.
-				// 고로 현재 애니메이션의 상태를 보고, 공격 애니메이션을 실행중이라면, 타겟이 범위 안에 들었던 것이므로, 
-				// 끝날때 까지는 객체가 이동해서는 안된다. 이동 여부를 알려주는 로직이다. 구분하지 않을 경우,
-				// 애니메이션이 계속 초기화되어 움직임이 어색해짐
-				if (isAttackOver)
 				{
-					graphic_ctrl.setActivateComponent("move");
-					cocos2d::CCPoint target_pos = target->getObjectPos();
-					float delta_x = target_pos.x - object_info.pos.x;
-					float target_image_width = target->getObjectRect(target_pos).getMaxX() - target->getObjectRect(target_pos).getMinX();
+					bool isAttackOver = false;
 
-					if (delta_x >= 0.0f)
-						target_pos.x -= target_image_width;
+					// 현재 자신의 그래픽 출력 상태를 따져보았을 때,
+					// 공격인 상태가 끝나지 않았다면 공격 애니메이션이
+					// 끝날 때까지 기다린 후, 끝났을 경우, 다시 움직일 수 있도록 한다.
+					const char* current_ani_stat = graphic_ctrl.getActiveGraphicComp();
+					if (!strcmp(current_ani_stat, "attack"))
+					{
+						graphic_ctrl.send_Message("attack");
+						grap_to_obj_packet recv_packet = graphic_ctrl.get_Message();
+						grap_to_obj_animate* ani_packet = static_cast<grap_to_obj_animate*>(recv_packet.data);
+
+						if (ani_packet->isAnimationFinish)
+							isAttackOver = true;
+
+						SAFE_DELETE(ani_packet);
+					}
 					else
-						target_pos.x += target_image_width;
+						isAttackOver = true;
 
-					create_move_to_dest_pos(target_pos);
+					// 상태값을 사용하지 않은 이유 - Attack안에는 타겟 객체가 범위 안에 있어서 공격해야할 경우,
+					// 타겟 객체가 범위 밖에 있어서 공격하기 위해 타겟 객체를 따라 움직여야 하는 상태가 존재한다.
+					// Attack 상태는 위의 2가지 경우를 모두 포함한 것이므로, 정확한 세부 케이스는 가려낼 수 없다.
+					// 고로 현재 애니메이션의 상태를 보고, 공격 애니메이션을 실행중이라면, 타겟이 범위 안에 들었던 것이므로, 
+					// 끝날때 까지는 객체가 이동해서는 안된다. 이동 여부를 알려주는 로직이다. 구분하지 않을 경우,
+					// 애니메이션이 계속 초기화되어 움직임이 어색해짐
+					if (isAttackOver)
+					{
+						graphic_ctrl.setActivateComponent("move");
+						cocos2d::CCPoint target_pos = target->getObjectPos();
+						float delta_x = target_pos.x - object_info.pos.x;
+						float target_image_width = target->getObjectRect(target_pos).getMaxX() - target->getObjectRect(target_pos).getMinX();
+
+						if (delta_x >= 0.0f)
+							target_pos.x -= target_image_width;
+						else
+							target_pos.x += target_image_width;
+
+						create_move_to_dest_pos(target_pos);
+					}
 				}
+			}
+			else
+			{
+				target = nullptr;
+				switch (prev_event)
+				{
+				case SEARCHING_RECOGNIZE_AREA:
+					break;
+				case PATROL:
+					current_pos_index = 0;
+					vector_clear(move_line_pt);
+					create_move_list(*patrol_select_pos);
+
+					BD_CCLog("%f %f %f", start_move_pos.x, dest_move_pos.x, patrol_select_pos->x);
+					break;
+				}
+				current_event = prev_event;
+				graphic_ctrl.setActivateComponent("move");
 			}
 		}
 	}
@@ -404,6 +448,7 @@ void GameObject::skill_update()
 	if(!dead_check())
 	{
 		bool isSkillTargeting = skill_ctrl.getSkillIsTargeting();
+		skill_info* curr_skill = skill_ctrl.getCurrentSkill();
 		if(isSkillTargeting)
 		{
 			if(target != nullptr)
@@ -412,8 +457,6 @@ void GameObject::skill_update()
 				{
 					if(check_firing_area(target))
 					{
-						skill_info* curr_skill = skill_ctrl.getCurrentSkill();
-
 						graphic_ctrl.send_Message(curr_skill->ref_ani_name);
 						grap_to_obj_packet recv_packet = graphic_ctrl.get_Message();
 						grap_to_obj_animate* ani_packet = static_cast<grap_to_obj_animate*>(recv_packet.data);
@@ -441,8 +484,6 @@ void GameObject::skill_update()
 				}
 				else
 				{
-					skill_info* curr_skill = skill_ctrl.getCurrentSkill();
-
 					graphic_ctrl.send_Message(curr_skill->ref_ani_name);
 					grap_to_obj_packet recv_packet = graphic_ctrl.get_Message();
 					grap_to_obj_animate* ani_packet = static_cast<grap_to_obj_animate*>(recv_packet.data);
@@ -457,26 +498,42 @@ void GameObject::skill_update()
 		}
 		else
 		{
-			unsigned int game_obj_size = all_object_list.size();
-			cocos2d::CCRect curr_rect = this->getObjectRect();
-
-			for(unsigned int i = 0; i < game_obj_size; ++i)
+			if (!strcmp(curr_skill->skill_type, "Hide"))
 			{
-				GameObject* obj_iter = all_object_list.at(i);
+				graphic_ctrl.send_Message(curr_skill->ref_ani_name);
+				grap_to_obj_packet recv_packet = graphic_ctrl.get_Message();
+				grap_to_obj_animate* ani_packet = static_cast<grap_to_obj_animate*>(recv_packet.data);
 
-				if(obj_iter != this)
+				if (ani_packet->isAnimationFinish)
 				{
-					cocos2d::CCRect obj_rect = obj_iter->getObjectRect();
+					onHide = true;
+					current_event = SEARCHING_RECOGNIZE_AREA;
+					graphic_ctrl.setActivateComponent("stand");
+				}
+			}
+			else if (!strcmp(curr_skill->skill_type, "Charge"))
+			{
+				unsigned int game_obj_size = all_object_list.size();
+				cocos2d::CCRect curr_rect = this->getObjectRect();
 
-					if(!obj_iter->dead_check())
+				for (unsigned int i = 0; i < game_obj_size; ++i)
+				{
+					GameObject* obj_iter = all_object_list.at(i);
+
+					if (obj_iter != this)
 					{
-						if(!obj_iter->getIsChargeAttacked())
+						cocos2d::CCRect obj_rect = obj_iter->getObjectRect();
+
+						if (!obj_iter->dead_check())
 						{
-							if(obj_rect.intersectsRect(curr_rect))
+							if (!obj_iter->getIsChargeAttacked())
 							{
-								skill_info* curr_skill = skill_ctrl.getCurrentSkill();
-								obj_iter->decrease_HealthPoint(object_info.attack_point * curr_skill->power_percentage);
-								obj_iter->setIsChargeAttacked(true);
+								if (obj_rect.intersectsRect(curr_rect))
+								{
+									skill_info* curr_skill = skill_ctrl.getCurrentSkill();
+									obj_iter->decrease_HealthPoint(object_info.attack_point * curr_skill->power_percentage);
+									obj_iter->setIsChargeAttacked(true);
+								}
 							}
 						}
 					}
@@ -492,17 +549,17 @@ void GameObject::patrol_update()
 	{
 		unsigned int move_pt_size = move_line_pt.size();
 
-		if (current_index < move_pt_size)
+		if (current_pos_index < move_pt_size)
 		{
-			cocos2d::CCPoint move_pos = move_line_pt.at(current_index++);
+			cocos2d::CCPoint move_pos = move_line_pt.at(current_pos_index++);
 			object_info.pos = move_pos;
 
-			start_time = get_ms_onSystem();
-			end_time = get_ms_onSystem();
+			patrol_start_time = get_ms_onSystem();
+			patrol_end_time = get_ms_onSystem();
 		}
 		else
 		{
-			long delta_time = end_time - start_time;
+			long delta_time = patrol_end_time - patrol_start_time;
 
 			if (delta_time > object_info.partol_delay_time)
 			{
@@ -510,24 +567,24 @@ void GameObject::patrol_update()
 
 				graphic_ctrl.setActivateComponent("move");
 				
-				if (patrol_select_pos.x == start_move_pos.x)
-					patrol_select_pos = dest_move_pos;
+				if (patrol_select_pos == &start_move_pos)
+					patrol_select_pos = &dest_move_pos;
 				else
-					patrol_select_pos = start_move_pos;
+					patrol_select_pos = &start_move_pos;
 
 				delta_time = 0;
-				current_index = 0;
+				current_pos_index = 0;
 
-				start_time = get_ms_onSystem();
-				end_time = get_ms_onSystem();
+				patrol_start_time = get_ms_onSystem();
+				patrol_end_time = get_ms_onSystem();
 
-				create_move_list(patrol_select_pos);
+				create_move_list(*patrol_select_pos);
 			}
 			else
 			{
 				graphic_ctrl.setActivateComponent("stand");
 
-				end_time = get_ms_onSystem();
+				patrol_end_time = get_ms_onSystem();
 			}
 		}
 
@@ -536,7 +593,7 @@ void GameObject::patrol_update()
 }
 void GameObject::search_update()
 {
-	if (!dead_check())
+	if (!dead_check() && !onHide)
 	{
 		target = nullptr;
 
@@ -564,67 +621,32 @@ void GameObject::search_update()
 						if (isLeft)
 						{
 							recognize_area.setRect(object_info.pos.x - object_info.recognize_area,
-								object_info.pos.y - (object_info.recognize_area / 4),
-								object_info.recognize_area, object_info.recognize_area / 2);
+								object_info.pos.y - (object_info.recognize_area / 2),
+								object_info.recognize_area, object_info.recognize_area);
 						}
 						else
 						{
-							recognize_area.setRect(object_info.pos.x, object_info.pos.y - (object_info.recognize_area / 4),
-								object_info.recognize_area, object_info.recognize_area / 2);
+							recognize_area.setRect(object_info.pos.x, object_info.pos.y - (object_info.recognize_area / 2),
+								object_info.recognize_area, object_info.recognize_area);
 						}
 
 						if (recognize_area.containsPoint(target_pos))
 						{
-							auto map_piece_collector = Map::Instance()->getMapPieceList();
-							unsigned int map_piece_cnt = map_piece_collector.size();
-
-							bool is_intersect = false;
-							for (unsigned int j = 0; j < map_piece_cnt; ++j)
-							{
-								map_piece* map_piece_iter = map_piece_collector.at(j);
-
-								unsigned int in_map_piece_size = map_piece_iter->in_map_obj_list.size();
-								for (unsigned int k = 0; k < in_map_piece_size; ++k)
-								{
-									in_map_obj* in_map_obj_iter = map_piece_iter->in_map_obj_list.at(k);
-
-									float x = in_map_obj_iter->collision_area.origin.x;
-									float y = in_map_obj_iter->collision_area.origin.y;
-
-									float width = in_map_obj_iter->collision_area.getMaxX() - in_map_obj_iter->collision_area.getMinX();
-									float height = in_map_obj_iter->collision_area.getMaxY() - in_map_obj_iter->collision_area.getMinY();
-
-									CCPoint rect_vert_pt1 = CCPoint(x + (width / 2), y);
-									CCPoint rect_vert_pt2 = CCPoint(x + (width / 2), y + height);
-
-									CCPoint intersect_Y = is_intersect_line_to_line(rect_vert_pt1, rect_vert_pt2, object_info.pos, target_pos);
-
-									bool is_intersect_Y = false;
-
-									is_intersect_Y = in_map_obj_iter->collision_area.containsPoint(intersect_Y);
-
-									if (is_intersect_Y)
-									{
-										is_intersect = true;
-										break;
-									}
-									else
-										is_intersect = false;
-								}
-							}
+							bool is_intersect = check_has_map_object_in_line(object_info.pos, target_pos);
 
 							if (is_intersect)
-							{
 								closest_obj = nullptr;
-								BD_CCLog("Can't Finded_Object!");
-							}
 							else
 							{
+								// 가장 가까운 객체를 찾아서 먼저 공격한다.
+								// 0이하라면, 가장 가까운 객체를 찾지 못한 상태이다.
+								// 그러므로 가장 가까운 객체로 첫 객체를 선정한다.
 								if (closest_delta <= 0)
 								{
 									closest_delta = current_to_other_delta;
 									closest_obj = obj_iter;
 								}
+								// 첫 객체가 설정된 이후 가장 가까운 객체를 찾을 때까지 루프를 돈다.
 								else
 								{
 									if (closest_delta >= current_to_other_delta)
@@ -633,30 +655,18 @@ void GameObject::search_update()
 										closest_obj = obj_iter;
 									}
 								}
-								BD_CCLog("Finded_Object!");
 							}
-
-							//if (closest_delta <= 0)
-							//{
-							//	closest_delta = current_to_other_delta;
-							//	closest_obj = obj_iter;
-							//}
-							//else
-							//{
-							//	if (closest_delta >= current_to_other_delta)
-							//	{
-							//		closest_delta = current_to_other_delta;
-							//		closest_obj = obj_iter;
-							//	}
-							//}
 						}
 					}
 				}
 			}
 		}
 
-		if(closest_obj != nullptr)
-			Attack(closest_obj);
+		if (closest_obj != nullptr)
+		{
+			if (!closest_obj->getIsHide())
+				Attack(closest_obj);
+		}
 		else
 		{
 			switch (current_event)
@@ -700,6 +710,56 @@ void GameObject::dead_update()
 		isSelected = isAttackingByEnemy = false;
 		graphic_ctrl.setActivateComponent("dead");
 	}
+}
+void GameObject::hide_update()
+{
+	if (!dead_check())
+	{
+		skill_info* hide_skill = skill_ctrl.getSkill("Hide", "n_hide");
+		
+		if (hide_skill != nullptr)
+		{
+			if (onHide)
+			{
+				unsigned int delta_time = hide_end_time - hide_start_time;
+				unsigned int hide_duration = hide_skill->power_percentage * 1000;
+
+				unsigned int spr_opacity = graphic_ctrl.getAlphaValue();
+				if (spr_opacity >= (opacity_limit * hide_opacity_limit))
+				{
+					spr_opacity -= hide_opacity_speed;
+					graphic_ctrl.setAlphaValue(spr_opacity);
+
+					hide_start_time = get_ms_onSystem();
+					hide_end_time = get_ms_onSystem();
+				}
+				else
+				{
+					if (hide_duration < delta_time)
+						onHide = false;
+					else
+						hide_end_time = get_ms_onSystem();
+				}
+			}
+			else
+			{
+				unsigned int spr_opacity = graphic_ctrl.getAlphaValue();
+				if (spr_opacity < opacity_limit)
+				{
+					spr_opacity += hide_opacity_speed;
+					if (spr_opacity >= opacity_limit)
+						spr_opacity = 255;
+				}
+
+				graphic_ctrl.setAlphaValue(spr_opacity);
+
+				hide_start_time = get_ms_onSystem();
+				hide_end_time = get_ms_onSystem();
+			}
+		}
+	}
+	else
+		onHide = false;
 }
 void GameObject::throw_object_update()
 {
@@ -837,65 +897,89 @@ bool GameObject::check_firing_area(GameObject* target)
 
 	return isCollidedToTarget;
 }
+bool GameObject::check_has_map_object_in_line(CCPoint curr_pos, CCPoint target_pos)
+{
+	auto map_piece_collector = Map::Instance()->getMapPieceList();
+	unsigned int map_piece_cnt = map_piece_collector.size();
+
+	bool is_intersect = false;
+	for (unsigned int i = 0; i < map_piece_cnt; ++i)
+	{
+		bool is_intersect_Y = false;
+		map_piece* map_piece_iter = map_piece_collector.at(i);
+
+		unsigned int in_map_piece_size = map_piece_iter->in_map_obj_list.size();
+		for (unsigned int j = 0; j < in_map_piece_size; ++j)
+		{
+			in_map_obj* in_map_obj_iter = map_piece_iter->in_map_obj_list.at(j);
+
+			float x = in_map_obj_iter->obj_spr->getPositionX();
+			float y = in_map_obj_iter->obj_spr->getPositionY();
+
+			float height = in_map_obj_iter->collision_area.getMaxY() - in_map_obj_iter->collision_area.getMinY();
+
+			CCPoint rect_vert_pt1 = CCPoint(x, y);
+			CCPoint rect_vert_pt2 = CCPoint(x, y + height);
+
+			CCPoint check_obj_pos = CCPoint(0.f, 0.f);
+			CCPoint check_target_pos = CCPoint(0.f, 0.f);
+
+			switch (current_event)
+			{
+			case MOVE:
+				rect_vert_pt2 = CCPoint(x, y + (height * 0.5));
+				check_obj_pos = CCPoint(curr_pos.x, curr_pos.y);
+				check_target_pos = CCPoint(target_pos.x, target_pos.y);
+				break;
+			case PATROL:
+			case SEARCHING_RECOGNIZE_AREA:
+				check_obj_pos = CCPoint(curr_pos.x, curr_pos.y + (height / 2));
+				check_target_pos = CCPoint(target_pos.x, target_pos.y + (height / 2));
+				break;
+			}
+
+			CCPoint intersect_Y = is_intersect_line_to_line(rect_vert_pt1, rect_vert_pt2, check_obj_pos, check_target_pos);
+
+			is_intersect_Y = in_map_obj_iter->collision_area.containsPoint(intersect_Y);
+
+			if (is_intersect_Y)
+			{
+				is_intersect = true;
+				break;
+			}
+			else
+				is_intersect = false;
+		}
+		if (is_intersect_Y)
+			break;
+	}
+
+	return is_intersect;
+}
+
 CCPoint GameObject::is_intersect_line_to_line(CCPoint pt1, CCPoint pt2, CCPoint pt3, CCPoint pt4)
 {
-	bool isintersect = false;
 	CCPoint res_pt = CCPoint(0.f, 0.f);
 
-	float A1 = pt2.y - pt1.y;
-	float B1 = pt1.x - pt2.x;
-	float C1 = A1 * pt1.x + B1 * pt1.y;
+	float s1_x, s1_y, s2_x, s2_y;
+	s1_x = pt2.x - pt1.x;     s1_y = pt2.y - pt1.y;
+	s2_x = pt4.x - pt3.x;     s2_y = pt4.y - pt3.y;
 
-	float A2 = pt4.y - pt3.y;
-	float B2 = pt3.x - pt4.x;
-	float C2 = A2 * pt3.x + B2 * pt3.y;
+	float s, t;
+	s = (-s1_y * (pt1.x - pt3.x) + s1_x * (pt1.y - pt3.y)) / (-s2_x * s1_y + s1_x * s2_y);
+	t = (s2_x * (pt1.y - pt3.y) - s2_y * (pt1.x - pt3.x)) / (-s2_x * s1_y + s1_x * s2_y);
 
-	float under = A1 * B2 - A2 * B1;
+	if (s >= 0 && s <= 1 && t >= 0 && t <= 1)
+	{
+		// Collision detected
+		res_pt.x = pt1.x + (t * s1_x);
+		res_pt.y = pt1.y + (t * s1_y);
+//		return 1;
+	}
 
-	if (under == 0)
-		return res_pt;
-
-	float t = B2 * C1 - B1 * C2;
-	float s = A1 * C2 - A2 * C1;
-
-	res_pt.x = t / under;
-	res_pt.y = s / under;
-
-	if (res_pt.x >= 0.f	&& res_pt.x <= 1.f &&
-		res_pt.y >= 0.f && res_pt.y <= 1.f)
-		isintersect = true;
-	else
-		isintersect = false;
-
-	BD_CCLog("intersect x = %f, y = %f", res_pt.x, res_pt.y);
+//	return 0; // No collision
 
 	return res_pt;
-
-	//double t;
-
-	//double s;
-
-	//double under = (pt4.y - pt3.y)*(pt2.x - pt1.x) - (pt4.x - pt3.x)*(pt2.y - pt1.y);
-
-	//if (under == 0) return false;
-
-
-
-	//double _t = (pt4.x - pt3.x)*(pt1.y - pt3.y) - (pt4.y - pt3.y)*(pt1.x - pt3.x);
-
-	//double _s = (pt2.x - pt1.x)*(pt1.y - pt3.y) - (pt2.y - pt1.y)*(pt1.x - pt3.x);
-
-
-
-	//t = _t / under;
-
-	//s = _s / under;
-
-
-
-	//if (t<0.0 || t>1.0 || s<0.0 || s>1.0) return false;
-
-	//if (_t == 0 && _s == 0) return false;
 }
 
 // 이동시에 사용된다. 미리 리스트를 쭉 만들어 놓고 리스트에 맞춰 이동한다.
@@ -904,7 +988,7 @@ void GameObject::create_move_list(cocos2d::CCPoint& dest_pt)
 {
 	if (!move_line_pt.empty())
 	{
-		current_index = 0;
+		current_pos_index = 0;
 		vector_clear(move_line_pt);
 	}
 

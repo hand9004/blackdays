@@ -88,6 +88,12 @@ typedef struct SlideSelectorMessage_Send
 	cocos2d::CCPoint linked_element_pos, slide_direction_vec;
 }slidesel_msg_send;
 
+typedef struct ButtonMessage_Send
+{
+	bool isClicked;
+	const char* button_name;
+}butt_msg_send;
+
 // 비트 세팅 시, FIELD 매크로와 넣고자 하는 데이터와 AND연산
 // 비트 데이터 초기화 시, FIELD 매크로를 보수시킨 후, 원래에 AND 연산
 const unsigned int UI_ID_FIELD = 0x00000fff;

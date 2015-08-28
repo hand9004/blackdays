@@ -4,7 +4,7 @@
 #include "../Graphics/GraphicsController.h"
 #include <SimpleAudioEngine.h>
 
-BD_Button::BD_Button(void) : button_image(nullptr), pressed_button_image(nullptr)
+BD_Button::BD_Button(void) : button_image(nullptr), pressed_button_image(nullptr), isClicked(false)
 {
 }
 
@@ -54,6 +54,7 @@ void BD_Button::setTouchEvent(TouchEvent t_event, cocos2d::CCPoint t_pt)
 			break;
 		case TOUCH_MOVED:
 		case TOUCH_ENDED:
+			isClicked = true;
 			button_image->setVisible(true);
 			pressed_button_image->setVisible(false);
 			break;
@@ -61,6 +62,7 @@ void BD_Button::setTouchEvent(TouchEvent t_event, cocos2d::CCPoint t_pt)
 	}
 	else
 	{
+		isClicked = false;
 		button_image->setVisible(true);
 		pressed_button_image->setVisible(false);
 	}
@@ -76,7 +78,7 @@ void BD_Button::Destroy()
 }
 void* BD_Button::send_message_main()
 {
-	return nullptr;
+	return (void*)isClicked;
 }
 void* BD_Button::send_message_lua()
 {
@@ -84,6 +86,7 @@ void* BD_Button::send_message_lua()
 }
 void BD_Button::recv_message_main(void* src_msg)
 {
+	isClicked = static_cast<bool>(src_msg);
 }
 
 void BD_Button::recv_message_lua(void* src_msg)

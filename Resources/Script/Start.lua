@@ -202,6 +202,7 @@ function ui_Update()
 			set_active_UI(tutorial_4.id, false)
 			set_active_UI(tutorial_5.id, false)
 			set_active_UI(tutorial_6.id, false)
+
 		elseif gallery_button.id == touched_id then
 			active_layer("gallery_layer", true)
 		elseif exit_button_gal.id == touched_id then

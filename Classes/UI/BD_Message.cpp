@@ -103,7 +103,7 @@ void BD_Message::setResource(void* packet)
 	message_label->setFontSize(30);
 	message_label->setString(message);
 	message_label->setFontName("fonts/arial.ttf");
-	message_label->setColor(cocos2d::ccc3(255, 255, 255));
+	message_label->setColor(cocos2d::ccc3(0, 0, 0));
 	message_label->setAnchorPoint(cocos2d::CCPoint(0.0f, 0.0f));
 
 	cocos2d::CCSize message_size = message_label->getContentSize();

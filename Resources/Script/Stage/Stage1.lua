@@ -21,11 +21,12 @@ function stage1.stage_init(GameObject, Map)
 
 	add_map(map_table[1])
 
-	table.insert(GameObject_ID, add_object(object_table[2], 200, 200))
+--	table.insert(GameObject_ID, add_object(object_table[2], 200, 200))
 --	add_object(object_table[2], 0, 100)
 
-	table.insert(GameObject_ID, add_object(object_table[3], 2000, 200))
-	table.insert(GameObject_ID, add_object(object_table[4], 2000, 0))
+	table.insert(GameObject_ID, add_object(object_table[4], 200, 200))
+	table.insert(GameObject_ID, add_object(object_table[5], 2000, 200))
+	table.insert(GameObject_ID, add_object(object_table[6], 2000, 0))
 
 --	load_background_music("sounds/main_menu.mp3")
 	play_background_music("sounds/main_menu.mp3", true)

@@ -1,5 +1,6 @@
 #include "Animate.h"
 #include "ObjectController.h"
+#include "GameGraphicController.h"
 #include "../Graphics/GraphicsController.h"
 #include "../Utility/Utility.h"
 
@@ -27,6 +28,7 @@ void Animate::Init(main_grap_info& game_graphic_info)
 	effect_info* p_ani_in_effect = game_graphic_info.m_ani_info->effect_data;
 	aniframe_set_info* p_ani_frame_set = game_graphic_info.m_ani_info->ani_frame_set;
 	aniframe_info* p_ani_frame = game_graphic_info.m_ani_info->ani_frame_data;
+
 	ani_name = p_ani_frame->ani_name;
 	isOnePlay = p_ani_frame_set->isOneTimePlay;
 
@@ -142,7 +144,7 @@ void Animate::animation_Stop()
 void Animate::check_AnimationEnd()
 {
 	unsigned int anim_max_size = anim_frame_list.size();
-	bool isAnimationEnd_Index = (ani_index >= anim_frame_list.size()) ? true : false;
+	bool isAnimationEnd_Index = (ani_index >= anim_max_size) ? true : false;
 
 	if(isAnimationEnd_Index)
 	{

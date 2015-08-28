@@ -47,21 +47,21 @@ void Effect::Update()
 
 	if(!isListEmpty)
 	{
-		if(selected_index >= 0 && selected_index < effect_draw_size)
+		if (selected_index >= 0 && selected_index < effect_draw_size)
 		{
 			eff_draw_data* eff_draw_iter = effect_frame.at(selected_index);
 
-			if(isEffectOn)
+			if (isEffectOn)
 				effect_spr->setVisible(true);
 			else
 				effect_spr->setVisible(false);
 
 			float relative_dist_X = eff_draw_iter->eff_set_info->relative_distance.x, relative_dist_Y = eff_draw_iter->eff_set_info->relative_distance.y;
 
-			if(isFlipX)
+			if (isFlipX)
 			{
 				effect_spr->setFlipX(true);
-				if(relative_dist_X >= 0)
+				if (relative_dist_X >= 0)
 					relative_dist_X = -relative_dist_X;
 			}
 			else
@@ -79,6 +79,8 @@ void Effect::Update()
 
 			effect_spr->setDisplayFrame(eff_draw_iter->eff_sprFrame);
 		}
+		else
+			effect_spr->setVisible(false);
 	}
 }
 void Effect::Destroy()
@@ -88,7 +90,7 @@ void Effect::Destroy()
 }
 bool Effect::isEffectEnd()
 {
-	unsigned int effect_draw_size = effect_frame.size();
+	int effect_draw_size = effect_frame.size();
 	if(selected_index >= effect_draw_size)
 		return true;
 	else
@@ -119,10 +121,12 @@ void Effect::syncWithEffectFrameIndex(unsigned int frame_index)
 	{
 		eff_draw_data* effect_draw_iter = effect_frame.at(i);
 
-		if(effect_draw_iter->eff_set_info->applying_index == frame_index)
+		if (effect_draw_iter->eff_set_info->applying_index == frame_index)
 		{
 			selected_index = i;
 			break;
 		}
+		else
+			selected_index = -1;
 	}
 }

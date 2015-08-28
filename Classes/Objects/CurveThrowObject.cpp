@@ -78,7 +78,7 @@ void CurveThrowObject::Update()
 			curve_throw_spr->setPosition(current_pos);
 
 			if(!isSoundPlayed)
-			{
+			{ 
 				SoundManager::Instance()->play_EffectMusic("sounds/bomb_explosion.mp3");
 				isSoundPlayed = true;
 			}

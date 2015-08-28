@@ -27,8 +27,9 @@ public:
 	void createScene(scene_type type);
 	void updateScene();
 	void destroyScene();
-	cocos2d::CCScene* getCurrentScene();
 	void clearScene();
+
+	cocos2d::CCScene* getCurrentScene();
 
 	void setIsCameraFixed(bool isCameraFixed) { this->isCameraFixed = isCameraFixed; }
 	void setIsCameraReset(bool isCameraReset) { this->isCameraReset = isCameraReset; }
@@ -37,7 +38,6 @@ public:
 	bool getIsCameraFixed() { return isCameraFixed; }
 	bool getIsCameraReset() { return isCameraReset; }
 	bool get_in_UI_CameraFixed() { return in_UI_IsCameraFixed; }
-
 
 	scene_type get_SceneType() { return current_scene_type; }
 

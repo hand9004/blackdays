@@ -108,7 +108,6 @@ void BD_SlideSelector::setTouchEvent(TouchEvent t_event, cocos2d::CCPoint t_pt)
 			latest_slided_dir_vec.x = touch_delta_X;
 			latest_slided_dir_vec.y = touch_delta_Y;
 
-			BD_CCLog("slide_selection = %d", current_index);
 			set_Message(current_index);
 			isUISelected = false;
 			break;

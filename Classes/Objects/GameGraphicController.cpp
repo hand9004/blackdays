@@ -40,12 +40,20 @@ void set_animate_sort(std::vector<const char*>&dest_list, obj_info& src_data)
 
 GameGraphicController::GameGraphicController(void) : active_component_key(nullptr)
 {
+
 }
 
 
 GameGraphicController::~GameGraphicController(void)
 {
 }
+
+void GameGraphicController::init()
+{
+	recog_area_draw_nd = CCDrawNode::create();
+	ObjectController::Instance()->addChild(recog_area_draw_nd);
+}
+
 void GameGraphicController::add_Object(obj_info& game_obj_info)
 {
 	// 메인으로 사용되는 Sprite 이미지들을 로드한다.
@@ -65,7 +73,7 @@ void GameGraphicController::add_Object(obj_info& game_obj_info)
 	{
 		main_grap_info grap_info;
 		GameGraphicComponent* img_frame_comp = new Normal();
-		grap_info.m_imgframe_info = game_obj_info.img_frame_list[i];
+		grap_info.m_imgframe_info = game_obj_info.img_frame_list.at(i);
 
 		img_frame_comp->Init(grap_info);
 
@@ -81,7 +89,7 @@ void GameGraphicController::add_Object(obj_info& game_obj_info)
 	for(unsigned int i = 0; i < ani_size; ++i)
 	{
 		main_grap_info ani_grap_info;
-		const char* ani_key_str = ani_key_sort_list[i];
+		const char* ani_key_str = ani_key_sort_list.at(i);
 		GameGraphicComponent* img_frame_comp = new Animate();
 
 		const char* list_key_name = NULL;
@@ -96,7 +104,7 @@ void GameGraphicController::add_Object(obj_info& game_obj_info)
 		unsigned int ani_frame_set_size = game_obj_info.ani_frame_set_list.size();
 		for(unsigned int j = 0; j < ani_frame_set_size; ++j)
 		{
-			aniframe_set_info* ani_frame_set_iter = game_obj_info.ani_frame_set_list[j];
+			aniframe_set_info* ani_frame_set_iter = game_obj_info.ani_frame_set_list.at(j);
 
 			if(!strcmp(ani_key_str, ani_frame_set_iter->ani_name))
 				ani_frame_comp.ani_frame_set = ani_frame_set_iter;
@@ -108,7 +116,7 @@ void GameGraphicController::add_Object(obj_info& game_obj_info)
 		unsigned int ani_frame_size = game_obj_info.ani_image_list.size();
 		for(unsigned int j = 0; j < ani_frame_size; ++j)
 		{
-			aniframe_info* ani_frame_iter = game_obj_info.ani_image_list[j];
+			aniframe_info* ani_frame_iter = game_obj_info.ani_image_list.at(j);
 			
 			if(!strcmp(ani_key_str, ani_frame_iter->ani_name))
 			{
@@ -159,6 +167,24 @@ void GameGraphicController::update_Object()
 		i->second->setPosition(draw_pos);
 		i->second->Update();
 	}
+
+	recog_area_draw_nd->clear();
+
+	float width = recog_area.getMaxX() - recog_area.getMinX();
+	float height = recog_area.getMaxY() - recog_area.getMinY();
+
+	CCPoint recog_points[4] =
+	{
+		CCPoint(recog_area.origin.x, recog_area.origin.y),
+		CCPoint(recog_area.origin.x + width, recog_area.origin.y),
+		CCPoint(recog_area.origin.x + width, recog_area.origin.y + height),
+		CCPoint(recog_area.origin.x, recog_area.origin.y + height),
+	};
+
+	ccColor4F border_color = ccc4f(1.f, 1.f, 1.f, 0.25f);
+	ccColor4F fill_color = ccc4f(0.5f, 0.5f, 0.5f, 0.3f);
+
+	recog_area_draw_nd->drawPolygon(recog_points, 4, fill_color, 0, border_color);
 }
 void GameGraphicController::clear_Object()
 {
@@ -174,6 +200,9 @@ void GameGraphicController::clear_Object()
 		SAFE_DELETE(i->second);
 	}
 
+	if (recog_area_draw_nd != nullptr)
+		recog_area_draw_nd->removeFromParentAndCleanup(true);
+
 	map_clear(game_graphic_list);
 }
 
@@ -185,11 +214,11 @@ void GameGraphicController::setAlphaValue(unsigned char val)
 
 	for(i = game_graphic_list.begin(); i != end; ++i)
 	{
-		if(!strcmp(i->first, active_component_key))
-		{
+//		if(!strcmp(i->first, active_component_key))
+//		{
 			i->second->setAlphaValue(val);
-			break;
-		}
+//			break;
+//		}
 	}
 }
 unsigned char GameGraphicController::getAlphaValue()

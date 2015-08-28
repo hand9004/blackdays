@@ -109,9 +109,6 @@ private:
 	void setAniFrameSet(obj_info&);
 	void setEffect(obj_info&);
 	void setSkill(obj_info&);
-private:
-	void update_Skill_UI(unsigned int index, UIComponent* current_ui);
-	void update_Object_UI(unsigned int& index, UIComponent* current_ui);
 public:
 	CREATE_FUNC(ObjectController);
 private:
