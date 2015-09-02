@@ -53,6 +53,11 @@ function stage1.stage_init(GameObject, Map)
 		set_ObjectInfo(GameObject_ID[i], "attack_point", 9999)
 	end
 
+	bindUI_on_game_object("skill_button_1", "n_run")
+	bindUI_on_game_object("skill_button_2", "n_hide")
+	bindUI_on_game_object("skill_button_3", "n_sleep_target")
+	bindUI_on_game_object("skill_button_4", "")
+
 --	load_background_music("sounds/main_menu.mp3")
 	play_background_music("sounds/main_menu.mp3", true)
 end

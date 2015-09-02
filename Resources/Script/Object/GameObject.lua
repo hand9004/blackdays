@@ -174,7 +174,7 @@ player = {info = {"player", 20, 5, 400, 100, 80, 20, 0, 3.0, false, true, true, 
 						 },
 			skill = {
 						{
-							"Images/skill_image_1.png",
+							"Images/button.png",
 							"charge",
 							"charge_straight",
 
@@ -187,7 +187,7 @@ player = {info = {"player", 20, 5, 400, 100, 80, 20, 0, 3.0, false, true, true, 
 							particle_data = {},
 						},
 						{
-							"Images/skill_image_2.png",
+							"Images/button.png",
 							"power",
 							"power_attack",
 
@@ -200,7 +200,7 @@ player = {info = {"player", 20, 5, 400, 100, 80, 20, 0, 3.0, false, true, true, 
 							particle_data = {},
 						},
 						{
-							"Images/skill_image_3.png",
+							"Images/button.png",
 							"chain",
 							"chain_attack",
 
@@ -462,7 +462,7 @@ player1 = {info = {"player", 30, 5, 400, 300, 80, 20, 0, 3.0, false, true, true,
 						 },
 			skill = {
 						{
-							"Images/skill_image_1.png",
+							"Images/button.png",
 							"akiha_charge",
 							"charge_straight",
 
@@ -475,7 +475,7 @@ player1 = {info = {"player", 30, 5, 400, 300, 80, 20, 0, 3.0, false, true, true,
 							particle_data = {},
 						},
 						{
-							"Images/skill_image_2.png",
+							"Images/button.png",
 							"akiha_chain_1",
 							"power_attack",
 
@@ -488,7 +488,7 @@ player1 = {info = {"player", 30, 5, 400, 300, 80, 20, 0, 3.0, false, true, true,
 							particle_data = {},
 						},
 						{
-							"Images/skill_image_3.png",
+							"Images/button.png",
 							"akiha_chain_2",
 							"chain_attack",
 

@@ -65,11 +65,6 @@ function StageManager.init_Stage()
 			stage_explain_message.message = "Eliminate All Enemies!"
 		end
 
-		bindUI_on_game_object("skill_button_1", "n_run")
-		bindUI_on_game_object("skill_button_2", "n_hide")
-		bindUI_on_game_object("skill_button_3", "n_sleep_target")
-		bindUI_on_game_object("skill_button_4", "")
-
 		set_active_UI(stage_message.id, true)
 		set_active_UI(stage_explain_message.id, true)
 		send_message("POPUP", stage_message.id, stage_message.message)

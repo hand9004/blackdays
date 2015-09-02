@@ -21,14 +21,20 @@ function stage2.stage_init(GameObject, Map)
 
 	add_map(map_table[2])
 
-	add_object(object_table[1], 900, 200)
+
 --	add_object(object_table[2], 700, 100)
+	table.insert(GameObject_ID, add_object(object_table[1], 900, 200))
 
-	add_object(object_table[5], 1500, 150)
-	add_object(object_table[6], 1300, 100)
+	table.insert(GameObject_ID, add_object(object_table[5], 1500, 150))
+	table.insert(GameObject_ID, add_object(object_table[6], 1300, 100))
 
-	add_object(object_table[5], 2300, 100)
-	add_object(object_table[6], 2000, 50)
+	table.insert(GameObject_ID, add_object(object_table[5], 2300, 100))
+	table.insert(GameObject_ID, add_object(object_table[6], 2000, 50))
+
+	bindUI_on_game_object("skill_button_1", "charge_straight")
+	bindUI_on_game_object("skill_button_2", "power_attack")
+	bindUI_on_game_object("skill_button_3", "chain_attack")
+	bindUI_on_game_object("skill_button_4", "")
 
 --	load_background_music("sounds/main_menu.mp3")
 	play_background_music("sounds/main_menu.mp3", true)
