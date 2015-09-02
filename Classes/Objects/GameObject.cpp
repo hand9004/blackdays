@@ -2,22 +2,19 @@
 #include "../Utility/Utility.h"
 #include "../Graphics/GraphicsController.h"
 #include "../Scene/SceneManager.h"
+#include "../StageManager.h"
 #include "Map.h"
 #include <math.h>
 
-const unsigned int opacity_limit = 255;
-const unsigned int hide_opacity_speed = 2;
-const float hide_opacity_limit = 0.2f;
-
 GameObject::GameObject(void) : target(nullptr), current_event(SEARCHING_RECOGNIZE_AREA), current_pos_index(0),
 isSelected(false), isAttackingByEnemy(false), isLeft(false), isNonTargetAttacked(false), 
-isCollidedToTarget(false), onDestroy(false), onHide(false)
+isCollidedToTarget(false), onSleep(false), onDestroy(false)
 {
 	patrol_start_time = get_ms_onSystem();
 	patrol_end_time = get_ms_onSystem();
-	
-	hide_start_time = get_ms_onSystem();
-	hide_end_time = get_ms_onSystem();
+
+	sleep_start_time = get_ms_onSystem();
+	sleep_end_time = get_ms_onSystem();
 }
 
 GameObject::~GameObject(void)
@@ -30,12 +27,21 @@ void GameObject::Init(obj_info* obj_info)
 
 	skill_ctrl.Init(object_info);
 
-	isSelected = object_info.isEnemy ? false : true;
-	hud_ctrl.Init_HUD(object_info);
-
 	graphic_ctrl.init();
 	graphic_ctrl.add_Object(object_info);
 	graphic_ctrl.setPosition(object_info.pos);
+
+	skill_ctrl.setGraphicController(&graphic_ctrl);
+	skill_ctrl.setEvent(current_event);
+
+	graphic_ctrl.setActivateComponent("stand");
+	CCSprite* curr_spr = graphic_ctrl.getActiveSprite();
+	CCSize curr_img_size = curr_spr->getContentSize();
+
+	isSelected = (!strcmp(object_info.object_name, "player")) ? true : false;
+	hud_ctrl.isSelected(isSelected);
+	hud_ctrl.setObjectImageSize(curr_img_size);
+	hud_ctrl.Init_HUD(object_info);
 }
 void GameObject::Update()
 {
@@ -61,20 +67,28 @@ void GameObject::Update()
 		case SEARCHING_RECOGNIZE_AREA:
 			search_update();
 			break;
+		case SLEEP:
+			sleep_update();
+			break;
 		case DEAD:
 			dead_update();
 			break;
 		}
 
+		skill_ctrl.Update();
 		skill_ctrl.Update_UI();
 		skill_ctrl.setObjectSprite(graphic_ctrl.getActiveSprite());
 
 		check_non_target_attacked();
 		check_is_attacked();
 		throw_object_update();
-
+		
 		hud_ctrl.isSelected(isSelected);
 		hud_ctrl.isAttacked(isAttackingByEnemy);
+
+		hud_ctrl.setCurrentEvent(current_event);
+		hud_ctrl.setOnRun(skill_ctrl.getOnRun());
+		hud_ctrl.setOnHide(skill_ctrl.getOnHide());
 		hud_ctrl.setObjectImageSize(getObjectRect().size);
 		hud_ctrl.Update_HUD();
 
@@ -84,7 +98,6 @@ void GameObject::Update()
 			graphic_ctrl.setTargetPosition(target->getObjectPos());
 
 		graphic_ctrl.update_Object();
-		hide_update();
 	}
 }
 void GameObject::Destroy()
@@ -156,7 +169,7 @@ void GameObject::Destroy()
 	hud_ctrl.Destroy_HUD();
 	skill_ctrl.Destroy();
 }
-void GameObject::change_PosList_On_Scrolling(float delta_x)
+void GameObject::change_PosList_On_Scrolling(int delta_x)
 {
 	if (!dead_check())
 	{
@@ -168,9 +181,11 @@ void GameObject::change_PosList_On_Scrolling(float delta_x)
 			for (unsigned int i = 0; i < pos_size; ++i)
 				move_line_pt.at(i).x += delta_x;
 		}
+
+		hud_ctrl.Update_ScrollingPos_HUD(delta_x);
 	}
 }
-void GameObject::change_ThrowPosList_On_Scrolling(float delta_x)
+void GameObject::change_ThrowPosList_On_Scrolling(int delta_x)
 {
 	if(!dead_check())
 	{
@@ -183,7 +198,7 @@ void GameObject::change_ThrowPosList_On_Scrolling(float delta_x)
 		}
 	}
 }
-void GameObject::change_SkillPos_On_Scrolling(float delta_x)
+void GameObject::change_SkillPos_On_Scrolling(int delta_x)
 {
 	if(!dead_check())
 		skill_ctrl.update_Scrolling(delta_x);
@@ -203,9 +218,14 @@ void GameObject::Move(cocos2d::CCPoint dest_pt)
 
 			if (!is_intersect)
 			{
+				if (skill_ctrl.getOnRun())
+					graphic_ctrl.setActivateComponent("run");
+				else
+					graphic_ctrl.setActivateComponent("move");
+
 				create_move_list(dest_pt);
 
-				graphic_ctrl.setActivateComponent("move");
+				hud_ctrl.setMovePoint(dest_pt);
 
 				prev_event = current_event;
 			}
@@ -259,11 +279,13 @@ void GameObject::Skill()
 				skill_ctrl.setStartSkillPos(object_info.pos);
 				skill_ctrl.setEvent(current_event);
 			}
-			graphic_ctrl.setActivateComponent(current_skill->ref_ani_name);
+
+			if (strcmp(current_skill->ref_ani_name, "") != 0)
+				graphic_ctrl.setActivateComponent(current_skill->ref_ani_name);
 		}
 	}
 }
-void GameObject::Patrol(cocos2d::CCPoint patrol_pt)
+void GameObject::Patrol(cocos2d::CCPoint patrol_pt, unsigned int patrol_delay_time)
 {
 	if (!dead_check())
 	{
@@ -277,6 +299,7 @@ void GameObject::Patrol(cocos2d::CCPoint patrol_pt)
 
 			graphic_ctrl.setActivateComponent("move");
 
+			object_info.patrol_delay_time = patrol_delay_time;
 			prev_event = current_event;
 			current_event = PATROL;
 		}
@@ -331,7 +354,7 @@ void GameObject::attack_update()
 	{
 		if (target != nullptr)
 		{
-			if (!target->getIsHide())
+			if (!target->getSkillController()->getOnHide())
 			{
 				cocos2d::CCPoint target_pos = target->getObjectPos();
 
@@ -369,10 +392,22 @@ void GameObject::attack_update()
 						}
 						else
 						{
-							if (prev_event == PATROL)
-								current_event = PATROL;
-							else
-								current_event = SEARCHING_RECOGNIZE_AREA;
+							target = nullptr;
+
+							switch (prev_event)
+							{
+							case SEARCHING_RECOGNIZE_AREA:
+								break;
+							case PATROL:
+								current_pos_index = 0;
+								vector_clear(move_line_pt);
+								create_move_list(*patrol_select_pos);
+
+								BD_CCLog("%f %f %f", start_move_pos.x, dest_move_pos.x, patrol_select_pos->x);
+								break;
+							}
+							current_event = prev_event;
+							graphic_ctrl.setActivateComponent("move");
 						}
 					}
 
@@ -445,17 +480,56 @@ void GameObject::attack_update()
 }
 void GameObject::skill_update()
 {
-	if(!dead_check())
+	if (!dead_check())
 	{
-		bool isSkillTargeting = skill_ctrl.getSkillIsTargeting();
-		skill_info* curr_skill = skill_ctrl.getCurrentSkill();
-		if(isSkillTargeting)
+		if (!skill_ctrl.getIsSkillEmpty())
 		{
-			if(target != nullptr)
+			bool isSkillTargeting = skill_ctrl.getSkillIsTargeting();
+			skill_info* curr_skill = skill_ctrl.getCurrentSkill();
+			if (isSkillTargeting)
 			{
-				if(!target->dead_check())
+				if (target != nullptr)
 				{
-					if(check_firing_area(target))
+					if (!target->dead_check())
+					{
+						if (check_firing_area(target))
+						{
+							graphic_ctrl.send_Message(curr_skill->ref_ani_name);
+							grap_to_obj_packet recv_packet = graphic_ctrl.get_Message();
+							grap_to_obj_animate* ani_packet = static_cast<grap_to_obj_animate*>(recv_packet.data);
+
+							if (!strcmp(curr_skill->skill_type, "Sleep_target"))
+							{
+								if (ani_packet->isAnimationFinish)
+								{
+									target->setEvent(SLEEP);
+									target->setTarget(this);
+									target->setSleepTimerReset();
+								}
+							}
+
+							skill_ctrl.setAniInfo(ani_packet);
+							skill_ctrl.setTargetInfo(target->getObjectInfo());
+							skill_ctrl.setIsSkillFinish(ani_packet->isAnimationFinish);
+
+							SAFE_DELETE(ani_packet);
+						}
+						else
+						{
+							graphic_ctrl.setActivateComponent("move");
+							cocos2d::CCPoint target_pos = target->getObjectPos();
+							float delta_x = target_pos.x - object_info.pos.x;
+							float target_image_width = target->getObjectRect(target_pos).getMaxX() - target->getObjectRect(target_pos).getMinX();
+
+							if (delta_x >= 0.0f)
+								target_pos.x -= target_image_width;
+							else
+								target_pos.x += target_image_width;
+
+							create_move_to_dest_pos(target_pos);
+						}
+					}
+					else
 					{
 						graphic_ctrl.send_Message(curr_skill->ref_ani_name);
 						grap_to_obj_packet recv_packet = graphic_ctrl.get_Message();
@@ -467,72 +541,55 @@ void GameObject::skill_update()
 
 						SAFE_DELETE(ani_packet);
 					}
-					else
-					{
-						graphic_ctrl.setActivateComponent("move");
-						cocos2d::CCPoint target_pos = target->getObjectPos();
-						float delta_x = target_pos.x - object_info.pos.x;
-						float target_image_width = target->getObjectRect(target_pos).getMaxX() - target->getObjectRect(target_pos).getMinX();
-
-						if(delta_x >= 0.0f)
-							target_pos.x -= target_image_width;
-						else
-							target_pos.x += target_image_width;
-
-						create_move_to_dest_pos(target_pos);
-					}	
 				}
-				else
+			}
+			else
+			{
+				if (!strcmp(curr_skill->skill_type, "Run"))
+				{
+					if (!skill_ctrl.getOnRun())
+					{
+						skill_ctrl.setOnRun(true);
+						object_info.move_speed *= 2.f;
+						current_event = SEARCHING_RECOGNIZE_AREA;
+					}
+				}
+				else if (!strcmp(curr_skill->skill_type, "Hide"))
 				{
 					graphic_ctrl.send_Message(curr_skill->ref_ani_name);
 					grap_to_obj_packet recv_packet = graphic_ctrl.get_Message();
 					grap_to_obj_animate* ani_packet = static_cast<grap_to_obj_animate*>(recv_packet.data);
 
-					skill_ctrl.setAniInfo(ani_packet);
-					skill_ctrl.setTargetInfo(target->getObjectInfo());
-					skill_ctrl.setIsSkillFinish(ani_packet->isAnimationFinish);
-
-					SAFE_DELETE(ani_packet);
-				}
-			}
-		}
-		else
-		{
-			if (!strcmp(curr_skill->skill_type, "Hide"))
-			{
-				graphic_ctrl.send_Message(curr_skill->ref_ani_name);
-				grap_to_obj_packet recv_packet = graphic_ctrl.get_Message();
-				grap_to_obj_animate* ani_packet = static_cast<grap_to_obj_animate*>(recv_packet.data);
-
-				if (ani_packet->isAnimationFinish)
-				{
-					onHide = true;
-					current_event = SEARCHING_RECOGNIZE_AREA;
-					graphic_ctrl.setActivateComponent("stand");
-				}
-			}
-			else if (!strcmp(curr_skill->skill_type, "Charge"))
-			{
-				unsigned int game_obj_size = all_object_list.size();
-				cocos2d::CCRect curr_rect = this->getObjectRect();
-
-				for (unsigned int i = 0; i < game_obj_size; ++i)
-				{
-					GameObject* obj_iter = all_object_list.at(i);
-
-					if (obj_iter != this)
+					if (ani_packet->isAnimationFinish)
 					{
-						cocos2d::CCRect obj_rect = obj_iter->getObjectRect();
+						skill_ctrl.setOnHide(true);
+						current_event = SEARCHING_RECOGNIZE_AREA;
+						graphic_ctrl.setActivateComponent("stand");
+					}
+				}
+				else if (!strcmp(curr_skill->skill_type, "Charge"))
+				{
+					unsigned int game_obj_size = all_object_list.size();
+					cocos2d::CCRect curr_rect = this->getObjectRect();
 
-						if (!obj_iter->dead_check())
+					for (unsigned int i = 0; i < game_obj_size; ++i)
+					{
+						GameObject* obj_iter = all_object_list.at(i);
+
+						if (obj_iter != this)
 						{
-							if (!obj_iter->getIsChargeAttacked())
+							cocos2d::CCRect obj_rect = obj_iter->getObjectRect();
+
+							if (!obj_iter->dead_check())
 							{
-								if (obj_rect.intersectsRect(curr_rect))
+								if (!obj_iter->getIsChargeAttacked())
 								{
-									skill_info* curr_skill = skill_ctrl.getCurrentSkill();
-									obj_iter->decrease_HealthPoint(object_info.attack_point * curr_skill->power_percentage);
-									obj_iter->setIsChargeAttacked(true);
+									if (obj_rect.intersectsRect(curr_rect))
+									{
+										skill_info* curr_skill = skill_ctrl.getCurrentSkill();
+										obj_iter->decrease_HealthPoint(object_info.attack_point * curr_skill->power_percentage);
+										obj_iter->setIsChargeAttacked(true);
+									}
 								}
 							}
 						}
@@ -540,7 +597,6 @@ void GameObject::skill_update()
 				}
 			}
 		}
-		skill_ctrl.Update();
 	}
 }
 void GameObject::patrol_update()
@@ -561,7 +617,7 @@ void GameObject::patrol_update()
 		{
 			long delta_time = patrol_end_time - patrol_start_time;
 
-			if (delta_time > object_info.partol_delay_time)
+			if (delta_time > object_info.patrol_delay_time)
 			{
 				vector_clear(move_line_pt);
 
@@ -593,7 +649,7 @@ void GameObject::patrol_update()
 }
 void GameObject::search_update()
 {
-	if (!dead_check() && !onHide)
+	if (!dead_check() && !skill_ctrl.getOnHide())
 	{
 		target = nullptr;
 
@@ -664,7 +720,7 @@ void GameObject::search_update()
 
 		if (closest_obj != nullptr)
 		{
-			if (!closest_obj->getIsHide())
+			if (!closest_obj->getSkillController()->getOnHide())
 				Attack(closest_obj);
 		}
 		else
@@ -674,6 +730,49 @@ void GameObject::search_update()
 			case SEARCHING_RECOGNIZE_AREA:
 				graphic_ctrl.setActivateComponent("stand");
 				break;
+			}
+		}
+	}
+}
+void GameObject::sleep_update()
+{
+	if (!dead_check())
+	{
+		unsigned long delta_time = sleep_end_time - sleep_start_time;
+		SkillController* target_skill_ctrl = target->getSkillController();
+		skill_info* sleep_skill = target_skill_ctrl->getSkill("n_sleep_target");
+		if (sleep_skill != nullptr)
+		{
+			unsigned int sleep_limit_ms = sleep_skill->power_percentage * 1000;
+
+			if (delta_time > sleep_limit_ms)
+			{
+				switch (prev_event)
+				{
+				case PATROL:
+					vector_clear(move_line_pt);
+					create_move_list(*patrol_select_pos);
+					break;
+				default:
+					prev_event = SEARCHING_RECOGNIZE_AREA;
+					break;
+				}
+				target = nullptr;
+				
+				current_event = prev_event;
+
+				sleep_start_time = get_ms_onSystem();
+				sleep_end_time = get_ms_onSystem();
+
+				onSleep = false;
+			}
+			else
+			{
+				graphic_ctrl.setActivateComponent("dead");
+
+				sleep_end_time = get_ms_onSystem();
+
+				onSleep = true;
 			}
 		}
 	}
@@ -710,56 +809,6 @@ void GameObject::dead_update()
 		isSelected = isAttackingByEnemy = false;
 		graphic_ctrl.setActivateComponent("dead");
 	}
-}
-void GameObject::hide_update()
-{
-	if (!dead_check())
-	{
-		skill_info* hide_skill = skill_ctrl.getSkill("Hide", "n_hide");
-		
-		if (hide_skill != nullptr)
-		{
-			if (onHide)
-			{
-				unsigned int delta_time = hide_end_time - hide_start_time;
-				unsigned int hide_duration = hide_skill->power_percentage * 1000;
-
-				unsigned int spr_opacity = graphic_ctrl.getAlphaValue();
-				if (spr_opacity >= (opacity_limit * hide_opacity_limit))
-				{
-					spr_opacity -= hide_opacity_speed;
-					graphic_ctrl.setAlphaValue(spr_opacity);
-
-					hide_start_time = get_ms_onSystem();
-					hide_end_time = get_ms_onSystem();
-				}
-				else
-				{
-					if (hide_duration < delta_time)
-						onHide = false;
-					else
-						hide_end_time = get_ms_onSystem();
-				}
-			}
-			else
-			{
-				unsigned int spr_opacity = graphic_ctrl.getAlphaValue();
-				if (spr_opacity < opacity_limit)
-				{
-					spr_opacity += hide_opacity_speed;
-					if (spr_opacity >= opacity_limit)
-						spr_opacity = 255;
-				}
-
-				graphic_ctrl.setAlphaValue(spr_opacity);
-
-				hide_start_time = get_ms_onSystem();
-				hide_end_time = get_ms_onSystem();
-			}
-		}
-	}
-	else
-		onHide = false;
 }
 void GameObject::throw_object_update()
 {

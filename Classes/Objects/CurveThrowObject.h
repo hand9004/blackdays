@@ -11,7 +11,7 @@ public:
 	void Update();
 	void Destroy();
 public:
-	void change_PosList_OnScrolling(float delta_X);
+	void change_PosList_OnScrolling(int delta_X);
 	bool isInBombArea(cocos2d::CCPoint src_pos);
 	void setSendedDamage(bool isSendDamage) { isSendedDamage = isSendDamage; }
 	bool getSendedDamage() { return isSendedDamage; }

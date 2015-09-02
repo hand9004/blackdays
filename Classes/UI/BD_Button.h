@@ -18,6 +18,8 @@ public:
 
 	virtual void recv_message_main(void* src_msg);
 	virtual void recv_message_lua(void* src_msg);
+public:
+	void setButtonImage(cocos2d::CCTexture2D* butt_img, cocos2d::CCTexture2D* pressed_butt_img);
 private:
 	virtual void setResource(void* packet);
 private:

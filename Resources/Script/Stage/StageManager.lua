@@ -48,11 +48,6 @@ function StageManager.init_Stage()
 		set_Camera_Is_Fixed(0)
 		send_message("CHECK_BOX", camera_hold_check_box.id, false)
 
-		bindUI_on_game_object("skill_button_1", "skill_1")
-		bindUI_on_game_object("skill_button_2", "skill_2")
-		bindUI_on_game_object("skill_button_3", "skill_3")
-		bindUI_on_game_object("skill_button_4", "skill_4")
-
 		local platform_type = get_platform_type()
 		StageManager.load_stageModule(platform_type)
 
@@ -62,8 +57,23 @@ function StageManager.init_Stage()
 
 		stage_message.message = "Stage " .. stage_index;
 
+		if stage_message.message == "Stage 1" then
+			stage_explain_message.message = "Avoid the Enemy then Goal the Destination!"
+		elseif stage_message.message == "Stage 2" then
+			stage_explain_message.message = "Eliminate All Enemies!"
+		elseif stage_message.message == "Stage 3" then
+			stage_explain_message.message = "Eliminate All Enemies!"
+		end
+
+		bindUI_on_game_object("skill_button_1", "n_run")
+		bindUI_on_game_object("skill_button_2", "n_hide")
+		bindUI_on_game_object("skill_button_3", "n_sleep_target")
+		bindUI_on_game_object("skill_button_4", "")
+
 		set_active_UI(stage_message.id, true)
+		set_active_UI(stage_explain_message.id, true)
 		send_message("POPUP", stage_message.id, stage_message.message)
+		send_message("POPUP", stage_explain_message.id, stage_explain_message.message)
 
 		stage_reached_max = false
 	else

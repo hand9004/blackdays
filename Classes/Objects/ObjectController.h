@@ -44,7 +44,7 @@ public:
 
 	void register_ObjectFunction();
 public:
-	void add_BindUI(UIComponent* src_ui, const char* key);
+	void add_BindUI(UIComponent* src_ui, const char* key, const char* skill_name);
 	void update_BindUI();
 public:
 	void setTouchBegan(cocos2d::CCTouch* pTouch, cocos2d::CCEvent* pEvent);

@@ -40,7 +40,7 @@ void Animate::Init(main_grap_info& game_graphic_info)
 	unsigned int in_ani_frame_size = p_ani_frame->in_aniframe_list.size();
 	for(unsigned int i = 0; i < in_ani_frame_size; ++i)
 	{
-		in_aniframe_info* in_aniframe_iter = p_ani_frame->in_aniframe_list[i];
+		in_aniframe_info* in_aniframe_iter = p_ani_frame->in_aniframe_list.at(i);
 
 		cocos2d::CCSpriteFrame* anim_frame = cache->spriteFrameByName(in_aniframe_iter->in_list_key);
 
@@ -57,6 +57,11 @@ void Animate::Init(main_grap_info& game_graphic_info)
 
 	GraphicsController::Instance()->getSprite(draw_spr, anim_frame_list.at(0));
 	draw_spr->setAnchorPoint(cocos2d::CCPoint(0.5f, 0.0f));
+
+	CCPoint frame_pos = draw_spr->getPosition();
+	CCSize frame_size = draw_spr->getContentSize();
+
+	content_rect = CCRect(frame_pos.x - (frame_size.width / 2), frame_pos.y, frame_size.width, frame_size.height);
 
 	ObjectController::Instance()->addChild(draw_spr);
 

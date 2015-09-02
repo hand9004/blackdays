@@ -109,7 +109,7 @@ void CurveThrowObject::Destroy()
 	vector_clear(throwing_line);
 	vector_clear(effect_frame_name_list);
 }
-void CurveThrowObject::change_PosList_OnScrolling(float delta_X)
+void CurveThrowObject::change_PosList_OnScrolling(int delta_X)
 {
 	unsigned int throw_pos_size = throwing_line.size();
 	for(unsigned int i = 0; i < throw_pos_size; ++i)

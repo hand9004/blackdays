@@ -172,7 +172,7 @@ void BD_SlideControl::setResource(void* packet)
 
 #ifdef DEBUG_MODE
 	test_font = cocos2d::CCLabelBMFont::create();
-	test_font->setFntFile("fonts/arial-unicode-26.fnt");
+	test_font->setFntFile("fonts/font_1.fnt");
 	test_font->setPosition(cocos2d::CCPoint(background_pos.x + contents_size.width, background_pos.y)); 
 	test_font->setColor(cocos2d::ccc3(255, 255, 255));
 	test_font->setAnchorPoint(cocos2d::CCPoint(0.0f, 0.0f));

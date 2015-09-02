@@ -85,12 +85,17 @@ void Map::Destroy()
 	{
 		in_map_particle_spr->removeAllChildrenWithCleanup(true);
 
+		in_map_particle_spr = nullptr;
+
 		ParticleController::Instance()->destroy_Particle();
 	}
 
 	if (trigger_draw_node != nullptr)
+	{
 		trigger_draw_node->removeFromParentAndCleanup(true);
-	
+
+		trigger_draw_node = nullptr;
+	}
 }
 void Map::register_MapFunction()
 {
@@ -429,6 +434,7 @@ void Map::set_Map(map_piece_info& map_piece_data_info)
 
 		BD_CCLog("%s", in_map_obj_info_iter->ref_key);
 
+		in_map_obj_data->obj_spr->setZOrder(3);
 		ObjectController::Instance()->addChild(in_map_obj_data->obj_spr);
 		piece_of_map->in_map_obj_list.push_back(in_map_obj_data);
 	}
@@ -490,7 +496,7 @@ cocos2d::CCPoint Map::getMapEndPoint()
 	cocos2d::CCPoint end_pt = cocos2d::CCPoint(first_map_pos.x + background_size.width, first_map_pos.y);
 	return end_pt;
 }
-void Map::setUpdateScrolling(float delta_x)
+void Map::setUpdateScrolling(int delta_x)
 {
 	unsigned int obj_size = map_piece_list.size();
 

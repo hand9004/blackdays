@@ -2,7 +2,7 @@
 			move_speed, isEnemy, isHero, isControllable, isAreaAttack} ]]--
 
 --[[ skill = {}]]
-player = {info = {"player", 20, 5, 400, 100, 70, 10, 5000, 4.0, false, true, true, false},
+player = {info = {"player", 20, 5, 400, 100, 80, 20, 0, 3.0, false, true, true, false},
 
 			main_image = {"Characters/len.png"},
 
@@ -219,7 +219,7 @@ player = {info = {"player", 20, 5, 400, 100, 70, 10, 5000, 4.0, false, true, tru
 					},
 		}
 
-player1 = {info = {"player", 30, 5, 400, 300, 70, 10, 5000, 4.0, false, true, true, false},
+player1 = {info = {"player", 30, 5, 400, 300, 80, 20, 0, 3.0, false, true, true, false},
 
 			main_image = {"Characters/akiha.png"},
 
@@ -503,7 +503,7 @@ player1 = {info = {"player", 30, 5, 400, 300, 70, 10, 5000, 4.0, false, true, tr
 					},
 		}
 
-player2 = {info = {"player", 30, 5, 400, 300, 70, 10, 5000, 6.0, false, true, true, false},
+player2 = {info = {"player", 30, 5, 400, 300, 80, 20, 0, 3.0, false, true, true, false},
 
 			main_image = {"Characters/shiki.png"},
 
@@ -613,7 +613,7 @@ player2 = {info = {"player", 30, 5, 400, 300, 70, 10, 5000, 6.0, false, true, tr
 					},
 		}
 
-player3 = {info = {"player", 30, 5, 400, 300, 70, 10, 5000, 6.0, false, true, true, false},
+player3 = {info = {"player", 30, 5, 400, 300, 80, 20, 0, 3.0, false, true, true, false},
 
 			main_image = {"Characters/arcueid.png"},
 
@@ -756,19 +756,6 @@ player3 = {info = {"player", 30, 5, 400, 300, 70, 10, 5000, 6.0, false, true, tr
 								{
 									"Characters/arcueid.png",
 									"Characters/arcueid.plist",
-									"threat_off",
-
-									{ "arc8100.png", 1 },
-									{ "arc8101.png", 2 },
-									{ "arc8102.png", 3 },
-									{ "arc8103.png", 4 },
-									{ "arc8104.png", 5 },
-									{ "arc8105.png", 6 },
-								},
-
-								{
-									"Characters/arcueid.png",
-									"Characters/arcueid.plist",
 									"sleep_target",
 
 									{ "arc4600.png", 1 },
@@ -789,7 +776,6 @@ player3 = {info = {"player", 30, 5, 400, 300, 70, 10, 5000, 6.0, false, true, tr
 
 								{"run", 0.025, 4, 15, false},
 								{"hide", 0.02, 0, 0, true},
-								{"threat_off", 0.04, 0, 0, true},
 								{"sleep_target", 0.02, 0, 0, true},
 							},
 			effect_set = {
@@ -816,8 +802,8 @@ player3 = {info = {"player", 30, 5, 400, 300, 70, 10, 5000, 6.0, false, true, tr
 						 },
 			skill = {
 						{
-							"Images/skill_image_1.png",
-							"run",
+							"Images/run_skill_icon.png",
+							"",
 							"n_run",
 
 							"Melee",
@@ -829,7 +815,7 @@ player3 = {info = {"player", 30, 5, 400, 300, 70, 10, 5000, 6.0, false, true, tr
 							particle_data = {},
 						},
 						{
-							"Images/skill_image_2.png",
+							"Images/hide_skill_icon.png",
 							"hide",
 							"n_hide",
 
@@ -842,20 +828,7 @@ player3 = {info = {"player", 30, 5, 400, 300, 70, 10, 5000, 6.0, false, true, tr
 							particle_data = {},
 						},
 						{
-							"Images/skill_image_3.png",
-							"threat_off",
-							"n_threat_off",
-
-							"Melee",
-							"Threat_off",
-
-							charge_dist = 0,
-							power_percent = 0.0,
-							chain_hit_frame = {},
-							particle_data = {},
-						},
-						{
-							"Images/skill_image_4.png",
+							"Images/sleep_skill_icon.png",
 							"sleep_target",
 							"n_sleep_target",
 
@@ -863,14 +836,14 @@ player3 = {info = {"player", 30, 5, 400, 300, 70, 10, 5000, 6.0, false, true, tr
 							"Sleep_target",
 
 							charge_dist = 0,
-							power_percent = 3.0,
+							power_percent = 10.0,
 							chain_hit_frame = {},
 							particle_data = {},
 						},
 					},
 		}
 
-enemy = {info = {"enemy", 15, 5, 200, 400, 500, 100, 2500, 2.0, true, false, false, true},
+enemy = {info = {"enemy", 15, 5, 200, 400, 500, 100, 0, 3.0, true, false, false, true},
 
 			main_image = {"Characters/sion.png"},
 
@@ -974,7 +947,7 @@ enemy = {info = {"enemy", 15, 5, 200, 400, 500, 100, 2500, 2.0, true, false, fal
 			skill = {},
 		}
 
-enemy1 = {info = {"enemy1", 10, 5, 200, 300, 100, 10, 2500, 3.0, true, false, false, false},
+enemy1 = {info = {"enemy1", 10, 5, 200, 300, 150, 30, 0, 3.0, true, false, false, false},
 
 			main_image = {"Characters/kohaku.png"},
 

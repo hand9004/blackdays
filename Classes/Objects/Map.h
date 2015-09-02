@@ -79,7 +79,7 @@ public:
 	cocos2d::CCPoint getMapStartPoint();
 	cocos2d::CCPoint getMapEndPoint();
 
-	void setUpdateScrolling(float delta_x);
+	void setUpdateScrolling(int delta_x);
 	std::vector<map_piece*>getMapPieceList() { return map_piece_list; }
 public:
 	void setLuaState(lua_State* lua_st) { p_lua_st = lua_st; }

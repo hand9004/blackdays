@@ -166,6 +166,7 @@
     <None Include="..\Resources\fonts\arial-unicode-26.fnt" />
     <None Include="..\Resources\fonts\arial-unicode-26.png" />
     <None Include="..\Resources\fonts\arial.ttf" />
+    <None Include="..\Resources\fonts\font_1.fnt" />
     <None Include="..\Resources\fonts\LBLACK.TTF" />
     <None Include="..\Resources\Images\background.png" />
     <None Include="..\Resources\Images\background1.png" />
@@ -294,7 +295,9 @@
     <ClCompile Include="..\Classes\Graphics\GraphicsController.cpp" />
     <ClCompile Include="..\Classes\LuaCommunicator.cpp" />
     <ClCompile Include="..\Classes\Objects\Animate.cpp" />
-    <ClCompile Include="..\Classes\Objects\CurveThrowObject.cpp" />
+    <ClCompile Include="..\Classes\Objects\CurveThrowObject.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">/FS %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
     <ClCompile Include="..\Classes\Objects\Effect.cpp" />
     <ClCompile Include="..\Classes\Objects\GameGraphicComponent.cpp" />
     <ClCompile Include="..\Classes\Objects\GameGraphicController.cpp" />
@@ -327,6 +330,9 @@
     <ClCompile Include="..\Classes\UI\UIController.cpp" />
     <ClCompile Include="..\Classes\UI\UILayer.cpp" />
     <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\Resources\fonts\font_1_0.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -2,12 +2,22 @@
 #include "../UI/UIController.h"
 #include "../Graphics/GraphicsController.h"
 #include "../Scene/SceneManager.h"
+#include "../Utility/Utility.h"
 
 #include <algorithm> 
 
-SkillController::SkillController(void) : isSkillFinish(false), current_skill(0), chain_index(0),
-										target_obj_info(nullptr), game_obj_info(nullptr), obj_spr(nullptr)
+const unsigned int opacity_limit = 255;
+const unsigned int hide_opacity_speed = 2;
+const float hide_opacity_limit = 0.2f;
+
+SkillController::SkillController(void) : isSkillFinish(false), onRun(false), onHide(false), current_skill(0), chain_index(0), hide_start_time(0), hide_end_time(0),
+											run_start_time(0), run_end_time(0), target_obj_info(nullptr), game_obj_info(nullptr), obj_spr(nullptr), game_obj_ev(nullptr), g_ctrl(nullptr)
 {
+	hide_start_time = get_ms_onSystem();
+	hide_end_time = get_ms_onSystem();
+
+	run_start_time = get_ms_onSystem();
+	run_end_time = get_ms_onSystem();
 }
 
 SkillController::~SkillController(void)
@@ -23,33 +33,33 @@ void SkillController::Init(obj_info& object_info)
 	skill_cnt = skill_size;
 }
 void SkillController::Update()
-{
-	unsigned int skill_size = game_obj_info->skill_list.size();
-	if(current_skill >= 0 && current_skill < skill_size)
+{	
+	if (game_obj_ev != nullptr)
 	{
-		skill_info* skill_iter = game_obj_info->skill_list[current_skill];
+		updateRun();
+		updateHide();
 
-		const char* skill_type = skill_iter->skill_type;
-		if(!strcmp(skill_type, "Charge"))
-			updateCharge();
-		else if(!strcmp(skill_type, "Power"))
-			updatePower();
-		else if (!strcmp(skill_type, "Chain"))
-			updateChain();
-		else if (!strcmp(skill_type, "Run"))
-			updateRun();
-		else if (!strcmp(skill_type, "Hide"))
-			updateHide();
-		else if (!strcmp(skill_type, "Threat_off"))
-			updateThreatOff();
-		else if (!strcmp(skill_type, "Sleep_target"))
-			updateSleepTarget();
-	}
+		if (*game_obj_ev == SKILL)
+		{
+			unsigned int skill_size = game_obj_info->skill_list.size();
+			if (current_skill >= 0 && current_skill < skill_size)
+			{
+				skill_info* skill_iter = game_obj_info->skill_list[current_skill];
 
-	if(isSkillFinish)
-	{
-		*game_obj_ev = SEARCHING_RECOGNIZE_AREA;
-		chain_index = 0;
+				const char* skill_type = skill_iter->skill_type;
+				if (!strcmp(skill_type, "Charge"))
+					updateCharge();
+				else if (!strcmp(skill_type, "Power"))
+					updatePower();
+				else if (!strcmp(skill_type, "Chain"))
+					updateChain();
+			}
+			if (isSkillFinish)
+			{
+				*game_obj_ev = SEARCHING_RECOGNIZE_AREA;
+				chain_index = 0;
+			}
+		}
 	}
 }
 void SkillController::Update_UI()
@@ -160,16 +170,78 @@ void SkillController::updateChain()
 }
 void SkillController::updateRun()
 {
+	skill_info* run_skill = getSkill("n_run");
 
+	if (run_skill != nullptr)
+	{
+		if (onRun)
+		{
+			unsigned int delta_time = run_end_time - run_start_time;
+			unsigned int run_duration = run_skill->power_percentage * 1000;
+
+			if (run_duration < delta_time)
+			{
+				run_start_time = get_ms_onSystem();
+				run_end_time = get_ms_onSystem();
+
+				game_obj_info->move_speed /= 2.f;
+				onRun = false;
+			}
+			else
+				run_end_time = get_ms_onSystem();
+		}
+		else
+		{
+			run_start_time = get_ms_onSystem();
+			run_end_time = get_ms_onSystem();
+		}
+	}
 }
 void SkillController::updateHide()
 {
-}
-void SkillController::updateThreatOff()
-{
+	skill_info* hide_skill = getSkill("n_hide");
 
-}
-void SkillController::updateSleepTarget()
-{
+	if (hide_skill != nullptr)
+	{
+		if (onHide)
+		{
+			unsigned int delta_time = hide_end_time - hide_start_time;
+			unsigned int hide_duration = hide_skill->power_percentage * 1000;
 
+			unsigned int spr_opacity = g_ctrl->getAlphaValue();
+			if (spr_opacity >= (opacity_limit * hide_opacity_limit))
+			{
+				spr_opacity -= hide_opacity_speed;
+				g_ctrl->setAlphaValue(spr_opacity);
+
+				hide_start_time = get_ms_onSystem();
+				hide_end_time = get_ms_onSystem();
+			}
+			else
+			{
+				if (hide_duration < delta_time)
+					onHide = false;
+				else
+					hide_end_time = get_ms_onSystem();
+			}
+		}
+		else
+		{
+			if (*game_obj_ev != DEAD)
+			{
+				unsigned int spr_opacity = g_ctrl->getAlphaValue();
+				if (spr_opacity < opacity_limit)
+				{
+					spr_opacity += hide_opacity_speed;
+					if (spr_opacity >= opacity_limit)
+						spr_opacity = 255;
+				}
+
+				g_ctrl->setAlphaValue(spr_opacity);
+			}
+
+			hide_start_time = get_ms_onSystem();
+			hide_end_time = get_ms_onSystem();
+		}
+	}
 }

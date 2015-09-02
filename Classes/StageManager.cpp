@@ -119,14 +119,6 @@ void StageManager::register_StageFunction()
 	LuaCommunicator::Instance()->Register_CFunction("recv_stage_index", l_recv_stage_index);
 }
 
-void StageManager::init_Manager()
-{
-}
-
-void StageManager::destroy_Manager()
-{
-}
-
 void StageManager::init_Stage()
 {	
 	LuaCommunicator::Instance()->Call_LuaFunction("game_Init", ">");
@@ -192,8 +184,11 @@ void StageManager::update_Stage()
 						}
 						else
 						{
-							if(!finded_ui->get_UIActive())
+							if (!finded_ui->get_UIActive())
+							{
+								isStageStart = false;
 								SceneManager::Instance()->set_SceneReplaceToken("Main");
+							}
 							else
 							{
 								finded_ui->recv_message_main((void*)true);

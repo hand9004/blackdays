@@ -213,13 +213,7 @@ void GameGraphicController::setAlphaValue(unsigned char val)
 	auto i = game_graphic_list.begin();
 
 	for(i = game_graphic_list.begin(); i != end; ++i)
-	{
-//		if(!strcmp(i->first, active_component_key))
-//		{
-			i->second->setAlphaValue(val);
-//			break;
-//		}
-	}
+		i->second->setAlphaValue(val);
 }
 unsigned char GameGraphicController::getAlphaValue()
 {

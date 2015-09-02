@@ -133,21 +133,15 @@ void BD_PopupMessage::setResource(void* packet)
 	strncpy(message_mode, pop_mess_pack->message_mode, sizeof(message_mode));
 	strncpy(message, pop_mess_pack->message, sizeof(message));
 
-//	strcpy(font_full_path, "fonts/");
+	strcpy(font_full_path, "fonts/");
 	strncat(font_full_path, pop_mess_pack->font_name, sizeof(font_full_path));
 
-	pop_font_label = cocos2d::CCLabelTTF::create();
-	pop_font_label->initWithString(message, font_full_path, pop_mess_pack->font_size);
-//	pop_font_label->setString(message);
-//	pop_font_label->setFontName(font_full_path);
-//	pop_font_label->setFontSize(90);
+	pop_font_label = cocos2d::CCLabelBMFont::create();
+	pop_font_label->setFntFile(font_full_path);
+	pop_font_label->setString(message);
 	pop_font_label->setColor(pop_mess_pack->color_val);
 	pop_font_label->setAnchorPoint(cocos2d::CCPoint(0.5f, 0.5f));
 	pop_font_label->setOpacity(0);
-
-	cocos2d::CCSize font_size = pop_font_label->getContentSize();
-
-	this->setContentSize(pop_font_label->getContentSize());
 
 	addChild(pop_font_label);
 

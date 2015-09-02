@@ -7,7 +7,7 @@
             <key>arc0000.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{585,322},{51,104}}</string>
+                <string>{{180,392},{51,104}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -20,7 +20,7 @@
             <key>arc0001.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{387,2},{49,105}}</string>
+                <string>{{301,285},{49,105}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -33,7 +33,7 @@
             <key>arc0002.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{537,323},{46,105}}</string>
+                <string>{{906,75},{46,105}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -46,7 +46,7 @@
             <key>arc0003.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{560,109},{46,105}}</string>
+                <string>{{1254,64},{46,105}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -59,7 +59,7 @@
             <key>arc0004.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{460,109},{48,105}}</string>
+                <string>{{598,210},{48,105}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -72,7 +72,7 @@
             <key>arc0005.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{489,2},{48,105}}</string>
+                <string>{{578,386},{48,105}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -85,7 +85,7 @@
             <key>arc0006.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{437,323},{48,105}}</string>
+                <string>{{751,165},{48,105}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -98,7 +98,7 @@
             <key>arc0007.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{409,109},{49,105}}</string>
+                <string>{{906,182},{49,105}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -111,7 +111,7 @@
             <key>arc0008.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{165,330},{50,106}}</string>
+                <string>{{1079,66},{50,106}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -124,7 +124,7 @@
             <key>arc0009.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{196,220},{50,106}}</string>
+                <string>{{957,175},{50,106}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -137,7 +137,7 @@
             <key>arc0010.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{217,328},{50,106}}</string>
+                <string>{{1009,175},{50,106}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -150,7 +150,7 @@
             <key>arc0011.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{206,2},{49,106}}</string>
+                <string>{{1116,174},{49,106}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -163,7 +163,7 @@
             <key>arc0012.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{461,216},{48,105}}</string>
+                <string>{{1275,171},{48,105}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -176,7 +176,7 @@
             <key>arc0013.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{206,110},{47,106}}</string>
+                <string>{{1428,168},{47,106}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -189,7 +189,7 @@
             <key>arc0014.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{248,218},{46,106}}</string>
+                <string>{{1015,283},{46,106}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -202,7 +202,7 @@
             <key>arc0015.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{255,110},{46,106}}</string>
+                <string>{{1151,386},{46,106}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -215,7 +215,7 @@
             <key>arc0016.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{510,109},{48,105}}</string>
+                <string>{{772,391},{48,105}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -228,7 +228,7 @@
             <key>arc0017.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{539,2},{48,105}}</string>
+                <string>{{822,391},{48,105}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -241,7 +241,7 @@
             <key>arc0018.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{487,323},{48,105}}</string>
+                <string>{{872,391},{48,105}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -254,7 +254,7 @@
             <key>arc0019.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{438,2},{49,105}}</string>
+                <string>{{1377,168},{49,105}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -267,7 +267,7 @@
             <key>arc0020.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{335,2},{50,105}}</string>
+                <string>{{1167,169},{50,105}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -280,7 +280,7 @@
             <key>arc0021.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{357,109},{50,105}}</string>
+                <string>{{1325,168},{50,105}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -293,7 +293,7 @@
             <key>arc0022.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{303,110},{52,105}}</string>
+                <string>{{187,285},{52,105}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -306,7 +306,7 @@
             <key>arc0023.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{356,217},{52,105}}</string>
+                <string>{{697,165},{52,105}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -319,7 +319,7 @@
             <key>arc0201.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1151,405},{54,94}}</string>
+                <string>{{906,289},{54,94}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -332,7 +332,7 @@
             <key>arc0202.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{800,423},{76,82}}</string>
+                <string>{{162,201},{76,82}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -345,11 +345,11 @@
             <key>arc0203.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{409,431},{73,83}}</string>
+                <string>{{831,75},{73,83}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{73,83}}</string>
                 <key>sourceSize</key>
@@ -358,7 +358,7 @@
             <key>arc0204.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1359,2},{71,81}}</string>
+                <string>{{240,202},{71,81}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -371,7 +371,7 @@
             <key>arc0205.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1160,99},{70,93}}</string>
+                <string>{{759,62},{70,93}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -384,7 +384,7 @@
             <key>arc0206.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1186,194},{64,92}}</string>
+                <string>{{466,208},{64,92}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -397,11 +397,11 @@
             <key>arc0207.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1058,415},{88,91}}</string>
+                <string>{{2,195},{88,91}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{88,91}}</string>
                 <key>sourceSize</key>
@@ -410,7 +410,7 @@
             <key>arc0208.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{878,420},{68,85}}</string>
+                <string>{{92,201},{68,85}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -423,7 +423,7 @@
             <key>arc0209.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{990,419},{66,86}}</string>
+                <string>{{1361,80},{66,86}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -436,7 +436,7 @@
             <key>arc0210.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1359,85},{64,88}}</string>
+                <string>{{532,210},{64,88}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -449,7 +449,7 @@
             <key>arc0211.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1296,183},{60,84}}</string>
+                <string>{{532,300},{60,84}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -462,7 +462,7 @@
             <key>arc0212.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1358,255},{63,80}}</string>
+                <string>{{1429,80},{63,80}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -475,11 +475,11 @@
             <key>arc0213.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1212,288},{60,78}}</string>
+                <string>{{1343,376},{60,78}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{60,78}}</string>
                 <key>sourceSize</key>
@@ -488,11 +488,11 @@
             <key>arc0214.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1212,350},{51,81}}</string>
+                <string>{{1427,276},{51,81}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{51,81}}</string>
                 <key>sourceSize</key>
@@ -501,7 +501,7 @@
             <key>arc0215.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{948,420},{40,85}}</string>
+                <string>{{1301,383},{40,85}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -514,7 +514,7 @@
             <key>arc0216.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1252,193},{39,91}}</string>
+                <string>{{1386,275},{39,91}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -527,7 +527,7 @@
             <key>arc0217.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1071,311},{43,99}}</string>
+                <string>{{1341,275},{43,99}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -540,7 +540,7 @@
             <key>arc0218.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{962,315},{47,102}}</string>
+                <string>{{80,288},{47,102}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -553,7 +553,7 @@
             <key>arc0219.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{386,324},{49,105}}</string>
+                <string>{{801,270},{49,105}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -566,7 +566,7 @@
             <key>arc1301.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1067,105},{54,101}}</string>
+                <string>{{1219,171},{54,101}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -579,7 +579,7 @@
             <key>arc1302.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{725,426},{73,79}}</string>
+                <string>{{313,201},{73,79}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -592,7 +592,7 @@
             <key>arc1303.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{315,433},{92,71}}</string>
+                <string>{{832,2},{92,71}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -605,11 +605,11 @@
             <key>arc1310.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1295,2},{91,62}}</string>
+                <string>{{1020,2},{91,62}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{91,62}}</string>
                 <key>sourceSize</key>
@@ -618,11 +618,11 @@
             <key>arc1311.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1293,269},{76,63}}</string>
+                <string>{{388,208},{76,63}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{76,63}}</string>
                 <key>sourceSize</key>
@@ -631,11 +631,11 @@
             <key>arc1312.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1296,95},{86,60}}</string>
+                <string>{{1203,2},{86,60}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{86,60}}</string>
                 <key>sourceSize</key>
@@ -644,11 +644,11 @@
             <key>arc1313.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1009,2},{101,58}}</string>
+                <string>{{626,2},{101,58}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{101,58}}</string>
                 <key>sourceSize</key>
@@ -657,11 +657,11 @@
             <key>arc1314.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{146,2},{106,58}}</string>
+                <string>{{307,2},{106,58}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{106,58}}</string>
                 <key>sourceSize</key>
@@ -670,11 +670,11 @@
             <key>arc1315.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{145,112},{106,59}}</string>
+                <string>{{199,2},{106,59}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{106,59}}</string>
                 <key>sourceSize</key>
@@ -683,11 +683,11 @@
             <key>arc1316.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1232,99},{92,62}}</string>
+                <string>{{926,2},{92,62}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{92,62}}</string>
                 <key>sourceSize</key>
@@ -696,11 +696,11 @@
             <key>arc1317.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{494,430},{75,63}}</string>
+                <string>{{594,317},{75,63}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{75,63}}</string>
                 <key>sourceSize</key>
@@ -709,11 +709,11 @@
             <key>arc1318.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1295,347},{86,59}}</string>
+                <string>{{1291,2},{86,59}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{86,59}}</string>
                 <key>sourceSize</key>
@@ -722,11 +722,11 @@
             <key>arc1319.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1011,312},{101,58}}</string>
+                <string>{{729,2},{101,58}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{101,58}}</string>
                 <key>sourceSize</key>
@@ -735,11 +735,11 @@
             <key>arc1320.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{296,218},{105,58}}</string>
+                <string>{{415,2},{105,58}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{105,58}}</string>
                 <key>sourceSize</key>
@@ -748,11 +748,11 @@
             <key>arc1321.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{870,107},{102,59}}</string>
+                <string>{{522,2},{102,59}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{102,59}}</string>
                 <key>sourceSize</key>
@@ -761,7 +761,7 @@
             <key>arc2430.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{559,430},{60,75}}</string>
+                <string>{{1405,368},{60,75}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -774,11 +774,11 @@
             <key>arc2431.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1358,175},{78,73}}</string>
+                <string>{{452,302},{78,73}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{78,73}}</string>
                 <key>sourceSize</key>
@@ -787,11 +787,11 @@
             <key>arc2432.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1358,337},{88,59}}</string>
+                <string>{{1113,2},{88,59}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{88,59}}</string>
                 <key>sourceSize</key>
@@ -800,11 +800,11 @@
             <key>arc2433.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1114,2},{100,39}}</string>
+                <string>{{431,167},{100,39}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{100,39}}</string>
                 <key>sourceSize</key>
@@ -813,11 +813,11 @@
             <key>arc2434.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{687,2},{104,39}}</string>
+                <string>{{1379,2},{104,39}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{104,39}}</string>
                 <key>sourceSize</key>
@@ -826,11 +826,11 @@
             <key>arc2435.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1252,2},{92,41}}</string>
+                <string>{{533,167},{92,41}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{92,41}}</string>
                 <key>sourceSize</key>
@@ -839,7 +839,7 @@
             <key>arc2436.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1262,435},{82,43}}</string>
+                <string>{{697,272},{82,43}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -852,7 +852,7 @@
             <key>arc2437.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1346,435},{82,43}}</string>
+                <string>{{671,317},{82,43}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -865,11 +865,11 @@
             <key>arc2438.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1123,104},{98,35}}</string>
+                <string>{{1379,43},{98,35}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{98,35}}</string>
                 <key>sourceSize</key>
@@ -878,11 +878,11 @@
             <key>arc2439.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{2,243},{110,32}}</string>
+                <string>{{307,62},{110,32}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{110,32}}</string>
                 <key>sourceSize</key>
@@ -891,11 +891,11 @@
             <key>arc2440.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{300,2},{106,33}}</string>
+                <string>{{199,63},{106,33}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{106,33}}</string>
                 <key>sourceSize</key>
@@ -904,7 +904,7 @@
             <key>arc2600.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{799,212},{47,103}}</string>
+                <string>{{382,96},{47,103}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -917,7 +917,7 @@
             <key>arc2601.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1069,2},{43,100}}</string>
+                <string>{{1166,282},{43,100}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -930,7 +930,7 @@
             <key>arc2602.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{850,316},{56,102}}</string>
+                <string>{{129,288},{56,102}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -943,7 +943,7 @@
             <key>arc2603.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{745,213},{52,103}}</string>
+                <string>{{409,392},{52,103}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -956,7 +956,7 @@
             <key>arc2604.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{638,321},{32,104}}</string>
+                <string>{{375,392},{32,104}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -969,11 +969,11 @@
             <key>arc2605.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{2,465},{40,104}}</string>
+                <string>{{333,392},{40,104}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{40,104}}</string>
                 <key>sourceSize</key>
@@ -982,7 +982,7 @@
             <key>arc2606.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{743,319},{53,103}}</string>
+                <string>{{1061,174},{53,103}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -995,7 +995,7 @@
             <key>arc2607.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1032,208},{56,101}}</string>
+                <string>{{520,386},{56,101}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -1008,7 +1008,7 @@
             <key>arc2608.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{915,211},{50,102}}</string>
+                <string>{{1114,282},{50,102}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -1021,7 +1021,7 @@
             <key>arc2609.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{840,2},{36,103}}</string>
+                <string>{{1061,391},{36,103}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -1034,7 +1034,7 @@
             <key>arc2610.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{830,107},{38,103}}</string>
+                <string>{{1301,278},{38,103}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -1047,7 +1047,7 @@
             <key>arc2611.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{908,316},{52,102}}</string>
+                <string>{{852,265},{52,102}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -1060,7 +1060,7 @@
             <key>arc4600.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1207,405},{53,94}}</string>
+                <string>{{1246,388},{53,94}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -1073,11 +1073,11 @@
             <key>arc4601.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1116,308},{95,94}}</string>
+                <string>{{102,2},{95,94}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{95,94}}</string>
                 <key>sourceSize</key>
@@ -1086,7 +1086,7 @@
             <key>arc4602.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1155,2},{95,95}}</string>
+                <string>{{2,98},{95,95}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -1099,11 +1099,11 @@
             <key>arc4603.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1090,208},{98,94}}</string>
+                <string>{{2,2},{98,94}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{98,94}}</string>
                 <key>sourceSize</key>
@@ -1112,11 +1112,11 @@
             <key>arc4604.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{211,438},{66,102}}</string>
+                <string>{{243,98},{66,102}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{66,102}}</string>
                 <key>sourceSize</key>
@@ -1125,7 +1125,7 @@
             <key>arc4605.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{632,2},{53,104}}</string>
+                <string>{{125,392},{53,104}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -1138,7 +1138,7 @@
             <key>arc4606.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{622,215},{50,104}}</string>
+                <string>{{233,392},{50,104}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -1151,7 +1151,7 @@
             <key>arc6000.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{511,216},{47,105}}</string>
+                <string>{{969,391},{47,105}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -1164,7 +1164,7 @@
             <key>arc6001.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{776,107},{52,103}}</string>
+                <string>{{852,160},{52,103}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -1177,7 +1177,7 @@
             <key>arc6002.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{787,2},{51,103}}</string>
+                <string>{{962,283},{51,103}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -1190,7 +1190,7 @@
             <key>arc6003.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{798,318},{50,103}}</string>
+                <string>{{1099,386},{50,103}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -1203,11 +1203,11 @@
             <key>arc6004.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{108,441},{64,101}}</string>
+                <string>{{628,62},{64,101}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{64,101}}</string>
                 <key>sourceSize</key>
@@ -1216,7 +1216,7 @@
             <key>arc6005.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1003,105},{62,101}}</string>
+                <string>{{1131,63},{62,101}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -1229,7 +1229,7 @@
             <key>arc6006.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{967,209},{63,101}}</string>
+                <string>{{694,62},{63,101}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -1242,7 +1242,7 @@
             <key>arc6007.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{931,106},{70,101}}</string>
+                <string>{{99,98},{70,101}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -1255,7 +1255,7 @@
             <key>arc6008.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{672,321},{69,103}}</string>
+                <string>{{311,96},{69,103}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -1268,7 +1268,7 @@
             <key>arc6009.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{674,214},{69,103}}</string>
+                <string>{{431,62},{69,103}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -1281,7 +1281,7 @@
             <key>arc6010.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{937,2},{70,101}}</string>
+                <string>{{171,98},{70,101}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -1294,11 +1294,11 @@
             <key>arc6011.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{621,428},{76,102}}</string>
+                <string>{{2,288},{76,102}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{76,102}}</string>
                 <key>sourceSize</key>
@@ -1307,7 +1307,7 @@
             <key>arc6012.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{848,212},{65,102}}</string>
+                <string>{{502,63},{65,102}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -1320,7 +1320,7 @@
             <key>arc6013.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{878,2},{57,102}}</string>
+                <string>{{569,63},{57,102}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -1333,7 +1333,7 @@
             <key>arc6014.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{717,108},{57,103}}</string>
+                <string>{{1195,64},{57,103}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -1346,7 +1346,7 @@
             <key>arc6015.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{728,2},{57,103}}</string>
+                <string>{{1302,63},{57,103}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -1359,7 +1359,7 @@
             <key>arc6016.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{608,109},{59,104}}</string>
+                <string>{{64,392},{59,104}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -1372,7 +1372,7 @@
             <key>arc6017.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{134,222},{60,106}}</string>
+                <string>{{1017,66},{60,106}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -1385,7 +1385,7 @@
             <key>arc6018.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{102,332},{61,107}}</string>
+                <string>{{954,66},{61,107}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -1398,7 +1398,7 @@
             <key>arc6019.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{329,325},{55,105}}</string>
+                <string>{{463,377},{55,105}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -1411,7 +1411,7 @@
             <key>arc8100.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{410,216},{49,105}}</string>
+                <string>{{1063,279},{49,105}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -1424,7 +1424,7 @@
             <key>arc8101.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{2,355},{49,108}}</string>
+                <string>{{352,282},{49,108}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -1437,7 +1437,7 @@
             <key>arc8102.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{2,124},{47,117}}</string>
+                <string>{{403,273},{47,117}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -1450,7 +1450,7 @@
             <key>arc8103.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{2,2},{47,120}}</string>
+                <string>{{648,165},{47,120}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -1463,7 +1463,7 @@
             <key>arc8104.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{560,216},{60,104}}</string>
+                <string>{{2,392},{60,104}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -1476,7 +1476,7 @@
             <key>arc8105.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{269,326},{58,105}}</string>
+                <string>{{241,285},{58,105}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -1489,7 +1489,7 @@
             <key>arc9300.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{669,108},{46,104}}</string>
+                <string>{{285,392},{46,104}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -1502,7 +1502,7 @@
             <key>arc9301.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{589,2},{41,105}}</string>
+                <string>{{1018,391},{41,105}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -1515,7 +1515,7 @@
             <key>arc9302.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{257,2},{41,106}}</string>
+                <string>{{1211,276},{41,106}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -1528,7 +1528,7 @@
             <key>arc9303.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{51,112},{45,108}}</string>
+                <string>{{628,382},{45,108}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -1541,7 +1541,7 @@
             <key>arc9304.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{51,2},{46,108}}</string>
+                <string>{{724,362},{46,108}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -1554,7 +1554,7 @@
             <key>arc9305.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{36,243},{49,108}}</string>
+                <string>{{801,160},{49,108}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -1567,7 +1567,7 @@
             <key>arc9306.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{53,353},{47,108}}</string>
+                <string>{{675,362},{47,108}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -1580,7 +1580,7 @@
             <key>arc9307.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{87,222},{45,108}}</string>
+                <string>{{922,388},{45,108}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -1593,7 +1593,7 @@
             <key>arc9308.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{98,112},{45,108}}</string>
+                <string>{{1199,384},{45,108}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -1606,7 +1606,7 @@
             <key>arc9309.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{99,2},{45,108}}</string>
+                <string>{{1254,278},{45,108}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -1624,9 +1624,9 @@
             <key>realTextureFileName</key>
             <string>arcueid.png</string>
             <key>size</key>
-            <string>{1433,507}</string>
+            <string>{1494,498}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:3e72f0da0d133ec6c245488caf95855f:477c173af1b2b2d095b6069a76ddac6c:b9468c3648c9f2f3550496340d5af0a9$</string>
+            <string>$TexturePacker:SmartUpdate:2d1070a085aa7c64be7a2d4704ca8ba9:477c173af1b2b2d095b6069a76ddac6c:b9468c3648c9f2f3550496340d5af0a9$</string>
             <key>textureFileName</key>
             <string>arcueid.png</string>
         </dict>

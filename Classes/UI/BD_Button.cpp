@@ -92,7 +92,14 @@ void BD_Button::recv_message_main(void* src_msg)
 void BD_Button::recv_message_lua(void* src_msg)
 {
 }
+void BD_Button::setButtonImage(cocos2d::CCTexture2D* butt_img, cocos2d::CCTexture2D* pressed_butt_img)
+{
+	CCAssert(butt_img != nullptr, "butt_img_texture is NULL.");
+	CCAssert(pressed_butt_img != nullptr, "pressed_butt_img_texture is NULL.");
 
+	button_image->setTexture(butt_img);
+	pressed_button_image->setTexture(pressed_butt_img);
+}
 void BD_Button::setResource(void* packet)
 {
 	butt_pack* butt_packet = static_cast<butt_pack*>(packet);

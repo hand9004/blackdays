@@ -17,8 +17,6 @@ public:
 	}
 public:
 	void register_StageFunction();
-	void init_Manager();
-	void destroy_Manager();
 
 	void init_Stage();
 	void update_Stage();

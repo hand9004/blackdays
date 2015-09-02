@@ -2,6 +2,7 @@
 #include "../LuaCommunicator.h"
 #include "../Graphics/GraphicsController.h"
 #include "../UI/UIController.h"
+#include "../UI/BD_Button.h"
 #include "../Utility/Utility.h"
 #include "ParticleController.h"
 #include "Map.h"
@@ -55,6 +56,8 @@ int l_command_to_Object(lua_State* L)
 		CCPoint dest_pt = CCPoint(pos_X, pos_Y);
 
 		finded_obj->Move(dest_pt);
+
+		lua_pop(L, 4);
 	}
 	else if (!strcmp(command_str, "Skill"))
 	{
@@ -64,19 +67,67 @@ int l_command_to_Object(lua_State* L)
 	{
 		int pos_X = lua_tointeger(L, 3);
 		int pos_Y = lua_tointeger(L, 4);
-
+		unsigned int patrol_delay_time = lua_tointeger(L, 5);
 		CCPoint dest_pt = CCPoint(pos_X, pos_Y);
 
-		finded_obj->Patrol(dest_pt);
+		finded_obj->Patrol(dest_pt, patrol_delay_time);
+
+		lua_pop(L, 4);
 	}
+
+	return 0;
+}
+
+int l_set_ObjectInfo(lua_State* L)
+{
+	unsigned int object_id = lua_tointeger(L, 1);
+	const char* set_object_stat = lua_tostring(L, 2);
+
+	GameObject* finded_obj = ObjectController::Instance()->getObject(object_id);
+	obj_info* finded_obj_info = &finded_obj->getObjectInfo();
+	if (!strcmp(set_object_stat, "max_health"))
+	{
+		unsigned int max_health_pt = lua_tointeger(L, 3);
+
+		if (finded_obj_info->health_point > max_health_pt)
+			finded_obj_info->health_point = max_health_pt;
+
+		finded_obj_info->max_health_point = max_health_pt;
+	}
+	else if (!strcmp(set_object_stat, "attack_point"))
+	{
+		unsigned int atk_pt = lua_tointeger(L, 3);
+
+		finded_obj_info->attack_point = atk_pt;
+	}
+	else if (!strcmp(set_object_stat, "defense_point"))
+	{
+		unsigned int def_pt = lua_tointeger(L, 3);
+
+		finded_obj_info->defense_point = def_pt;
+	}
+	else if (!strcmp(set_object_stat, "move_speed"))
+	{
+		unsigned int move_speed = lua_tointeger(L, 3);
+
+		finded_obj_info->move_speed = move_speed;
+	}
+	else if (!strcmp(set_object_stat, "patrol_delay_time"))
+	{
+		unsigned int patrol_delay_time = lua_tointeger(L, 3);
+
+		finded_obj_info->patrol_delay_time = patrol_delay_time;
+	}
+
+	lua_pop(L, 3);
 
 	return 0;
 }
 
 int l_bindUI_On_GameObject(lua_State* L)
 {
-	const char* table_name = lua_tostring(L, -2);
-	const char* ui_key = lua_tostring(L, -1);
+	const char* table_name = lua_tostring(L, 1);
+	const char* skill_name = lua_tostring(L, 2);
 
 	lua_pop(L, 2);
 
@@ -89,7 +140,7 @@ int l_bindUI_On_GameObject(lua_State* L)
 	unsigned int add_id = lua_tointeger(L, -1);
 	UIComponent* add_ui_comp = UIController::Instance()->find_UIComponent(add_id);
 
-	ObjectController::Instance()->add_BindUI(add_ui_comp, ui_key);
+	ObjectController::Instance()->add_BindUI(add_ui_comp, table_name, skill_name);
 
 	lua_pop(L, 1);
 
@@ -150,7 +201,6 @@ void ObjectController::update_Dead_Object()
 		GameObject* game_obj_iter = game_object_list.at(i);
 		auto finded_iter = std::find(begin, end, game_obj_iter);
 
-		bool isDead = game_obj_iter->dead_check();
 		bool isDestroy = game_obj_iter->destroy_check();
 
 		if (isDestroy)
@@ -199,13 +249,36 @@ void ObjectController::register_ObjectFunction()
 	LuaCommunicator::Instance()->Register_CFunction("update_object", l_update_Object);
 	LuaCommunicator::Instance()->Register_CFunction("remove_object", l_remove_Object);
 	LuaCommunicator::Instance()->Register_CFunction("command_to_object", l_command_to_Object);
+	LuaCommunicator::Instance()->Register_CFunction("set_ObjectInfo", l_set_ObjectInfo);
 	LuaCommunicator::Instance()->Register_CFunction("bindUI_on_game_object", l_bindUI_On_GameObject);
 }
 
-void ObjectController::add_BindUI(UIComponent* src_ui, const char* key)
+void ObjectController::add_BindUI(UIComponent* src_ui, const char* key, const char* skill_name)
 {
 	CCAssert(src_ui != nullptr, "Can't BindUI To Object. UIComponent Is NULL.");
 	binded_ui_list[key] = src_ui;
+
+	// 스킬이름이 공란이 아닐 경우는 버튼의 이미지를 변경해주고,
+	// 스킬이름이 공란일 경우는 버튼의 이미지를 디폴트로 그대로 놔둔다.
+	if (strcmp(skill_name, ""))
+	{
+		GameObject* player_obj = getObject("player");
+
+		SkillController* player_skill_ctrl = player_obj->getSkillController();
+		skill_info* selected_skill = player_skill_ctrl->getSkill(skill_name);
+
+		CCSprite* skill_img_spr = CCSprite::create(selected_skill->skill_image_name);
+
+		player_obj->setSkillSelect(skill_name);
+
+		BD_Button* butt_inst = dynamic_cast<BD_Button*>(src_ui);
+		if (butt_inst != nullptr)
+		{
+			CCTexture2D* skill_texture = skill_img_spr->getTexture();
+			butt_inst->setButtonImage(skill_texture, skill_texture);
+			skill_img_spr->retain();
+		}
+	}
 }
 void ObjectController::update_BindUI()
 {
@@ -220,18 +293,23 @@ void ObjectController::update_BindUI()
 		{
 			if (bind_msg_iter)
 			{
-				if (!strcmp(i->first, "skill_1"))
-					selected_Object->setSkillSelect(0);
-				else if (!strcmp(i->first, "skill_2"))
-					selected_Object->setSkillSelect(1);
-				else if (!strcmp(i->first, "skill_3"))
-					selected_Object->setSkillSelect(2);
-				else if (!strcmp(i->first, "skill_4"))
-					selected_Object->setSkillSelect(3);
+				const unsigned int skill_index[4] = { 0, 1, 2, 3 };
+
+				bool isSkillSelected = false;
+
+				if (!strcmp(i->first, "skill_button_1"))
+					isSkillSelected = selected_Object->setSkillSelect(skill_index[0]);
+				else if (!strcmp(i->first, "skill_button_2"))
+					isSkillSelected = selected_Object->setSkillSelect(skill_index[1]);
+				else if (!strcmp(i->first, "skill_button_3"))
+					isSkillSelected = selected_Object->setSkillSelect(skill_index[2]);
+				else if (!strcmp(i->first, "skill_button_4"))
+					isSkillSelected = selected_Object->setSkillSelect(skill_index[3]);
 
 				i->second->recv_message_main(false);
 
-				selected_Object->Skill();
+				if (isSkillSelected)
+					selected_Object->Skill();
 			}
 		}
 	}
@@ -259,7 +337,7 @@ void ObjectController::setObjectInfo(obj_info& p_obj_info)
 		p_obj_info.recognize_area = lua_tointeger(p_lua_st, -9);
 		p_obj_info.firing_area_X = lua_tointeger(p_lua_st, -8);
 		p_obj_info.firing_area_Y = lua_tointeger(p_lua_st, -7);
-		p_obj_info.partol_delay_time = lua_tointeger(p_lua_st, -6);
+		p_obj_info.patrol_delay_time = lua_tointeger(p_lua_st, -6);
 		p_obj_info.move_speed = lua_tonumber(p_lua_st, -5);
 		INTEGER_TO_BOOLEAN(p_obj_info.isEnemy, lua_toboolean(p_lua_st, -4));
 		INTEGER_TO_BOOLEAN(p_obj_info.isHero, lua_toboolean(p_lua_st, -3));
@@ -376,8 +454,6 @@ void ObjectController::setAniFrame(obj_info& p_obj_info)
 		lua_pop(p_lua_st, no_table_size);
 
 		///////////////////////////////////////////////
-		int frame_size = ani_table_size - no_table_size;
-
 		for (int j = no_table_size + 1; j <= ani_table_size; ++j)
 		{
 			lua_pushinteger(p_lua_st, j);

@@ -25,18 +25,36 @@ function stage1.stage_init(GameObject, Map)
 --	add_object(object_table[2], 0, 100)
 
 	table.insert(GameObject_ID, add_object(object_table[4], 200, 200))
-	table.insert(GameObject_ID, add_object(object_table[5], 2000, 200))
-	table.insert(GameObject_ID, add_object(object_table[6], 2000, 0))
+
+	-- Stage 1 of Level 1
+	table.insert(GameObject_ID, add_object(object_table[6], 1300, 200))
+	table.insert(GameObject_ID, add_object(object_table[6], 1300, 20))
+
+	command_to_object(GameObject_ID[2], "Patrol", 1000, 200, 1000)
+	command_to_object(GameObject_ID[3], "Patrol", 1000, 20, 2000)
+	-- Stage 1 of Level 2
+	table.insert(GameObject_ID, add_object(object_table[6], 2100, 140))
+	table.insert(GameObject_ID, add_object(object_table[6], 2100, 100))
+	table.insert(GameObject_ID, add_object(object_table[6], 2100, 60))
+	table.insert(GameObject_ID, add_object(object_table[6], 2100, 20))
+
+	command_to_object(GameObject_ID[4], "Patrol", 1800, 140, 500)
+	command_to_object(GameObject_ID[5], "Patrol", 1800, 100, 1000)
+	command_to_object(GameObject_ID[6], "Patrol", 1800, 60, 1500)
+	command_to_object(GameObject_ID[7], "Patrol", 1800, 20, 2000)
+
+	set_ObjectInfo(GameObject_ID[4], "move_speed", 5)
+	set_ObjectInfo(GameObject_ID[5], "move_speed", 5)
+	set_ObjectInfo(GameObject_ID[6], "move_speed", 5)
+	set_ObjectInfo(GameObject_ID[7], "move_speed", 5)
+	-- Stage 1 of Level 3
+
+	for i = 2, table.getn(GameObject_ID) do
+		set_ObjectInfo(GameObject_ID[i], "attack_point", 9999)
+	end
 
 --	load_background_music("sounds/main_menu.mp3")
 	play_background_music("sounds/main_menu.mp3", true)
-
-	for key, value in ipairs(GameObject_ID) do
-		LOG("Object Unique_ID = " .. value)
-	end
-
-	command_to_object(GameObject_ID[2], "Patrol", 1500, 200)
-	command_to_object(GameObject_ID[3], "Patrol", 1500, 0)
 end
 
 function stage1.stage_update()

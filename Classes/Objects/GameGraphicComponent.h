@@ -40,6 +40,7 @@ public:
 protected:
 	cocos2d::CCPoint target_pos;
 	cocos2d::CCSprite* draw_spr;
+	// 객체의 실제 충돌 영역이다.
 	cocos2d::CCRect content_rect;
 	Effect grap_effect;
 };

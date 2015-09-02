@@ -245,7 +245,6 @@ unsigned int UIController::add_UIComponent(UI_TYPE ui_type, const char* key, voi
 }
 unsigned int UIController::check_UIComponent()
 {
-	bool message_box_active = false;
 	unsigned int activate_UI_ID = 0;
 	
 	auto begin = ui_component_list.begin();
@@ -341,8 +340,6 @@ void UIController::set_after_layerAction(const char* layer_name, const char* aft
 }
 void UIController::update_UILayer()
 {
-	unsigned int layer_cnt = layer_list.size();
-
 	auto iter = layer_list.begin();
 	auto begin = layer_list.begin();
 	auto end = layer_list.end();

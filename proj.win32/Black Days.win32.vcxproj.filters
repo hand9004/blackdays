@@ -395,6 +395,9 @@
     <None Include="..\Resources\fonts\arial-unicode-26.fnt">
       <Filter>resource\fonts</Filter>
     </None>
+    <None Include="..\Resources\fonts\font_1.fnt">
+      <Filter>resource\fonts</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\Scene\StartScene.h">
@@ -630,5 +633,10 @@
     <ClCompile Include="..\Classes\Objects\ParticleController.cpp">
       <Filter>Objects</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\Resources\fonts\font_1_0.png">
+      <Filter>resource\fonts</Filter>
+    </Image>
   </ItemGroup>
 </Project>

@@ -4,40 +4,36 @@ stage1 = {
 
 			{
 				index = 0,
-				background = "Images/background1.png",
+				background = "Images/background3.png",
 				move_area = {0, 0, 800, 200},
 
 			},
 
 			{
 				index = 1,
-				background = "Images/background1.png",
+				background = "Images/background3.png",
 				move_area = {0, 0, 800, 200},
 
-				{400, 180, "Images/stage1.plist", "tree1.png", 0},
-				{300, 0, "Images/stage1.plist", "tree.png", 0},
-				{600, 100, "Images/stage1.plist", "tree1.png", 0},
+				{100, 100, "Images/stage1.plist", "tree1.png", 0},
 			},
 
 			{
 				index = 2,
-				background = "Images/background1.png",
+				background = "Images/background3.png",
 				move_area = {0, 0, 800, 200},
 
-				{400, 180, "Images/stage1.plist", "tree1.png", 0},
-				{300, 0, "Images/stage1.plist", "tree.png", 0},
-				{600, 100, "Images/stage1.plist", "tree1.png", 0},
+				{100, 180, "Images/stage1.plist", "tree1.png", 0},
 			},
 
 			{
 				index = 3,
-				background = "Images/background1.png",
+				background = "Images/background3.png",
 				move_area = {0, 0, 800, 200},
 			},
 
 			{
 				index = 4,
-				background = "Images/background1.png",
+				background = "Images/background3.png",
 				move_area = {0, 0, 800, 200},
 			},
 
@@ -49,23 +45,13 @@ stage1 = {
 			-- life_val, emission_rate, gravity
 			particle_data =
 			{
-				{"snow_pt", "Images/RainParticle.png", 10, 400, 550,
-				 1.5, 400, 0, -600},
-				{"snow_pt_1", "Images/RainParticle.png", 10, 1200, 550,
-				 1.5, 400, 0, -600},
-				{"snow_pt_2", "Images/RainParticle.png", 10, 2000, 550,
-				 1.5, 400, 0, -600},
-				{"snow_pt_3", "Images/RainParticle.png", 10, 2800, 550,
-				 1.5, 400, 0, -600},
-				{"snow_pt_4", "Images/RainParticle.png", 10, 3600, 550,
-				 1.5, 400, 0, -600},
 				{"fire_pt", "Images/RainParticle.png", 0, 1000, 250,
 				 0.5, 200, 0, 300},
 			},
 		 }
 
 stage2 = {
-			stage_type = "assasinate",
+			stage_type = "Assassinate",
 			{"Images/stage1.plist"},
 
 			{

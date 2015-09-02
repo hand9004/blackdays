@@ -17,9 +17,9 @@ public:
 	void Update();
 	void Destroy();
 public:
-	void change_PosList_On_Scrolling(float delta_x);
-	void change_ThrowPosList_On_Scrolling(float delta_x);
-	void change_SkillPos_On_Scrolling(float delta_x);
+	void change_PosList_On_Scrolling(int delta_x);
+	void change_ThrowPosList_On_Scrolling(int delta_x);
+	void change_SkillPos_On_Scrolling(int delta_x);
 public:
 	cocos2d::CCPoint& getObjectPos() { return object_info.pos; }
 	cocos2d::CCPoint getDestMovePos() { return dest_move_pos; }
@@ -36,7 +36,6 @@ public:
 	bool getIsCollidedToTarget() { return isCollidedToTarget; }
 	bool getIsLeft() { return isLeft; }
 	bool getIsChargeAttacked() { return isNonTargetAttacked; }
-	bool getIsHide() { return onHide; }
 	float getMoveSpeed() { return object_info.move_speed; }
 	float getMovedDeltaX() { return moved_delta_x; }
 	obj_event getEvent(){ return current_event; }
@@ -52,15 +51,21 @@ public:
 	void setIsChargeAttacked(bool isChargeAttacked) { this->isNonTargetAttacked = isChargeAttacked; }
 	void setTarget(GameObject* target) { this->target = target; }
 	void setIsSelected(bool isSelected) { this->isSelected = isSelected; }
+	void setSleepTimerReset()
+	{
+		sleep_start_time = get_ms_onSystem();
+		sleep_end_time = get_ms_onSystem();
+	}
 public:
-	void setSkillSelect(unsigned int selected_index) { skill_ctrl.setSkillSelect(selected_index); }
+	bool setSkillSelect(unsigned int selected_index) { return skill_ctrl.setSkillSelect(selected_index); }
+	bool setSkillSelect(const char* skill_name) { return skill_ctrl.setSkillSelect(skill_name); }
 
 	SkillController* getSkillController() { return &skill_ctrl; }
 public:
 	void Move(cocos2d::CCPoint dest_pt);
 	void Attack(GameObject* target);
 	void Skill();
-	void Patrol(cocos2d::CCPoint patrol_pt);
+	void Patrol(cocos2d::CCPoint patrol_pt, unsigned int patrol_delay_time);
 	void SetAllObjectList(std::vector<GameObject*>all_object_list);
 public:
 	bool dead_check();
@@ -71,14 +76,14 @@ private:
 	void skill_update();
 	void patrol_update();
 	void search_update();
+	void sleep_update();
 	void dead_update();
-	void hide_update();
 
 	void throw_object_update();
-	bool check_firing_area(GameObject* target);
-	bool check_has_map_object_in_line(CCPoint curr_pos, CCPoint target_pos);
 	void check_non_target_attacked();
 	void check_is_attacked();
+	bool check_firing_area(GameObject* target);
+	bool check_has_map_object_in_line(CCPoint curr_pos, CCPoint target_pos);
 private:
 	cocos2d::CCPoint is_intersect_line_to_line(CCPoint pt1, CCPoint pt2, CCPoint pt3, CCPoint pt4);
 
@@ -94,15 +99,15 @@ private:
 	SkillController skill_ctrl;
 private:
 	GameObject* target;
-	bool isLeft, isSelected, isAttackingByEnemy, isNonTargetAttacked, isCollidedToTarget, onHide, onDestroy;
-	obj_event current_event, prev_event;
+	bool isLeft, isSelected, isAttackingByEnemy, isNonTargetAttacked, isCollidedToTarget, onSleep, onDestroy;
 	unsigned int current_pos_index;
+	obj_event current_event, prev_event;
 	std::vector<cocos2d::CCPoint>move_line_pt;
 	std::vector<CurveThrowObject*>throwing_object_list;
 	std::vector<GameObject*>all_object_list;
 
 	cocos2d::CCPoint dest_move_pos, start_move_pos, *patrol_select_pos;
-	long patrol_start_time, patrol_end_time, hide_start_time, hide_end_time;
+	long patrol_start_time, patrol_end_time, sleep_start_time, sleep_end_time;
 	float moved_delta_x;
 };
 

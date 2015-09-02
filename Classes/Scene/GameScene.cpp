@@ -65,14 +65,11 @@ void GameScene::init_SceneInfo()
 	UIController::Instance()->register_UIFunctions();
 	SoundManager::Instance()->register_SoundFunction();
 
-	ParticleController::Instance()->init_ParticleController();
-
 	LuaCommunicator::Instance()->Call_LuaFunction("init_on_platform", ">");
 
 	LuaCommunicator::Instance()->Call_LuaFunction("ui_Init", ">");
 	LuaCommunicator::Instance()->Call_LuaFunction("ui_Update", ">");
 
-	StageManager::Instance()->init_Manager();
 	StageManager::Instance()->init_Stage();
 
 	schedule(schedule_selector(GameScene::schedule_updater));
@@ -82,7 +79,9 @@ void GameScene::init_SceneInfo()
 
 void GameScene::destroy_SceneInfo()
 {
-	StageManager::Instance()->destroy_Manager();
+	StageManager::Instance()->setStageAllClear(false);
+	StageManager::Instance()->setStageClear(false);
+	StageManager::Instance()->setVictorious(false);
 	unschedule(schedule_selector(GameScene::schedule_updater));
 	LuaCommunicator::Instance()->Lua_FileClose();
 }

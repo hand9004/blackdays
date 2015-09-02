@@ -10,8 +10,11 @@ skill_button_2 = {id = 0, untouched = "Images/button.png", touched = "Images/but
 skill_button_3 = {id = 0, untouched = "Images/button.png", touched = "Images/button.png", posX = 650, posY = 0}
 skill_button_4 = {id = 0, untouched = "Images/button.png", touched = "Images/button.png", posX = 725, posY = 0}
 
-stage_message = {id = 0, message = "test", font_name = "Lucida Blackletter", mode = "toast"
-				, posX = 0, posY = 0, delay_time_ms = 3000, font_size = 90, color = LemonChiffon}
+stage_message = {id = 0, message = "test", font_name = "font_1.fnt", mode = "toast"
+				, posX = 0, posY = 0, delay_time_ms = 3000, font_size = 90, color = LightSteelBlue}
+
+stage_explain_message = {id = 0, message = "", font_name = "font_1.fnt", mode = "toast"
+				, posX = 0, posY = 0, delay_time_ms = 3000, font_size = 30, color = LightSteelBlue}
 
 camera_hold_check_box = {id = 0, unchecked = "Images/unchecked.png", checked = "Images/checked.png"
 				, posX = 0, posY = 0}
@@ -42,6 +45,9 @@ function ui_Init()
 	stage_message.posX = screen_width / 2
 	stage_message.posY = screen_height / 2
 
+	stage_explain_message.posX = screen_width / 2
+	stage_explain_message.posY = stage_message.posY - 50;
+
 	skill_button_1.id = create_UI("skill_button_1", 1)
 	skill_button_2.id = create_UI("skill_button_2", 1)
 	skill_button_3.id = create_UI("skill_button_3", 1)
@@ -52,6 +58,7 @@ function ui_Init()
 --	skill_slide_selector.id = create_UI("skill_slide_selector", 5)
 --	object_slide_selector.id = create_UI("object_slide_selector", 5)
 	stage_message.id = create_UI("stage_message", 7)
+	stage_explain_message.id = create_UI("stage_explain_message", 7)
 	camera_hold_check_box.id = create_UI("camera_hold_check_box", 2)
 
 	local notice_string = "Init ID = "
@@ -59,9 +66,11 @@ function ui_Init()
 --	LOG(notice_string .. skill_slide_selector.id)
 --	LOG(notice_string .. object_slide_selector.id)
 	LOG(notice_string .. stage_message.id)
+	LOG(notice_string .. stage_explain_message.id)
 	LOG(notice_string .. camera_hold_check_box.id)
 
 	set_active_UI(stage_message.id, false)
+	set_active_UI(stage_explain_message.id, false)
 end
 
 function ui_Update()
