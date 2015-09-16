@@ -4,6 +4,8 @@
 
 BD_PopupMessage::BD_PopupMessage(void) : start_time(0), end_time(0), opacity_val(0), onEvent(false), onReset(false)
 {
+	strset(message, 0);
+	strset(message_mode, 0);
 }
 
 
@@ -107,15 +109,24 @@ void* BD_PopupMessage::send_message_lua()
 }
 void BD_PopupMessage::recv_message_main(void* src_msg)
 {
-	bool onEventUI = static_cast<bool>(src_msg);
+	pop_message_msg_recv* recv_msg = static_cast<pop_message_msg_recv*>(src_msg);
 
-	onEvent = onEventUI;
+	onEvent = recv_msg->onPopup;
+	if (recv_msg->onChange)
+	{
+		strcpy(message, recv_msg->message);
+		pop_font_label->setString(message);
+		pop_font_label->setColor(recv_msg->change_color);
+		pop_font_label->setFontSize(recv_msg->font_size);
+	}
 }
 void BD_PopupMessage::recv_message_lua(void* src_msg)
 {
 	pop_msg_update_pack* pop_mess_update_pack = static_cast<pop_msg_update_pack*>(src_msg);
 
-	pop_font_label->setString(pop_mess_update_pack->message);
+	strcpy(message, pop_mess_update_pack->message);
+
+	pop_font_label->setString(message);
 
 	start_time = get_ms_onSystem();
 
@@ -123,7 +134,7 @@ void BD_PopupMessage::recv_message_lua(void* src_msg)
 }
 void BD_PopupMessage::setResource(void* packet)
 {
-	char font_full_path[512] = {0,};
+	char font_full_path[512] = { 0, };
 
 	pop_message_pack* pop_mess_pack = static_cast<pop_message_pack*>(packet);
 
@@ -131,19 +142,27 @@ void BD_PopupMessage::setResource(void* packet)
 	delay_time_ms = pop_mess_pack->delay_time_ms;
 
 	strncpy(message_mode, pop_mess_pack->message_mode, sizeof(message_mode));
-	strncpy(message, pop_mess_pack->message, sizeof(message));
 
 	strcpy(font_full_path, "fonts/");
 	strncat(font_full_path, pop_mess_pack->font_name, sizeof(font_full_path));
 
-	pop_font_label = cocos2d::CCLabelBMFont::create();
-	pop_font_label->setFntFile(font_full_path);
+	strcpy(message, pop_mess_pack->message);
+
+	pop_font_label = cocos2d::CCLabelTTF::create();
 	pop_font_label->setString(message);
+	pop_font_label->setFontName(font_full_path);
+	pop_font_label->setFontSize(pop_mess_pack->font_size);
 	pop_font_label->setColor(pop_mess_pack->color_val);
 	pop_font_label->setAnchorPoint(cocos2d::CCPoint(0.5f, 0.5f));
-	pop_font_label->setOpacity(0);
+
+	if (!strcmp(message_mode, "toast"))
+		pop_font_label->setOpacity(0);
+	else
+		pop_font_label->setOpacity(255);
 
 	addChild(pop_font_label);
+
+	pop_font_label->retain();
 
 	SAFE_DELETE(pop_mess_pack);
 }

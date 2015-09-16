@@ -2,7 +2,6 @@
 #include "UIController.h"
 #include "../Utility/Utility.h"
 #include "../Graphics/GraphicsController.h"
-#include <SimpleAudioEngine.h>
 
 BD_CheckBox::BD_CheckBox(void) : isChecked(false), checked_image(nullptr), unchecked_image(nullptr)
 {
@@ -122,10 +121,14 @@ void BD_CheckBox::setResource(void* packet)
 	checked_image->setAnchorPoint(cocos2d::CCPoint(0.0f, 0.0f));
 	unchecked_image->setAnchorPoint(cocos2d::CCPoint(0.0f, 0.0f));
 
+	checked_image->setZOrder(2);
 	this->setContentSize(unchecked_image->getContentSize());
 
 	addChild(checked_image);
 	addChild(unchecked_image);
+
+	checked_image->retain();
+	unchecked_image->retain();
 
 	SAFE_DELETE(chk_packet);
 }

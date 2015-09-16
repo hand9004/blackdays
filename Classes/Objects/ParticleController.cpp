@@ -2,7 +2,7 @@
 
 USING_NS_CC;
 
-ParticleController::ParticleController() : p_lua_st(nullptr)
+ParticleController::ParticleController()
 {
 }
 

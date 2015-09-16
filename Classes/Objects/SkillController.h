@@ -1,5 +1,6 @@
 #pragma once
 #include "ObjectProtocol.h"
+#include "../Utility/Utility.h"
 #include "../Objects/GameGraphicController.h"
 
 const float charge_speed = 2.0f;
@@ -62,7 +63,7 @@ public:
 	void setAniInfo(grap_to_obj_animate* ani_info) { this->ani_info.current_index = ani_info->current_index;
 														this->ani_info.isAnimationFinish = ani_info->isAnimationFinish; }
 	void setTargetInfo(obj_info& target) { target_obj_info = &target; }
-	void setOnHide(bool onHide) { this->onHide = onHide; }
+	void setOnPrepareHide(bool onPrepareHide) { this->onPrepareHide = onPrepareHide; }
 	void setOnRun(bool onRun) { this->onRun = onRun; }
 	bool setSkillSelect(unsigned int skill_sel)
 	{
@@ -105,14 +106,17 @@ private:
 
 	void updateRun();
 	void updateHide();
+
+	void updateGlobalVibration();
+	void updateCoolDownTimer(bool cooldown_reset);
 private:
 	GameGraphicController* g_ctrl;
 	grap_to_obj_animate ani_info;
 	obj_event* game_obj_ev;
 	obj_info* game_obj_info, *target_obj_info;
-	bool isDirLeft, isSkillFinish, onHide, onRun;
+	bool isDirLeft, isSkillFinish, onHide, onPrepareHide, onRun, onVibration;
 	unsigned int current_skill, chain_index, skill_cnt;
-	unsigned long hide_start_time, hide_end_time, run_start_time, run_end_time;
+	unsigned long hide_start_time, hide_end_time, hide_elapsed_time, run_start_time, run_end_time, run_elapsed_time;
 	cocos2d::CCPoint start_player_pt, end_player_pt;
 	cocos2d::CCSprite* obj_spr;
 };

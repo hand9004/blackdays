@@ -7,7 +7,7 @@
             <key>arrow.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{84,57},{32,42}}</string>
+                <string>{{234,57},{32,42}}</string>
                 <key>offset</key>
                 <string>{-2,0}</string>
                 <key>rotated</key>
@@ -17,10 +17,23 @@
                 <key>sourceSize</key>
                 <string>{50,50}</string>
             </dict>
+            <key>cc_gauge.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{84,92},{78,9}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{1,1},{78,9}}</string>
+                <key>sourceSize</key>
+                <string>{80,11}</string>
+            </dict>
             <key>hide_icon.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{121,2},{50,50}}</string>
+                <string>{{273,2},{50,50}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -33,7 +46,7 @@
             <key>hp_frame.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{2,80},{80,11}}</string>
+                <string>{{2,92},{80,11}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -46,7 +59,7 @@
             <key>hp_gauge.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{2,93},{78,9}}</string>
+                <string>{{154,80},{78,9}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -59,7 +72,7 @@
             <key>move_arrow.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{74,2},{45,53}}</string>
+                <string>{{226,2},{45,53}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -72,7 +85,7 @@
             <key>run_icon.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{121,54},{50,50}}</string>
+                <string>{{273,54},{50,50}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -85,7 +98,7 @@
             <key>sleep.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{2,2},{70,76}}</string>
+                <string>{{154,2},{70,76}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -95,6 +108,19 @@
                 <key>sourceSize</key>
                 <string>{70,76}</string>
             </dict>
+            <key>tap.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{2,2},{150,88}}</string>
+                <key>offset</key>
+                <string>{0,2}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,4},{150,88}}</string>
+                <key>sourceSize</key>
+                <string>{150,100}</string>
+            </dict>
         </dict>
         <key>metadata</key>
         <dict>
@@ -103,9 +129,9 @@
             <key>realTextureFileName</key>
             <string>hud.png</string>
             <key>size</key>
-            <string>{173,106}</string>
+            <string>{325,106}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:070427647a6e7390f4fa2ca7b51fd315:2de20a1c5304cad09e1a56ea9c3992ba:f2a61c07da5915a36e0a2ce159a09224$</string>
+            <string>$TexturePacker:SmartUpdate:fba0d5446d23d1adbad07093aa4ac293:1f01314801110e13f74a0a4fd55d2b55:f2a61c07da5915a36e0a2ce159a09224$</string>
             <key>textureFileName</key>
             <string>hud.png</string>
         </dict>

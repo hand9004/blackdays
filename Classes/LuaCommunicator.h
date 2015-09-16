@@ -63,19 +63,19 @@ public:
 	void Lua_FileOpenByBuffer(const char* lua_file_chunk);
 	void Lua_Register_Functions();
 
-	// 루아 전역 변수와의 통신을 위해 사용함.
-	int Lua_GetGlobalVariable_t_i(const char* table_name, const char* in_table_variable_name);
-	const char* Lua_GetGlobalVariable_t_s(const char* table_name, const char* in_table_variable_name);
-	float Lua_GetGlobalVariable_t_f(const char* table_name, const char* in_table_variable_name);
+	//// 루아 전역 변수와의 통신을 위해 사용함.
+	//int Lua_GetGlobalVariable_t_i(const char* table_name, const char* in_table_variable_name);
+	//const char* Lua_GetGlobalVariable_t_s(const char* table_name, const char* in_table_variable_name);
+	//float Lua_GetGlobalVariable_t_f(const char* table_name, const char* in_table_variable_name);
 
-	int Lua_GetGlobalVariable_i(const char* variable_name);
-	const char* Lua_GetGlobalVariable_s(const char* variable_name);
-	float Lua_GetGlobalVariable_f(const char* variable_name);
-	void* Lua_GetGlobalVariable_u(const char* variable_name);
+	//int Lua_GetGlobalVariable_i(const char* variable_name);
+	//const char* Lua_GetGlobalVariable_s(const char* variable_name);
+	//float Lua_GetGlobalVariable_f(const char* variable_name);
+	//void* Lua_GetGlobalVariable_u(const char* variable_name);
 
-	void Lua_SetGlobalVariable_i(const char* variable_name, int data);
-	void Lua_SetGlobalVariable_s(const char* variable_name, const char* data);
-	void Lua_SetGlobalVariable_f(const char* variable_name, float data);
+	//void Lua_SetGlobalVariable_i(const char* variable_name, int data);
+	//void Lua_SetGlobalVariable_s(const char* variable_name, const char* data);
+	//void Lua_SetGlobalVariable_f(const char* variable_name, float data);
 
 	// 루아에 정의된 함수를 불러 C에서 사용하게 해준다.
 	void Call_LuaFunction(const char* function_name, const char* sig, ...);

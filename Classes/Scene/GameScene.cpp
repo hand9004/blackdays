@@ -11,7 +11,6 @@
 #include "../Objects/ObjectController.h"
 #include "../Graphics/GraphicsController.h"
 #include "../Objects/ParticleController.h"
-#include <SimpleAudioEngine.h>
 
 USING_NS_CC;
 
@@ -66,14 +65,11 @@ void GameScene::init_SceneInfo()
 	SoundManager::Instance()->register_SoundFunction();
 
 	LuaCommunicator::Instance()->Call_LuaFunction("init_on_platform", ">");
-
 	LuaCommunicator::Instance()->Call_LuaFunction("ui_Init", ">");
-	LuaCommunicator::Instance()->Call_LuaFunction("ui_Update", ">");
-
 	StageManager::Instance()->init_Stage();
 
 	schedule(schedule_selector(GameScene::schedule_updater));
-
+	LuaCommunicator::Instance()->Call_LuaFunction("ui_Update", ">");
 	SceneManager::Instance()->set_SceneReplaceToken("");
 }
 
@@ -82,6 +78,8 @@ void GameScene::destroy_SceneInfo()
 	StageManager::Instance()->setStageAllClear(false);
 	StageManager::Instance()->setStageClear(false);
 	StageManager::Instance()->setVictorious(false);
+
+	StageManager::Instance()->destroy_Stage();
 	unschedule(schedule_selector(GameScene::schedule_updater));
 	LuaCommunicator::Instance()->Lua_FileClose();
 }
@@ -93,4 +91,14 @@ void GameScene::menuCloseCallback(CCObject* pSender)
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     exit(0);
 #endif
+}
+void GameScene::resume_scheduler()
+{
+	schedule(schedule_selector(GameScene::schedule_updater));
+	SceneManager::Instance()->setIsGamePaused(false);
+}
+void GameScene::pause_scheduler()
+{
+	unschedule(schedule_selector(GameScene::schedule_updater));
+	SceneManager::Instance()->setIsGamePaused(true);
 }

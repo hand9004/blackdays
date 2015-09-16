@@ -170,15 +170,21 @@ void BD_SlideControl::setResource(void* packet)
 	addChild(background_image);
 	addChild(slide_bar_image);
 
+	background_image->retain();
+	slide_bar_image->retain();
+
 #ifdef DEBUG_MODE
-	test_font = cocos2d::CCLabelBMFont::create();
-	test_font->setFntFile("fonts/font_1.fnt");
+	test_font = cocos2d::CCLabelTTF::create();
+	test_font->setFontName("fonts/nanum_font.ttf");
 	test_font->setPosition(cocos2d::CCPoint(background_pos.x + contents_size.width, background_pos.y)); 
 	test_font->setColor(cocos2d::ccc3(255, 255, 255));
 	test_font->setAnchorPoint(cocos2d::CCPoint(0.0f, 0.0f));
+	test_font->setFontSize(20);
 	test_font->setString("0");
 	
 	addChild(test_font);
+
+	test_font->retain();
 #endif
 
 	SAFE_DELETE(slide_packet);

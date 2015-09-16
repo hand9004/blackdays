@@ -10,11 +10,20 @@ c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackd
 c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackdays\proj.win32\debug.win32\bd_actionscrolling.obj
 c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackdays\proj.win32\debug.win32\bd_background.obj
 c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackdays\proj.win32\debug.win32\bd_button.obj
+c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackdays\proj.win32\debug.win32\bd_checkbox.obj
+c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackdays\proj.win32\debug.win32\bd_layeraction.obj
+c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackdays\proj.win32\debug.win32\bd_message.obj
+c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackdays\proj.win32\debug.win32\bd_popupmessage.obj
+c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackdays\proj.win32\debug.win32\bd_slidecontrol.obj
+c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackdays\proj.win32\debug.win32\bd_slideselector.obj
+c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackdays\proj.win32\debug.win32\uicomponent.obj
+c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackdays\proj.win32\debug.win32\uicontroller.obj
+c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackdays\proj.win32\debug.win32\uilayer.obj
+c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackdays\proj.win32\debug.win32\main.obj
 c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackdays\proj.win32\debug.win32\appdelegate.obj
 c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackdays\proj.win32\debug.win32\graphicscontroller.obj
 c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackdays\proj.win32\debug.win32\luacommunicator.obj
 c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackdays\proj.win32\debug.win32\animate.obj
-c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackdays\proj.win32\debug.win32\curvethrowobject.obj
 c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackdays\proj.win32\debug.win32\effect.obj
 c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackdays\proj.win32\debug.win32\gamegraphiccomponent.obj
 c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackdays\proj.win32\debug.win32\gamegraphiccontroller.obj
@@ -27,16 +36,7 @@ c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackd
 c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackdays\proj.win32\debug.win32\skillcontroller.obj
 c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackdays\proj.win32\debug.win32\gamescene.obj
 c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackdays\proj.win32\debug.win32\stageselectscene.obj
-c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackdays\proj.win32\debug.win32\bd_checkbox.obj
-c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackdays\proj.win32\debug.win32\bd_layeraction.obj
-c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackdays\proj.win32\debug.win32\bd_message.obj
-c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackdays\proj.win32\debug.win32\bd_popupmessage.obj
-c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackdays\proj.win32\debug.win32\bd_slidecontrol.obj
-c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackdays\proj.win32\debug.win32\bd_slideselector.obj
-c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackdays\proj.win32\debug.win32\uicomponent.obj
-c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackdays\proj.win32\debug.win32\uicontroller.obj
-c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackdays\proj.win32\debug.win32\uilayer.obj
-c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackdays\proj.win32\debug.win32\main.obj
+c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackdays\proj.win32\debug.win32\curvethrowobject.obj
 c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackdays\proj.win32\debug.win32\black days.win32.ilk
 c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackdays\proj.win32\debug.win32\black days.win32.exe
 c:\users\솔\desktop\work\actual\blackdays\programming\maincode\blackdays\blackdays\proj.win32\debug.win32\black days.win32.pdb

@@ -1,8 +1,19 @@
 --[[ info {name, atk_pt, def_pt, hp, recognize_area, attack_range_X, attack_range_Y, partol_delay_time(ms)
 			move_speed, isEnemy, isHero, isControllable, isAreaAttack} ]]--
-
---[[ skill = {}]]
-player = {info = {"player", 20, 5, 400, 100, 80, 20, 0, 3.0, false, true, true, false},
+object_event = 
+{
+	NO_EVENT = 0,
+	MOVE = 1,
+	ATTACK = 2,
+	SKILL = 3,
+	PATROL = 4,
+	SEARCHING_RECOGNIZE_AREA = 5,
+	SLEEP = 6,
+	STUN = 7,
+	DEAD = 8,
+}
+			
+allies = {info = {"allies", 20, 5, 300, 200, 100, 20, 0, 3.0, false, true, false, false},
 
 			main_image = {"Characters/len.png"},
 
@@ -183,6 +194,8 @@ player = {info = {"player", 20, 5, 400, 100, 80, 20, 0, 3.0, false, true, true, 
 
 							charge_dist = 500,
 							power_percent = 1.2,
+							skill_cooldown = 10.0,
+							global_vibration = 0.0,
 							chain_hit_frame = {},
 							particle_data = {},
 						},
@@ -196,6 +209,8 @@ player = {info = {"player", 20, 5, 400, 100, 80, 20, 0, 3.0, false, true, true, 
 
 							charge_dist = 0,
 							power_percent = 2.0,
+							skill_cooldown = 10.0,
+							global_vibration = 0.0,
 							chain_hit_frame = {},
 							particle_data = {},
 						},
@@ -209,6 +224,8 @@ player = {info = {"player", 20, 5, 400, 100, 80, 20, 0, 3.0, false, true, true, 
 
 							charge_dist = 0,
 							power_percent = 0.5,
+							skill_cooldown = 10.0,
+							global_vibration = 0.0,
 							chain_hit_frame = {6, 8, 18},
 							particle_data =
 							{
@@ -219,7 +236,7 @@ player = {info = {"player", 20, 5, 400, 100, 80, 20, 0, 3.0, false, true, true, 
 					},
 		}
 
-player1 = {info = {"player", 30, 5, 400, 300, 80, 20, 0, 3.0, false, true, true, false},
+player = {info = {"player", 30, 5, 400, 300, 100, 20, 0, 3.0, false, true, true, false},
 
 			main_image = {"Characters/akiha.png"},
 
@@ -283,6 +300,15 @@ player1 = {info = {"player", 30, 5, 400, 300, 80, 20, 0, 3.0, false, true, true,
 									{ "aki40_010.png", 11 },
 								},
 
+								{
+									"Characters/akiha.png",
+									"Characters/akiha.plist",
+									"stun",
+
+									{ "aki21_000.png", 1 },
+									{ "aki21_001.png", 2 },
+								},
+								
 								{
 									"Characters/akiha.png",
 									"Characters/akiha.plist",
@@ -407,8 +433,10 @@ player1 = {info = {"player", 30, 5, 400, 300, 80, 20, 0, 3.0, false, true, true,
 								{"stand", 0.02, 0, 0, false},
 								{"move", 0.02, 4, 11, false},
 								{"attack", 0.04, 0, 0, false},
+								{"stun", 0.02, 0, 0, false},
 								{"dead", 0.02, 0, 0, true},
-								{"akiha_charge", 0.02, 5, 9, false},
+								
+								{"akiha_charge", 0.02, 6, 8, false},
 								{"akiha_chain_1", 0.03, 0, 0, false},
 								{"akiha_chain_2", 0.03, 0, 0, false},
 							},
@@ -471,6 +499,8 @@ player1 = {info = {"player", 30, 5, 400, 300, 80, 20, 0, 3.0, false, true, true,
 
 							charge_dist = 500,
 							power_percent = 1.2,
+							skill_cooldown = 10.0,
+							global_vibration = 0.0,
 							chain_hit_frame = {},
 							particle_data = {},
 						},
@@ -484,6 +514,8 @@ player1 = {info = {"player", 30, 5, 400, 300, 80, 20, 0, 3.0, false, true, true,
 
 							charge_dist = 0,
 							power_percent = 0.3,
+							skill_cooldown = 10.0,
+							global_vibration = 0.0,
 							chain_hit_frame = {5, 6, 7, 8, 9, 10, 11},
 							particle_data = {},
 						},
@@ -497,13 +529,15 @@ player1 = {info = {"player", 30, 5, 400, 300, 80, 20, 0, 3.0, false, true, true,
 
 							charge_dist = 0,
 							power_percent = 0.2,
+							skill_cooldown = 10.0,
+							global_vibration = 0.5,
 							chain_hit_frame = {25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40},
 							particle_data = {},
 						},
 					},
 		}
 
-player2 = {info = {"player", 30, 5, 400, 300, 80, 20, 0, 3.0, false, true, true, false},
+allies_1 = {info = {"allies_1", 30, 5, 300, 200, 100, 20, 0, 3.0, false, true, false, false},
 
 			main_image = {"Characters/shiki.png"},
 
@@ -613,7 +647,7 @@ player2 = {info = {"player", 30, 5, 400, 300, 80, 20, 0, 3.0, false, true, true,
 					},
 		}
 
-player3 = {info = {"player", 30, 5, 400, 300, 80, 20, 0, 3.0, false, true, true, false},
+player1 = {info = {"player", 30, 5, 400, 300, 100, 20, 0, 3.0, false, true, true, false},
 
 			main_image = {"Characters/arcueid.png"},
 
@@ -699,6 +733,15 @@ player3 = {info = {"player", 30, 5, 400, 300, 80, 20, 0, 3.0, false, true, true,
 								{
 									"Characters/arcueid.png",
 									"Characters/arcueid.plist",
+									"stun",
+
+									{ "arc2101.png", 1 },
+									{ "arc2102.png", 2 },
+								},
+								
+								{
+									"Characters/arcueid.png",
+									"Characters/arcueid.plist",
 									"dead",
 
 									{ "arc2430.png", 1 },
@@ -772,8 +815,9 @@ player3 = {info = {"player", 30, 5, 400, 300, 80, 20, 0, 3.0, false, true, true,
 								{"stand", 0.02, 0, 0, false},
 								{"move", 0.02, 1, 12, false},
 								{"attack", 0.04, 0, 0, false},
+								{"stun", 0.02, 0, 0, false},
 								{"dead", 0.02, 0, 0, true},
-
+								
 								{"run", 0.025, 4, 15, false},
 								{"hide", 0.02, 0, 0, true},
 								{"sleep_target", 0.02, 0, 0, true},
@@ -811,6 +855,8 @@ player3 = {info = {"player", 30, 5, 400, 300, 80, 20, 0, 3.0, false, true, true,
 
 							charge_dist = 0,
 							power_percent = 3.0,
+							skill_cooldown = 10.0,
+							global_vibration = 0.0,
 							chain_hit_frame = {},
 							particle_data = {},
 						},
@@ -824,6 +870,8 @@ player3 = {info = {"player", 30, 5, 400, 300, 80, 20, 0, 3.0, false, true, true,
 
 							charge_dist = 0,
 							power_percent = 3.0,
+							skill_cooldown = 10.0,
+							global_vibration = 0.0,
 							chain_hit_frame = {},
 							particle_data = {},
 						},
@@ -837,6 +885,8 @@ player3 = {info = {"player", 30, 5, 400, 300, 80, 20, 0, 3.0, false, true, true,
 
 							charge_dist = 0,
 							power_percent = 10.0,
+							skill_cooldown = 10.0,
+							global_vibration = 0.0,
 							chain_hit_frame = {},
 							particle_data = {},
 						},
@@ -947,7 +997,7 @@ enemy = {info = {"enemy", 15, 5, 200, 400, 500, 100, 0, 3.0, true, false, false,
 			skill = {},
 		}
 
-enemy1 = {info = {"enemy1", 10, 5, 200, 300, 150, 30, 0, 3.0, true, false, false, false},
+enemy1 = {info = {"enemy1", 10, 5, 200, 300, 120, 30, 0, 3.0, true, false, false, false},
 
 			main_image = {"Characters/kohaku.png"},
 
@@ -1048,10 +1098,92 @@ enemy1 = {info = {"enemy1", 10, 5, 200, 300, 150, 30, 0, 3.0, true, false, false
 			skill = {},
 		}
 
+enemy2 = {info = {"enemy2", 10, 5, 200, 300, 120, 30, 0, 3.0, true, false, false, false},
+
+			main_image = {"Characters/warakia.png"},
+
+			image_frame = {},
+
+			ani_image_frame = {
+								{
+									"Characters/warakia.png",
+									"Characters/warakia.plist",
+									"stand",
+
+									{ "war0000.png", 1 },
+									{ "war0001.png", 2 },
+									{ "war0002.png", 3 },
+									{ "war0003.png", 4 },
+									{ "war0004.png", 5 },
+									{ "war0005.png", 6 },
+									{ "war0006.png", 7 },
+									{ "war0007.png", 8 },
+									{ "war0008.png", 9 },
+									{ "war0009.png", 10 },
+								},
+
+								{
+									"Characters/warakia.png",
+									"Characters/warakia.plist",
+									"move",
+
+									{ "war2600.png", 1 },
+									{ "war2601.png", 2 },
+									{ "war2602.png", 3 },
+									{ "war2603.png", 4 },
+									{ "war2604.png", 5 },
+									{ "war2605.png", 6 },
+								},
+
+								{
+									"Characters/warakia.png",
+									"Characters/warakia.plist",
+									"attack",
+
+									{ "war4000.png", 1 },
+									{ "war4001.png", 2 },
+									{ "war4002.png", 3 },
+									{ "war4003.png", 4 },
+									{ "war4004.png", 5 },
+									{ "war4005.png", 6 },
+									{ "war4006.png", 7 },
+									{ "war4007.png", 8 },
+									{ "war4008.png", 9 },
+									{ "war4009.png", 10 },
+								},
+
+								{
+									"Characters/warakia.png",
+									"Characters/warakia.plist",
+									"dead",
+
+									{ "war2420.png", 1 },
+									{ "war2421.png", 2 },
+									{ "war2422.png", 3 },
+									{ "war2423.png", 4 },
+									{ "war2424.png", 5 },
+									{ "war2425.png", 6 },
+									{ "war2426.png", 7 },
+									{ "war2427.png", 8 },
+								}
+							  },
+			ani_frame_set = {
+							  {"stand", 0.02, 0, 0, false},
+							  {"move", 0.02, 1, 6, false},
+							  {"attack", 0.04, 0, 0, false},
+							  {"dead", 0.02, 0, 0, true},
+							},
+			effect_set = {
+						 },
+
+			skill = {},
+		}
+
+
 local GameObject = {}
 
 function GameObject.getVarString()
-	return {"player", "player1", "player2", "player3", "enemy", "enemy1"}
+	return {"allies", "player", "allies_1", "player1", "enemy", "enemy1", "enemy2"}
 end
 
 return GameObject

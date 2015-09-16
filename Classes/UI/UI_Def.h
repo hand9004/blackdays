@@ -1,4 +1,5 @@
 #pragma once
+#include <cocos2d.h>
 
 enum UI_TYPE
 {
@@ -71,9 +72,24 @@ typedef struct BackgroundInfoPacket
 typedef struct PopupMessageUpdatePacket
 {
 	char message[512];
+	cocos2d::ccColor3B change_color;
+	unsigned int font_size;
 }pop_msg_update_pack;
 
 // Main -> UI (Update Data)
+typedef struct BackgroundMessage_Recv
+{
+	const char* change_image_path;
+}bg_msg_recv;
+
+typedef struct PopupMessageMessage_Recv
+{
+	bool onPopup, onChange;
+	char message[512];
+	cocos2d::ccColor3B change_color;
+	unsigned int font_size;
+}pop_message_msg_recv;
+
 typedef struct SlideSelectorMessage_Recv
 {
 	int current_index;

@@ -35,6 +35,5 @@ public:
 	void destroy_Particle();
 	void destroy_ParticleController();
 private:
-	lua_State* p_lua_st;
 	std::vector<in_particle_data*>particle_collector;
 };

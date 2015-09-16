@@ -18,7 +18,9 @@ public:
 
     // a selector callback
     void menuCloseCallback(CCObject* pSender);
-    
+public:
+	void resume_scheduler();
+	void pause_scheduler();
     // implement the "static node()" method manually
     CREATE_FUNC(StageSelectScene);
 };

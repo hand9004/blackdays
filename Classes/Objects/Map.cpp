@@ -12,8 +12,6 @@ USING_NS_CC;
 
 int l_add_Map(lua_State* L)
 {
-	Map::Instance()->setLuaState(L);
-
 	const char *table_name = nullptr;
 
 	table_name = lua_tostring(L, 1);
@@ -28,12 +26,22 @@ int l_add_Map(lua_State* L)
 	return 0;
 }
 
+int l_is_map_scrolled(lua_State* L)
+{
+	int scrolling_val = Map::Instance()->getScrollingValue();
+	bool isMapScrolled = (abs(scrolling_val) > swipe_disable_range) ? true : false;
+
+	lua_pushboolean(L, isMapScrolled);
+
+	return 1;
+}
+
 bool sort_map_index(map_piece* fir, map_piece* sec)
 {
 	return fir->map_index < sec->map_index;
 }
 
-Map::Map(void) : in_map_particle_spr(nullptr), trigger_draw_node(nullptr)
+Map::Map(void) : in_map_particle_spr(nullptr), trigger_draw_node(nullptr), scrolling_val(0)
 {
 }
 
@@ -66,7 +74,7 @@ void Map::Destroy()
 		unsigned int in_map_object_size = map_piece_iter->in_map_obj_list.size();
 		for(unsigned int j = 0; j < in_map_object_size; ++j)
 		{
-			in_map_obj* in_map_obj_iter = map_piece_iter->in_map_obj_list[j];
+			in_map_obj* in_map_obj_iter = map_piece_iter->in_map_obj_list.at(j);
 
 			ObjectController::Instance()->removeChild(in_map_obj_iter->obj_spr, true);
 
@@ -100,6 +108,7 @@ void Map::Destroy()
 void Map::register_MapFunction()
 {
 	LuaCommunicator::Instance()->Register_CFunction("add_map", l_add_Map);
+	LuaCommunicator::Instance()->Register_CFunction("is_map_scrolled", l_is_map_scrolled);
 }
 void Map::setTouchBegan(cocos2d::CCTouch* pTouch, cocos2d::CCEvent* pEvent)
 {
@@ -121,8 +130,9 @@ bool Map::isInMovingArea(cocos2d::CCPoint src_pt)
 	unsigned int map_size = map_piece_list.size();
 	for(unsigned int i = 0; i < map_size; ++i)
 	{
-		cocos2d::CCPoint pt = map_piece_list.at(i)->background_image->getPosition();
-		float width = map_piece_list.at(i)->moving_area.size.width, height = map_piece_list.at(i)->moving_area.size.height;
+		map_piece* map_piece_iter = map_piece_list.at(i);
+		cocos2d::CCPoint pt = map_piece_iter->background_image->getPosition();
+		float width = map_piece_iter->moving_area.size.width, height = map_piece_iter->moving_area.size.height;
 		can_move_Rect = cocos2d::CCRect(pt.x, 0.0f, width, height);
 
 		if(can_move_Rect.containsPoint(src_pt))
@@ -140,19 +150,28 @@ const char* Map::get_collided_trigger(cocos2d::CCPoint src_pt)
 
 	for (auto j = trig_begin; j != trig_end; ++j)
 	{
-		if (j->second->trigger_rect.containsPoint(src_pt))
-			ret_str = j->first;
+		if (!j->second->isTriggered)
+		{
+			if (j->second->trigger_rect.containsPoint(src_pt))
+			{
+				j->second->isTriggered = true;
+				ret_str = j->first;
+				break;
+			}
+		}
 	}
 
 	return ret_str;
 }
 void Map::set_Map_Info()
 {
+	lua_State* p_lua_st = LuaCommunicator::Instance()->Lua_GetState();
+
 	const int constant_data_size = 3;
 	unsigned int map_piece_size = LuaCommunicator::Instance()->getTableSize(1);
 
 	// 맵의 실제 정보로부터 시작한다. 1번째는 맵에 들어갈 오브젝트들을 레퍼런스할 plist가 들어가 있다.
-	for(unsigned int i = 2; i <= map_piece_size - 3; ++i)
+	for (unsigned int i = 2; i <= map_piece_size - constant_data_size; ++i)
 	{
 		lua_pushinteger(p_lua_st, i);
 		lua_gettable(p_lua_st, 1);
@@ -164,7 +183,7 @@ void Map::set_Map_Info()
 		lua_gettable(p_lua_st, 2);
 
 		lua_pushstring(p_lua_st, "background");
-		lua_gettable(p_lua_st,  2);
+		lua_gettable(p_lua_st, 2);
 
 		map_piece_data.map_index = lua_tointeger(p_lua_st, -2);
 		map_piece_data.background_image_name = lua_tostring(p_lua_st, -1);
@@ -247,18 +266,21 @@ void Map::set_Map_Info()
 
 			int x = 0, y = 0, width = 0, height = 0;
 
-			x = lua_tointeger(p_lua_st, -5);
-			y = lua_tointeger(p_lua_st, -4);
-			width = lua_tointeger(p_lua_st, -3);
-			height = lua_tointeger(p_lua_st, -2);
+			x = lua_tointeger(p_lua_st, -6);
+			y = lua_tointeger(p_lua_st, -5);
+			width = lua_tointeger(p_lua_st, -4);
+			height = lua_tointeger(p_lua_st, -3);
+			const char* trigger_type = lua_tostring(p_lua_st, -2);
 			const char* trigger_name = lua_tostring(p_lua_st, -1);
 
 			map_trig_info* add_trigger_info = new map_trig_info;
 
+			add_trigger_info->isTriggered = false;
+			add_trigger_info->trigger_type = trigger_type;
 			add_trigger_info->trigger_pos = CCPoint(x, y);
 			add_trigger_info->trigger_rect = CCRect(x, y, width, height);
 
-			map_piece_data.trigger_list[trigger_name] = add_trigger_info;
+			map_piece_data.trigger_list.insert(std::pair<const char*, map_trig_info*>(trigger_name, add_trigger_info));
 
 			lua_pop(p_lua_st, map_trigger_attri_cnt);
 
@@ -270,7 +292,7 @@ void Map::set_Map_Info()
 		unsigned int in_obj_size = map_piece_data.in_map_info_list.size();
 
 		for(unsigned int j = 0; j < in_obj_size; ++j)
-			SAFE_DELETE(map_piece_data.in_map_info_list[j]);
+			SAFE_DELETE(map_piece_data.in_map_info_list.at(j));
 		
 		map_clear(map_piece_data.trigger_list);
 		vector_clear(map_piece_data.in_map_info_list);
@@ -339,14 +361,15 @@ void Map::set_In_Map_Particle()
 			in_map_particle_spr->addChild(iter);
 		}
 	}
-	in_map_particle_spr->setZOrder(2);
-	trigger_draw_node->setZOrder(2);
+	trigger_draw_node->setZOrder(-400);
 
 	ObjectController::Instance()->addChild(in_map_particle_spr);
 	ObjectController::Instance()->addChild(trigger_draw_node);
 }
 void Map::set_In_Map_Object_Resource_Info()
 {
+	lua_State* p_lua_st = LuaCommunicator::Instance()->Lua_GetState();
+
 	// stage_type
 	lua_pushinteger(p_lua_st, 1);
 	lua_gettable(p_lua_st, 1);
@@ -413,6 +436,9 @@ void Map::set_Map(map_piece_info& map_piece_data_info)
 
 	ObjectController::Instance()->addChild(piece_of_map->background_image);
 
+	piece_of_map->background_image->setZOrder(-500);
+	piece_of_map->background_image->retain();
+
 	trigger_list = map_piece_data_info.trigger_list;
 
 	unsigned int in_object_size = map_piece_data_info.in_map_info_list.size();
@@ -421,7 +447,7 @@ void Map::set_Map(map_piece_info& map_piece_data_info)
 	BD_CCLog("%d", in_object_size);
 	for(unsigned int i = 0; i < in_object_size; ++i)
 	{
-		in_map_info* in_map_obj_info_iter = map_piece_data_info.in_map_info_list[i];
+		in_map_info* in_map_obj_info_iter = map_piece_data_info.in_map_info_list.at(i);
 
 		in_map_obj* in_map_obj_data = new in_map_obj;
 		float in_obj_X = map_X + in_map_obj_info_iter->obj_pos.x , in_obj_Y = map_Y + in_map_obj_info_iter->obj_pos.y;
@@ -430,11 +456,12 @@ void Map::set_Map(map_piece_info& map_piece_data_info)
 		in_map_obj_data->obj_spr->setPosition(cocos2d::CCPoint(in_obj_X, in_obj_Y));
 		CCSize spr_size = in_map_obj_data->obj_spr->getContentSize();
 
+		in_map_obj_data->obj_spr->retain();
+
 		in_map_obj_data->collision_area = CCRect(in_obj_X - (spr_size.width / 2), in_obj_Y, spr_size.width, spr_size.height);
 
 		BD_CCLog("%s", in_map_obj_info_iter->ref_key);
 
-		in_map_obj_data->obj_spr->setZOrder(3);
 		ObjectController::Instance()->addChild(in_map_obj_data->obj_spr);
 		piece_of_map->in_map_obj_list.push_back(in_map_obj_data);
 	}
@@ -455,33 +482,6 @@ void Map::reset_MapCoordinate()
 
 	setUpdateScrolling(dist);
 }
-bool Map::getIsCanScrolling()
-{
-	cocos2d::CCSize win_size = cocos2d::CCDirector::sharedDirector()->getVisibleSize();
-
-	if(!map_piece_list.empty())
-	{
-		bool canLeftScrolling = false;
-		bool canRightScrolling = false;
-
-		cocos2d::CCPoint start_pt = getMapStartPoint();
-		cocos2d::CCPoint end_pt = getMapEndPoint();
-
-		if(start_pt.x < 0.0f)
-			canLeftScrolling = true;
-		else
-			canLeftScrolling = false;
-
-		if(end_pt.x > win_size.width)
-			canRightScrolling = true;
-		else
-			canRightScrolling = false;
-
-		return (canLeftScrolling && canRightScrolling);
-	}
-	else
-		return false;
-}
 cocos2d::CCPoint Map::getMapStartPoint()
 {
 	cocos2d::CCPoint first_map_pos = map_piece_list.at(0)->background_image->getPosition();
@@ -498,34 +498,7 @@ cocos2d::CCPoint Map::getMapEndPoint()
 }
 void Map::setUpdateScrolling(int delta_x)
 {
-	unsigned int obj_size = map_piece_list.size();
-
-	for (unsigned int i = 0; i < obj_size; ++i)
-	{
-		map_piece* map_piece_iter = map_piece_list.at(i);
-		CCPoint background_pos = map_piece_iter->background_image->getPosition();
-
-		background_pos.x += delta_x;
-
-		unsigned int in_map_obj_size = map_piece_iter->in_map_obj_list.size();
-
-		for (unsigned int j = 0; j < in_map_obj_size; ++j)
-		{
-			in_map_obj* in_map_obj_iter = map_piece_iter->in_map_obj_list[j];
-			
-			CCPoint obj_pos = in_map_obj_iter->obj_spr->getPosition();
-
-			CCSize obj_size = in_map_obj_iter->obj_spr->getContentSize();
-
-			obj_pos.x += delta_x;
-			
-			in_map_obj_iter->collision_area.setRect(obj_pos.x - (obj_size.width / 2), obj_pos.y, obj_size.width, obj_size.height);
-
-			in_map_obj_iter->obj_spr->setPosition(obj_pos);
-		}
-
-		map_piece_iter->background_image->setPosition(background_pos);
-	}
+	scrolling_val = delta_x;
 
 	trigger_draw_node->clear();
 
@@ -547,27 +520,22 @@ void Map::setUpdateScrolling(int delta_x)
 			CCPoint trig_iter_pos = trig_iter->trigger_pos;
 			CCSize trig_iter_size = trig_iter->trigger_rect.size;
 
-			trig_iter_pos.x += delta_x;
-			trig_iter->trigger_pos = trig_iter_pos;
-
 			trig_iter->trigger_rect.setRect(trig_iter_pos.x, trig_iter_pos.y, trig_iter_size.width, trig_iter_size.height);
-
-			CCPoint draw_rect_pos[4] =
+			if (!strcmp(j->second->trigger_type, "stage_clear"))
 			{
-				CCPoint(trig_iter_pos.x, trig_iter_pos.y),
-				CCPoint(trig_iter_pos.x + trig_iter_size.width, trig_iter_pos.y),
-				CCPoint(trig_iter_pos.x + trig_iter_size.width, trig_iter_pos.y + trig_iter_size.height),
-				CCPoint(trig_iter_pos.x, trig_iter_pos.y + trig_iter_size.height)
-			};
+				CCPoint draw_rect_pos[4] =
+				{
+					CCPoint(trig_iter_pos.x, trig_iter_pos.y),
+					CCPoint(trig_iter_pos.x + trig_iter_size.width, trig_iter_pos.y),
+					CCPoint(trig_iter_pos.x + trig_iter_size.width, trig_iter_pos.y + trig_iter_size.height),
+					CCPoint(trig_iter_pos.x, trig_iter_pos.y + trig_iter_size.height)
+				};
 
-			ccColor4F fill_color = ccc4f(0.67f, 1.f, 0.18f, 0.3f);
-			ccColor4F border_color = ccc4f(0.5f, 1.f, 0.83f, 0.5f);
+				ccColor4F fill_color = ccc4f(0.67f, 1.f, 0.18f, 0.3f);
+				ccColor4F border_color = ccc4f(0.5f, 1.f, 0.83f, 0.5f);
 
-			trigger_draw_node->drawPolygon(draw_rect_pos, 4, fill_color, 1, border_color);
+				trigger_draw_node->drawPolygon(draw_rect_pos, 4, fill_color, 1, border_color);
+			}
 		}
 	}
-
-	CCPoint particle_pt = in_map_particle_spr->getPosition();
-	particle_pt.x += delta_x;
-	in_map_particle_spr->setPosition(particle_pt);
 }

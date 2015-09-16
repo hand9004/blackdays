@@ -16,8 +16,26 @@ public:
 	void setSendedDamage(bool isSendDamage) { isSendedDamage = isSendDamage; }
 	bool getSendedDamage() { return isSendedDamage; }
 
-	bool isArrived() { unsigned int curve_size = throwing_line.size(); return (current_index >= curve_size) ? true : false; }
-	bool isDestroy() { unsigned int curve_size = throwing_line.size(); return ((current_index >= curve_size) && isBombEffectEnd) ? true : false; }
+	bool isArrived()
+	{ 
+		if (!throwing_line.empty())
+		{
+			unsigned int curve_size = throwing_line.size();
+			return (current_index >= curve_size) ? true : false;
+		}
+		else
+			return false;
+	}
+	bool isDestroy()
+	{
+		if (!throwing_line.empty())
+		{
+			unsigned int curve_size = throwing_line.size();
+			return ((current_index >= curve_size) && isBombEffectEnd) ? true : false;
+		}
+		else
+			return false;
+	}
 private:
 	void create_bezier_to_pos(cocos2d::CCPoint start_pt, cocos2d::CCPoint end_pt);
 private:

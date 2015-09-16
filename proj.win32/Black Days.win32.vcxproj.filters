@@ -68,9 +68,6 @@
     <Filter Include="resource\runtime_dlls">
       <UniqueIdentifier>{f99c2ec2-59c4-4646-9093-deedc4a5fd3f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Objects\ObjectComponent">
-      <UniqueIdentifier>{bb77b476-ff57-4b77-8c71-6f54491a443a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="resource\Sounds">
       <UniqueIdentifier>{b875a2dc-0dd1-4508-8d10-3be0c9b54c0f}</UniqueIdentifier>
     </Filter>
@@ -79,6 +76,9 @@
     </Filter>
     <Filter Include="UI\Utility">
       <UniqueIdentifier>{8672ad78-3a6d-44dd-9da2-7ee751a3f300}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects\ObjectComponent">
+      <UniqueIdentifier>{bb77b476-ff57-4b77-8c71-6f54491a443a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

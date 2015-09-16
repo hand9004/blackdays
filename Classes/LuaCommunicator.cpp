@@ -25,9 +25,9 @@ LuaCommunicator::~LuaCommunicator(void)
 void LuaCommunicator::Lua_FileOpen(const char* file_Name)
 {
 	char relative_script_path[256] = {0,};
-	char log_message[256] = {0,};
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+	char log_message[256] = {0,};
 	strncpy(relative_script_path, cocos2d::CCFileUtils::sharedFileUtils()->getWritablePath().c_str(), sizeof(relative_script_path));
 	strncat(relative_script_path, file_Name, sizeof(relative_script_path));
 
@@ -63,150 +63,150 @@ void LuaCommunicator::Lua_Register_Functions()
 	Register_CFunction("LOG", l_DEBUG);
 }
 
-int LuaCommunicator::Lua_GetGlobalVariable_t_i(const char* table_name, const char* in_table_variable_name)
-{
-	int ret = 0;
-	lua_getglobal(p_lua_state, table_name);
-	if(!lua_istable(p_lua_state, -1))
-	{
-		lua_Error_msg("%s Is not table.", table_name);
-		return 0;
-	}
-
-	lua_getfield(p_lua_state, -1, in_table_variable_name);
-	ret = lua_tointeger(p_lua_state, -1);
-	if(!lua_isnumber(p_lua_state, -1))
-	{
-		lua_Error_msg("%s Is not Number.", in_table_variable_name);
-		return 0;
-	}
-	lua_pop(p_lua_state, 1);
-
-	return ret;
-}
-const char* LuaCommunicator::Lua_GetGlobalVariable_t_s(const char* table_name, const char* in_table_variable_name)
-{
-	const char* ret = nullptr;
-	lua_getglobal(p_lua_state, table_name);
-	if(!lua_istable(p_lua_state, -1))
-	{
-		lua_Error_msg("%s Is not table.", table_name);
-		return 0;
-	}
-
-	lua_getfield(p_lua_state, -1, in_table_variable_name);
-	ret = lua_tolstring(p_lua_state, -1, nullptr);
-	if(!lua_isstring(p_lua_state, -1))
-	{
-		lua_Error_msg("%s Is not Number.", in_table_variable_name);
-		return 0;
-	}
-	lua_pop(p_lua_state, 1);
-
-	return ret;
-}
-float LuaCommunicator::Lua_GetGlobalVariable_t_f(const char* table_name, const char* in_table_variable_name)
-{
-	float ret = 0;
-	lua_getglobal(p_lua_state, table_name);
-	if(!lua_istable(p_lua_state, -1))
-	{
-		lua_Error_msg("%s Is not table.", table_name);
-		return 0;
-	}
-
-	lua_getfield(p_lua_state, -1, in_table_variable_name);
-	ret = lua_tonumber(p_lua_state, -1);
-	if(!lua_isnumber(p_lua_state, -1))
-	{
-		lua_Error_msg("%s Is not Number.", in_table_variable_name);
-		return 0;
-	}
-	lua_pop(p_lua_state, 1);
-
-	return ret;
-}
-int LuaCommunicator::Lua_GetGlobalVariable_i(const char* variable_name)
-{
-	int ret = 0;
-	lua_getglobal(p_lua_state, variable_name);
-	if(!lua_isnumber(p_lua_state, -1))
-	{
-		lua_Error_msg("%s Is not Number.", variable_name);
-		return 0;
-	}
-
-	ret = lua_tointeger(p_lua_state, -1);
-	lua_pop(p_lua_state, 1);
-	return ret;
-}
-const char* LuaCommunicator::Lua_GetGlobalVariable_s(const char* variable_name)
-{
-	const char* ret = nullptr;
-	lua_getglobal(p_lua_state, variable_name);
-	if(!lua_isstring(p_lua_state, -1))
-	{
-		lua_Error_msg("%s Is not String.", variable_name);
-		return 0;
-	}
-
-	ret = lua_tolstring(p_lua_state, -1, nullptr);
-	lua_pop(p_lua_state, 1);
-	return ret;
-}
-float LuaCommunicator::Lua_GetGlobalVariable_f(const char* variable_name)
-{
-	float ret = 0.0f;
-	lua_getglobal(p_lua_state, variable_name);
-	if(!lua_isnumber(p_lua_state, -1))
-	{
-		lua_Error_msg("%s Is not Number.", variable_name);
-		return 0;
-	}
-
-	ret = lua_tonumber(p_lua_state, -1);
-	lua_pop(p_lua_state, 1);
-	return ret;
-}
-void* LuaCommunicator::Lua_GetGlobalVariable_u(const char* variable_name)
-{
-	void* ret = nullptr;
-	lua_getglobal(p_lua_state, variable_name);
-	if(!lua_isuserdata(p_lua_state, -1))
-	{
-		lua_Error_msg("%s Is not Userdata.", variable_name);
-		return 0;
-	}
-
-	ret = lua_touserdata(p_lua_state, -1);
-	lua_pop(p_lua_state, 1);
-	return ret;
-}
-
-void LuaCommunicator::Lua_SetGlobalVariable_i(const char* variable_name, int data)
-{
-	float ret = 0.0f;
-	lua_setglobal(p_lua_state, variable_name);
-	lua_pushinteger(p_lua_state, data);
-
-	lua_pop(p_lua_state, 1);
-}
-void LuaCommunicator::Lua_SetGlobalVariable_s(const char* variable_name, const char* data)
-{
-	float ret = 0.0f;
-	lua_setglobal(p_lua_state, variable_name);
-	lua_pushstring(p_lua_state, data);
-
-	lua_pop(p_lua_state, 1);
-}
-void LuaCommunicator::Lua_SetGlobalVariable_f(const char* variable_name, float data)
-{
-	float ret = 0.0f;
-	lua_setglobal(p_lua_state, variable_name);
-	lua_pushnumber(p_lua_state, data);
-
-	lua_pop(p_lua_state, 1);
-}
+//int LuaCommunicator::Lua_GetGlobalVariable_t_i(const char* table_name, const char* in_table_variable_name)
+//{
+//	int ret = 0;
+//	lua_getglobal(p_lua_state, table_name);
+//	if(!lua_istable(p_lua_state, -1))
+//	{
+//		lua_Error_msg("%s Is not table.", table_name);
+//		return 0;
+//	}
+//
+//	lua_getfield(p_lua_state, -1, in_table_variable_name);
+//	ret = lua_tointeger(p_lua_state, -1);
+//	if(!lua_isnumber(p_lua_state, -1))
+//	{
+//		lua_Error_msg("%s Is not Number.", in_table_variable_name);
+//		return 0;
+//	}
+//	lua_pop(p_lua_state, 1);
+//
+//	return ret;
+//}
+//const char* LuaCommunicator::Lua_GetGlobalVariable_t_s(const char* table_name, const char* in_table_variable_name)
+//{
+//	const char* ret = nullptr;
+//	lua_getglobal(p_lua_state, table_name);
+//	if(!lua_istable(p_lua_state, -1))
+//	{
+//		lua_Error_msg("%s Is not table.", table_name);
+//		return 0;
+//	}
+//
+//	lua_getfield(p_lua_state, -1, in_table_variable_name);
+//	ret = lua_tolstring(p_lua_state, -1, nullptr);
+//	if(!lua_isstring(p_lua_state, -1))
+//	{
+//		lua_Error_msg("%s Is not Number.", in_table_variable_name);
+//		return 0;
+//	}
+//	lua_pop(p_lua_state, 1);
+//
+//	return ret;
+//}
+//float LuaCommunicator::Lua_GetGlobalVariable_t_f(const char* table_name, const char* in_table_variable_name)
+//{
+//	float ret = 0;
+//	lua_getglobal(p_lua_state, table_name);
+//	if(!lua_istable(p_lua_state, -1))
+//	{
+//		lua_Error_msg("%s Is not table.", table_name);
+//		return 0;
+//	}
+//
+//	lua_getfield(p_lua_state, -1, in_table_variable_name);
+//	ret = lua_tonumber(p_lua_state, -1);
+//	if(!lua_isnumber(p_lua_state, -1))
+//	{
+//		lua_Error_msg("%s Is not Number.", in_table_variable_name);
+//		return 0;
+//	}
+//	lua_pop(p_lua_state, 1);
+//
+//	return ret;
+//}
+//int LuaCommunicator::Lua_GetGlobalVariable_i(const char* variable_name)
+//{
+//	int ret = 0;
+//	lua_getglobal(p_lua_state, variable_name);
+//	if(!lua_isnumber(p_lua_state, -1))
+//	{
+//		lua_Error_msg("%s Is not Number.", variable_name);
+//		return 0;
+//	}
+//
+//	ret = lua_tointeger(p_lua_state, -1);
+//	lua_pop(p_lua_state, 1);
+//	return ret;
+//}
+//const char* LuaCommunicator::Lua_GetGlobalVariable_s(const char* variable_name)
+//{
+//	const char* ret = nullptr;
+//	lua_getglobal(p_lua_state, variable_name);
+//	if(!lua_isstring(p_lua_state, -1))
+//	{
+//		lua_Error_msg("%s Is not String.", variable_name);
+//		return 0;
+//	}
+//
+//	ret = lua_tolstring(p_lua_state, -1, nullptr);
+//	lua_pop(p_lua_state, 1);
+//	return ret;
+//}
+//float LuaCommunicator::Lua_GetGlobalVariable_f(const char* variable_name)
+//{
+//	float ret = 0.0f;
+//	lua_getglobal(p_lua_state, variable_name);
+//	if(!lua_isnumber(p_lua_state, -1))
+//	{
+//		lua_Error_msg("%s Is not Number.", variable_name);
+//		return 0;
+//	}
+//
+//	ret = lua_tonumber(p_lua_state, -1);
+//	lua_pop(p_lua_state, 1);
+//	return ret;
+//}
+//void* LuaCommunicator::Lua_GetGlobalVariable_u(const char* variable_name)
+//{
+//	void* ret = nullptr;
+//	lua_getglobal(p_lua_state, variable_name);
+//	if(!lua_isuserdata(p_lua_state, -1))
+//	{
+//		lua_Error_msg("%s Is not Userdata.", variable_name);
+//		return 0;
+//	}
+//
+//	ret = lua_touserdata(p_lua_state, -1);
+//	lua_pop(p_lua_state, 1);
+//	return ret;
+//}
+//
+//void LuaCommunicator::Lua_SetGlobalVariable_i(const char* variable_name, int data)
+//{
+//	float ret = 0.0f;
+//	lua_setglobal(p_lua_state, variable_name);
+//	lua_pushinteger(p_lua_state, data);
+//
+//	lua_pop(p_lua_state, 1);
+//}
+//void LuaCommunicator::Lua_SetGlobalVariable_s(const char* variable_name, const char* data)
+//{
+//	float ret = 0.0f;
+//	lua_setglobal(p_lua_state, variable_name);
+//	lua_pushstring(p_lua_state, data);
+//
+//	lua_pop(p_lua_state, 1);
+//}
+//void LuaCommunicator::Lua_SetGlobalVariable_f(const char* variable_name, float data)
+//{
+//	float ret = 0.0f;
+//	lua_setglobal(p_lua_state, variable_name);
+//	lua_pushnumber(p_lua_state, data);
+//
+//	lua_pop(p_lua_state, 1);
+//}
 void LuaCommunicator::Call_LuaFunction(const char* function_name, const char* sig, ...)
 {
 	va_list vl;

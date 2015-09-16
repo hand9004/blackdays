@@ -4,10 +4,13 @@ local isStageOver = false
 
 local GameObject_ID = {}
 
-function stage1.stage_init(GameObject, Map)
-	local object_table = {}
-	local map_table = {}
+local object_table = {}
+local map_table = {}
 
+local isCommandToObject = false
+local isUIIntroduceShowed = false
+
+function stage1.stage_init(GameObject, Map)
 	object_table = GameObject.getVarString()
 	map_table = Map.getVarString()
 
@@ -21,61 +24,111 @@ function stage1.stage_init(GameObject, Map)
 
 	add_map(map_table[1])
 
---	table.insert(GameObject_ID, add_object(object_table[2], 200, 200))
---	add_object(object_table[2], 0, 100)
-
-	table.insert(GameObject_ID, add_object(object_table[4], 200, 200))
+	table.insert(GameObject_ID, add_object(object_table[2], 200, 200))
 
 	-- Stage 1 of Level 1
 	table.insert(GameObject_ID, add_object(object_table[6], 1300, 200))
-	table.insert(GameObject_ID, add_object(object_table[6], 1300, 20))
-
-	command_to_object(GameObject_ID[2], "Patrol", 1000, 200, 1000)
-	command_to_object(GameObject_ID[3], "Patrol", 1000, 20, 2000)
-	-- Stage 1 of Level 2
-	table.insert(GameObject_ID, add_object(object_table[6], 2100, 140))
-	table.insert(GameObject_ID, add_object(object_table[6], 2100, 100))
-	table.insert(GameObject_ID, add_object(object_table[6], 2100, 60))
-	table.insert(GameObject_ID, add_object(object_table[6], 2100, 20))
-
-	command_to_object(GameObject_ID[4], "Patrol", 1800, 140, 500)
-	command_to_object(GameObject_ID[5], "Patrol", 1800, 100, 1000)
-	command_to_object(GameObject_ID[6], "Patrol", 1800, 60, 1500)
-	command_to_object(GameObject_ID[7], "Patrol", 1800, 20, 2000)
-
-	set_ObjectInfo(GameObject_ID[4], "move_speed", 5)
-	set_ObjectInfo(GameObject_ID[5], "move_speed", 5)
-	set_ObjectInfo(GameObject_ID[6], "move_speed", 5)
-	set_ObjectInfo(GameObject_ID[7], "move_speed", 5)
+--	set_ObjectInfo(GameObject_ID[1], "attack_point", 999)
 	-- Stage 1 of Level 3
 
-	for i = 2, table.getn(GameObject_ID) do
-		set_ObjectInfo(GameObject_ID[i], "attack_point", 9999)
-	end
-
-	bindUI_on_game_object("skill_button_1", "n_run")
-	bindUI_on_game_object("skill_button_2", "n_hide")
-	bindUI_on_game_object("skill_button_3", "n_sleep_target")
+	bindUI_on_game_object("skill_button_1", "charge_straight")
+	bindUI_on_game_object("skill_button_2", "power_attack")
+	bindUI_on_game_object("skill_button_3", "chain_attack")
 	bindUI_on_game_object("skill_button_4", "")
-
+	
 --	load_background_music("sounds/main_menu.mp3")
 	play_background_music("sounds/main_menu.mp3", true)
 end
 
 function stage1.stage_update()
-	enemy_cnt = get_enemy_cnt()
-	ally_cnt = get_ally_cnt()
-
-	collided_trigger_str = get_collided_trigger("player")
+	local enemy_cnt = get_enemy_cnt()
+	local ally_cnt = get_ally_cnt()
+	
+	local is_stage_start = get_is_stage_start()
+	local is_map_scrolling = is_map_scrolled()
+	local talk_string = get_current_talk()
+	local collided_trigger_str = get_collided_trigger("player")
 --	LOG("enemy_cnt = " .. enemy_cnt .. " ally_cnt = " .. ally_cnt)
 
-	if collided_trigger_str == "stage_clear" then
+	if collided_trigger_str == "stage1_clear" then
+		isCommandToObject = false
 		isStageOver = true
 		isVictorious = true
+	elseif collided_trigger_str == "tutorial_trap" then
+		set_status_on_object("player", object_event.STUN)
 	elseif ally_cnt <= 0 then
 		isStageOver = true
 		isVictorious = false
+	elseif is_stage_start == true then
+		if isUIIntroduceShowed == false then
+			isUIIntroduceShowed = true
+			active_layer("tutorial_layer", true)
+		end
 	end
+	
+	if touched_id == ui_introduce_img.id then
+		if touched_event == 3 then
+			active_layer("tutorial_layer", false)
+			active_talk_event("stage_1_tutorial", true)
+			set_AllObject_Event(object_event.NO_EVENT)
+		end
+	end
+	
+	if talk_string == "stage_1_tutorial" then
+			local is_talk_start = get_is_talk_start()
+			local player_stat = get_status_on_object("player")
+			local conversation_index = get_current_conversation()
+			local is_target_dead = get_is_object_alive("enemy1")
+			
+			if conversation_index == 0 or conversation_index == 1 or conversation_index == 4 or
+			conversation_index == 8 or conversation_index == 9 then
+				if touched_event == 3 and touched_id == stage_talk_message_background.id then
+					set_conversation_change(true)
+				end
+			elseif conversation_index == 2 then
+				if is_map_scrolling == true then
+					set_conversation_change(true)
+				end
+			elseif conversation_index == 3 then
+				if player_stat == object_event.MOVE then
+					set_conversation_change(true)
+				end
+			elseif conversation_index == 5 then
+				if is_target_dead == true then
+					set_conversation_change(true)
+					active_layer("conversation_layer", true)
+				else
+					if isCommandToObject == false then
+						command_to_object(GameObject_ID[2], "Patrol", 1000, 200, 1500)
+						isCommandToObject = true
+					end
+					active_layer("conversation_layer", false)
+				end
+			elseif conversation_index == 6 then
+				if player_stat == object_event.STUN then
+					set_conversation_change(true)
+				end
+			elseif conversation_index == 7 then
+				if player_stat == object_event.SEARCHING_RECOGNIZE_AREA then
+					set_conversation_change(true)
+				end
+			end
+	end
+	
+	touched_id = 0
+	touched_sort = 0
+	touched_event = 0
+	touched_message = 0
+end
+
+function stage1.stage_destroy()
+	stage1 = nil
+	isVictorious = nil
+	isStageOver = nil
+
+	GameObject_ID = nil
+	object_table = nil
+	map_table = nil
 end
 
 function stage1.isStageOverStat()
@@ -92,6 +145,10 @@ function stage1.isStageOverStat()
 	end
 
 	return stage_over_status
+end
+
+function stage1.setGameObject_ID_List(list)
+	GameObject_ID = list
 end
 
 return stage1

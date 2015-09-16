@@ -4,7 +4,7 @@
 	 create_UI(table_name, UI_TYPE)
 	 update_UI() --> return value 3 --> id, ui_sort, message_box
 	 setActive_UI(unsigned int dest_ui_id, bool isActivate)
-	 DEBUG_UI(char* str) --> insert string value. then u can see the output.
+	 LOG(char* str) --> insert string value. then u can see the output.
 	 --]]
 
 --here's the introducing of function arguments explanation.
@@ -25,6 +25,9 @@ start_button = {id = 0, untouched = "Images/starter.png", touched = "Images/star
 
 credits_button = {id = 0, untouched = "Images/credits.png", touched = "Images/credits_clicked.png"
 				, posX = 525, posY = 100}
+
+credits_message_button = {id = 0, untouched = "Images/credits_message.png", touched = "Images/credits_message.png"
+				, posX = 200, posY = 18}
 
 gallery_button = {id = 0, untouched = "Images/gallery.png", touched = "Images/gallery_clicked.png"
 				, posX = 523, posY = 172}
@@ -56,8 +59,6 @@ slide_ctrl2 = {id = 0, slide_background = "Images/slider.png", slide_bar = "Imag
 
 setting_message = {id = 0, background = "Images/message_box_empty_chained.png", message = "", posX = 60, posY = 18}
 
-credits_message = {id = 0, background = "Images/credits_message.png", message = "", posX = 200, posY = 18}
-
 tutorial_message = {id = 0, background = "Images/tutorial_message.png", message = "", posX = 30, posY = 18}
 
 tutorial_1 = {id = 0, untouched = "Images/explain_1.png", touched = "Images/explain_1.png", posX = 80, posY = 80}
@@ -72,7 +73,6 @@ function ui_Init()
 	background2.id = create_UI("background2", 6)
 	setting_message.id = create_UI("setting_message", 6)
 	tutorial_message.id = create_UI("tutorial_message", 6)
-	credits_message.id = create_UI("credits_message", 3)
 
 	tutorial_1.id = create_UI("tutorial_1", 1)
 	tutorial_2.id = create_UI("tutorial_2", 1)
@@ -88,6 +88,7 @@ function ui_Init()
 
 	start_button.id = create_UI("start_button", 1)
 	credits_button.id = create_UI("credits_button", 1)
+	credits_message_button.id = create_UI("credits_message_button", 1)
 	setting_button.id = create_UI("setting_button", 1)
 	tutorial_button.id = create_UI("tutorial_button", 1)
 	gallery_button.id = create_UI("gallery_button", 1)
@@ -103,7 +104,7 @@ function ui_Init()
 	LOG(notice_string .. background2.id)
 	LOG(notice_string .. start_button.id)
 	LOG(notice_string .. credits_button.id)
-	LOG(notice_string .. credits_message.id)
+	LOG(notice_string .. credits_message_button.id)
 	LOG(notice_string .. setting_button.id)
 	LOG(notice_string .. exit_button.id)
 	LOG(notice_string .. exit_button_gal.id)
@@ -125,7 +126,7 @@ function ui_Init()
 	LOG(notice_string, setting_message.id)
 
 	set_active_UI(setting_message.id, false)
-	set_active_UI(credits_message.id, false)
+	set_active_UI(credits_message_button.id, false)
 	set_active_UI(tutorial_message.id, false)
 	set_active_UI(tutorial_1.id, false)
 	set_active_UI(tutorial_2.id, false)
@@ -141,6 +142,9 @@ function ui_Init()
 	set_active_UI(exit_button_gal.id, false)
 	set_active_UI(setting_exit_button.id, false)
 	set_active_UI(gallery_bg.id, false)
+
+	create_layer("credits_layer", 200, 18)
+	add_UI_to_layer("credits_layer", credits_message_button.id, 0, 0)
 
 	create_layer("gallery_layer", 0, 0)
 	add_UI_to_layer("gallery_layer", gallery_bg.id, 0, 0)
@@ -163,8 +167,8 @@ function ui_Init()
 	add_UI_to_layer("tutorial_layer", tutorial_5.id, 50, 62)
 	add_UI_to_layer("tutorial_layer", tutorial_6.id, 50, 62)
 
-	send_message("CHECK_BOX", check_box1.id, true)
-	send_message("CHECK_BOX", check_box2.id, true)
+	send_message("CHECK_BOX", check_box1.id, false)
+	send_message("CHECK_BOX", check_box2.id, false)
 
 	send_message("SLIDE_CONTROL", slide_ctrl1.id, 50)
 	send_message("SLIDE_CONTROL", slide_ctrl2.id, 50)
@@ -190,9 +194,13 @@ function ui_Update()
 			set_after_layerAction("setting_layer", "Visible", false)
 			add_action_to_layer("setting_layer", "move_to", 0, 300, 10.0, true)
 		elseif start_button.id == touched_id then
+			ui_Destroy()
 			replace_scene("Select")
 		elseif credits_button.id == touched_id then
-			set_active_UI(credits_message.id, true)
+			active_layer("credits_layer", true)
+			vibrate_scene(true, 500)
+		elseif credits_message_button.id == touched_id then
+			active_layer("credits_layer", false)
 		elseif tutorial_button.id == touched_id then
 			active_layer("tutorial_layer", true)
 			set_active_UI(tutorial_message.id, true)
@@ -262,6 +270,33 @@ function ui_Update()
 			active_layer("tutorial_layer", false)
 		end
 	end
+end
+
+function ui_Destroy()
+background1 = nil
+background2 = nil
+start_button = nil
+credits_button = nil
+credits_message_button = nil
+gallery_button = nil
+gallery_bg = nil
+setting_button = nil
+exit_button = nil
+setting_exit_button = nil
+exit_button_gal = nil
+tutorial_button = nil
+check_box1 = nil
+check_box2 = nil
+slide_ctrl1 = nil
+slide_ctrl2 = nil
+setting_message = nil
+tutorial_message = nil
+tutorial_1 = nil
+tutorial_2 = nil
+tutorial_3 = nil
+tutorial_4 = nil
+tutorial_5 = nil
+tutorial_6 = nil
 end
 
 function sound_Init()

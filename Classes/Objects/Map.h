@@ -10,6 +10,8 @@ typedef enum MAP_OBJECT_TYPE
 
 typedef struct MAP_TRIGGER_INFO
 {
+	bool isTriggered;
+	const char* trigger_type;
 	cocos2d::CCPoint trigger_pos;
 	cocos2d::CCRect trigger_rect;
 }map_trig_info;
@@ -75,14 +77,12 @@ public:
 	const char* get_collided_trigger(cocos2d::CCPoint src_pt);
 	void reset_MapCoordinate();
 
-	bool getIsCanScrolling();
 	cocos2d::CCPoint getMapStartPoint();
 	cocos2d::CCPoint getMapEndPoint();
 
 	void setUpdateScrolling(int delta_x);
+	int getScrollingValue() { return scrolling_val; }
 	std::vector<map_piece*>getMapPieceList() { return map_piece_list; }
-public:
-	void setLuaState(lua_State* lua_st) { p_lua_st = lua_st; }
 private:
 	void set_Map_Info();
 	void sort_Map_On_Index();
@@ -94,6 +94,6 @@ private:
 	cocos2d::CCSprite* in_map_particle_spr;
 	std::vector<map_piece*>map_piece_list;
 	std::map<const char*, map_trig_info*>trigger_list;
-	lua_State* p_lua_st;
+	int scrolling_val;
 };
 

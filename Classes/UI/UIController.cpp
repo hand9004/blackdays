@@ -9,17 +9,15 @@
 #include "UILayer.h"
 #include "../Utility/Utility.h"
 #include "../LuaCommunicator.h"
+#include "../SoundManager.h"
 
 USING_NS_CC;
 
 #include <algorithm>
 // UI 모듈과 루아 스크립트가 통신하기 위한 인터페이스 함수이다.
 
-lua_State* l_state_temp = nullptr;
-
 int l_create_UI(lua_State* L)
 {
-	l_state_temp = L;
 	unsigned int ret_id = UIController::Instance()->create_UIFromLua();
 
 	lua_pushinteger(L, ret_id);
@@ -116,6 +114,32 @@ int l_add_action_to_layer(lua_State* L)
 
 		UIController::Instance()->add_Action_to_Layer(dest_layer_name, action_name, (void*)&scroll_action_data);
 	}
+
+	return 0;
+}
+
+int l_add_progress_timer(lua_State* L)
+{
+	unsigned int target_id = lua_tointeger(L, 1);
+	const char* timer_type = lua_tostring(L, 2);
+	const char* progress_img_path = lua_tostring(L, 3);
+
+	UIComponent* finded_UI = UIController::Instance()->find_UIComponent(target_id);
+
+	CCAssert(finded_UI != nullptr, "Can't Find UIComponent. Check the Lua Script File.");
+
+	CCProgressTimer* in_UI_Progress_Timer = CCProgressTimer::create(CCSprite::create(progress_img_path));
+	if (!strcmp(timer_type, "Radial"))
+		in_UI_Progress_Timer->setType(CCProgressTimerType::kCCProgressTimerTypeRadial);
+	else if (!strcmp(timer_type, "Bar"))
+		in_UI_Progress_Timer->setType(CCProgressTimerType::kCCProgressTimerTypeBar);
+	
+	in_UI_Progress_Timer->setPercentage(0.f);
+	in_UI_Progress_Timer->setPosition(finded_UI->getPosition());
+	in_UI_Progress_Timer->setAnchorPoint(CCPoint(0.f, 0.f));
+	finded_UI->setProgressTimer(in_UI_Progress_Timer);
+
+	UIController::Instance()->addChild(in_UI_Progress_Timer);
 
 	return 0;
 }
@@ -237,7 +261,7 @@ unsigned int UIController::add_UIComponent(UI_TYPE ui_type, const char* key, voi
 	ui_data->set_Sort(ui_type);
 
 	ui_data->Init(ui_packet);
-	ui_component_list[key] = ui_data;
+	ui_component_list.insert(std::pair<const char*, UIComponent*>(key, ui_data));
 
 	addChild(ui_data);
 
@@ -301,6 +325,8 @@ void UIController::clear_UIComponent()
 		ui_iter->Destroy();
 
 		removeChild(ui_iter, true);
+
+		SAFE_DELETE(ui_iter);
 	}
 	ui_component_cnt = 0;
 	map_clear(ui_component_list);
@@ -311,12 +337,12 @@ void UIController::add_UILayer(const char* layer_name, cocos2d::CCPoint layer_pt
 	UILayer* layer_obj = new UILayer;
 
 	CCAssert(layer_obj != nullptr, "Can't Create UILayer.");
-	layer_list[layer_name] = layer_obj;
+	layer_list.insert(std::pair<const char*, UILayer*>(layer_name, layer_obj));
 	layer_obj->init_UILayer(layer_pt);
 }
 void UIController::add_UIComponent_to_Layer(const char* layer_name, unsigned int id, cocos2d::CCPoint relative_pt)
 {
-	UILayer* p_layer = layer_list[layer_name];
+	UILayer* p_layer = layer_list.at(layer_name);
 
 	CCAssert(p_layer != nullptr, "Can't Add To Layer. Should be Make UILayer Object.");
 	UIComponent* p_UIComp = find_UIComponent(id);
@@ -324,18 +350,26 @@ void UIController::add_UIComponent_to_Layer(const char* layer_name, unsigned int
 }
 void UIController::add_Action_to_Layer(const char* layer_name, const char* action_type, void* action_data)
 {
-	UILayer* p_layer = layer_list[layer_name];
+	UILayer* p_layer = layer_list.at(layer_name);
 	p_layer->link_Action_to_UILayer(action_type, action_data);
 }
 void UIController::active_Layer(const char* layer_name, bool isLayerActive)
 {
-	UILayer* p_layer = layer_list[layer_name];
-	p_layer->active_Layer(isLayerActive);
-	BD_CCLog("layer_Active = %s %d", layer_name, isLayerActive);
+	auto begin = layer_list.begin();
+	auto end = layer_list.end();
+
+	for (auto i = begin; i != end; ++i)
+	{
+		if (!strcmp(i->first, layer_name))
+		{
+			i->second->active_Layer(isLayerActive);
+			break;
+		}
+	}
 }
 void UIController::set_after_layerAction(const char* layer_name, const char* after_action_type, void* data)
 {
-	UILayer* p_layer = layer_list[layer_name];
+	UILayer* p_layer = layer_list.at(layer_name);
 	p_layer->set_after_layerAction(after_action_type, data);
 }
 void UIController::update_UILayer()
@@ -417,6 +451,7 @@ void UIController::register_UIFunctions()
 	LuaCommunicator::Instance()->Register_CFunction("create_layer", l_create_layer);
 	LuaCommunicator::Instance()->Register_CFunction("add_UI_to_layer", l_add_UI_to_layer);
 	LuaCommunicator::Instance()->Register_CFunction("active_layer", l_active_layer);
+	LuaCommunicator::Instance()->Register_CFunction("add_progress_timer", l_add_progress_timer);
 	LuaCommunicator::Instance()->Register_CFunction("set_after_layerAction", l_set_after_layerAction);
 	LuaCommunicator::Instance()->Register_CFunction("add_action_to_layer", l_add_action_to_layer);
 	LuaCommunicator::Instance()->Register_CFunction("send_message", l_send_message);
@@ -424,17 +459,19 @@ void UIController::register_UIFunctions()
 
 unsigned int UIController::create_UIFromLua()
 {
+	lua_State* p_lua_st = LuaCommunicator::Instance()->Lua_GetState();
+
 	unsigned int ui_type = 0;
 	unsigned int ret_id = 0;
 	const char* table_name = nullptr;
-	table_name = lua_tostring(l_state_temp, 1);
-	ui_type = lua_tonumber(l_state_temp, 2);
-	lua_pop(l_state_temp, 2);
+	table_name = lua_tostring(p_lua_st, 1);
+	ui_type = lua_tonumber(p_lua_st, 2);
+	lua_pop(p_lua_st, 2);
 
 	UI_TYPE converted_ui_type = (UI_TYPE)ui_type;
 	
-	lua_getglobal(l_state_temp, table_name);
-	CCAssert(lua_istable(l_state_temp, -1), "Error : Wasn't Lua Table Type.");
+	lua_getglobal(p_lua_st, table_name);
+	CCAssert(lua_istable(p_lua_st, -1), "Error : Wasn't Lua Table Type.");
 
 	switch(converted_ui_type)
 	{
@@ -494,32 +531,34 @@ void UIController::set_TouchEnable_UI(bool isTouchEnable)
 }
 unsigned int UIController::setButton(const char* key)
 {
+	lua_State* p_lua_st = LuaCommunicator::Instance()->Lua_GetState();
+
 	int posX, posY;
 	butt_pack* butt_info = new butt_pack;
 
-	lua_pushstring(l_state_temp, "untouched");
-	lua_gettable(l_state_temp, 1);
-	strncpy(butt_info->image_info.file_name, lua_tostring(l_state_temp, -1), sizeof(butt_info->image_info.file_name));
+	lua_pushstring(p_lua_st, "untouched");
+	lua_gettable(p_lua_st, 1);
+	strncpy(butt_info->image_info.file_name, lua_tostring(p_lua_st, -1), sizeof(butt_info->image_info.file_name));
 
-	lua_pop(l_state_temp, 1);
+	lua_pop(p_lua_st, 1);
 
-	lua_pushstring(l_state_temp, "touched");
-	lua_gettable(l_state_temp, 1);
-	strncpy(butt_info->pressed_image_info.file_name, lua_tostring(l_state_temp, -1), sizeof(butt_info->pressed_image_info.file_name));
+	lua_pushstring(p_lua_st, "touched");
+	lua_gettable(p_lua_st, 1);
+	strncpy(butt_info->pressed_image_info.file_name, lua_tostring(p_lua_st, -1), sizeof(butt_info->pressed_image_info.file_name));
 
-	lua_pop(l_state_temp, 1);
+	lua_pop(p_lua_st, 1);
 
-	lua_pushstring(l_state_temp, "posX");
-	lua_gettable(l_state_temp, 1);
-	posX = lua_tonumber(l_state_temp, -1);
+	lua_pushstring(p_lua_st, "posX");
+	lua_gettable(p_lua_st, 1);
+	posX = lua_tonumber(p_lua_st, -1);
 
-	lua_pop(l_state_temp, 1);
+	lua_pop(p_lua_st, 1);
 
-	lua_pushstring(l_state_temp, "posY");
-	lua_gettable(l_state_temp, 1);
-	posY = lua_tonumber(l_state_temp, -1);
+	lua_pushstring(p_lua_st, "posY");
+	lua_gettable(p_lua_st, 1);
+	posY = lua_tonumber(p_lua_st, -1);
 
-	lua_pop(l_state_temp, 1);
+	lua_pop(p_lua_st, 1);
 
 	butt_info->image_info.image_pt.x = butt_info->pressed_image_info.image_pt.x = posX;
 	butt_info->image_info.image_pt.y = butt_info->pressed_image_info.image_pt.y = posY;	
@@ -528,32 +567,34 @@ unsigned int UIController::setButton(const char* key)
 }
 unsigned int UIController::setCheckBox(const char* key)
 {
+	lua_State* p_lua_st = LuaCommunicator::Instance()->Lua_GetState();
+
 	int posX, posY;
 	chk_box_pack* chk_box_info = new chk_box_pack;
 
-	lua_pushstring(l_state_temp, "unchecked");
-	lua_gettable(l_state_temp, 1);
-	strncpy(chk_box_info->unchecked_image_info.file_name, lua_tostring(l_state_temp, -1), sizeof(chk_box_info->unchecked_image_info.file_name));
+	lua_pushstring(p_lua_st, "unchecked");
+	lua_gettable(p_lua_st, 1);
+	strncpy(chk_box_info->unchecked_image_info.file_name, lua_tostring(p_lua_st, -1), sizeof(chk_box_info->unchecked_image_info.file_name));
 
-	lua_pop(l_state_temp, 1);
+	lua_pop(p_lua_st, 1);
 
-	lua_pushstring(l_state_temp, "checked");
-	lua_gettable(l_state_temp, 1);
-	strncpy(chk_box_info->checked_image_info.file_name, lua_tostring(l_state_temp, -1), sizeof(chk_box_info->checked_image_info.file_name));
+	lua_pushstring(p_lua_st, "checked");
+	lua_gettable(p_lua_st, 1);
+	strncpy(chk_box_info->checked_image_info.file_name, lua_tostring(p_lua_st, -1), sizeof(chk_box_info->checked_image_info.file_name));
 
-	lua_pop(l_state_temp, 1);
+	lua_pop(p_lua_st, 1);
 
-	lua_pushstring(l_state_temp, "posX");
-	lua_gettable(l_state_temp, 1);
-	posX = lua_tonumber(l_state_temp, -1);
+	lua_pushstring(p_lua_st, "posX");
+	lua_gettable(p_lua_st, 1);
+	posX = lua_tonumber(p_lua_st, -1);
 
-	lua_pop(l_state_temp, 1);
+	lua_pop(p_lua_st, 1);
 
-	lua_pushstring(l_state_temp, "posY");
-	lua_gettable(l_state_temp, 1);
-	posY = lua_tonumber(l_state_temp, -1);
+	lua_pushstring(p_lua_st, "posY");
+	lua_gettable(p_lua_st, 1);
+	posY = lua_tonumber(p_lua_st, -1);
 
-	lua_pop(l_state_temp, 1);
+	lua_pop(p_lua_st, 1);
 
 	chk_box_info->checked_image_info.image_pt.x = chk_box_info->unchecked_image_info.image_pt.x = posX;
 	chk_box_info->checked_image_info.image_pt.y = chk_box_info->unchecked_image_info.image_pt.y = posY;	
@@ -562,28 +603,30 @@ unsigned int UIController::setCheckBox(const char* key)
 }
 unsigned int UIController::setMessageBox(const char* key)
 {
+	lua_State* p_lua_st = LuaCommunicator::Instance()->Lua_GetState();
+
 	int posX, posY;
 	message_pack* msg_box_info = new message_pack;
 
-	lua_pushstring(l_state_temp, "background");
-	lua_gettable(l_state_temp, 1);
-	strncpy(msg_box_info->background_image_info.file_name, lua_tostring(l_state_temp, -1), sizeof(msg_box_info->background_image_info.file_name));
-	lua_pop(l_state_temp, 1);
+	lua_pushstring(p_lua_st, "background");
+	lua_gettable(p_lua_st, 1);
+	strncpy(msg_box_info->background_image_info.file_name, lua_tostring(p_lua_st, -1), sizeof(msg_box_info->background_image_info.file_name));
+	lua_pop(p_lua_st, 1);
 
-	lua_pushstring(l_state_temp, "message");
-	lua_gettable(l_state_temp, 1);
-	strncpy(msg_box_info->message, lua_tostring(l_state_temp, -1), sizeof(msg_box_info->message));
-	lua_pop(l_state_temp, 1);
+	lua_pushstring(p_lua_st, "message");
+	lua_gettable(p_lua_st, 1);
+	strncpy(msg_box_info->message, lua_tostring(p_lua_st, -1), sizeof(msg_box_info->message));
+	lua_pop(p_lua_st, 1);
 
-	lua_pushstring(l_state_temp, "posX");
-	lua_gettable(l_state_temp, 1);
-	posX = lua_tonumber(l_state_temp, -1);
-	lua_pop(l_state_temp, 1);
+	lua_pushstring(p_lua_st, "posX");
+	lua_gettable(p_lua_st, 1);
+	posX = lua_tonumber(p_lua_st, -1);
+	lua_pop(p_lua_st, 1);
 
-	lua_pushstring(l_state_temp, "posY");
-	lua_gettable(l_state_temp, 1);
-	posY = lua_tonumber(l_state_temp, -1);
-	lua_pop(l_state_temp, 1);
+	lua_pushstring(p_lua_st, "posY");
+	lua_gettable(p_lua_st, 1);
+	posY = lua_tonumber(p_lua_st, -1);
+	lua_pop(p_lua_st, 1);
 
 	msg_box_info->background_image_info.image_pt.x = posX;
 	msg_box_info->background_image_info.image_pt.y = posY;	
@@ -592,59 +635,61 @@ unsigned int UIController::setMessageBox(const char* key)
 }
 unsigned int UIController::setPopupMessage(const char* key)
 {
+	lua_State* p_lua_st = LuaCommunicator::Instance()->Lua_GetState();
+
 	int posX, posY;
 	pop_message_pack* pop_msg_info = new pop_message_pack;
 
-	lua_pushstring(l_state_temp, "message");
-	lua_gettable(l_state_temp, 1);
-	strncpy(pop_msg_info->message, lua_tostring(l_state_temp, -1), sizeof(pop_msg_info->message));
-	lua_pop(l_state_temp, 1);
+	lua_pushstring(p_lua_st, "message");
+	lua_gettable(p_lua_st, 1);
+	strncpy(pop_msg_info->message, lua_tostring(p_lua_st, -1), sizeof(pop_msg_info->message));
+	lua_pop(p_lua_st, 1);
 
-	lua_pushstring(l_state_temp, "font_name");
-	lua_gettable(l_state_temp, 1);
-	strncpy(pop_msg_info->font_name, lua_tostring(l_state_temp, -1), sizeof(pop_msg_info->font_name));
-	lua_pop(l_state_temp, 1);
+	lua_pushstring(p_lua_st, "font_name");
+	lua_gettable(p_lua_st, 1);
+	strncpy(pop_msg_info->font_name, lua_tostring(p_lua_st, -1), sizeof(pop_msg_info->font_name));
+	lua_pop(p_lua_st, 1);
 
-	lua_pushstring(l_state_temp, "mode");
-	lua_gettable(l_state_temp, 1);
-	strncpy(pop_msg_info->message_mode, lua_tostring(l_state_temp, -1), sizeof(pop_msg_info->message_mode));
-	lua_pop(l_state_temp, 1);
+	lua_pushstring(p_lua_st, "mode");
+	lua_gettable(p_lua_st, 1);
+	strncpy(pop_msg_info->message_mode, lua_tostring(p_lua_st, -1), sizeof(pop_msg_info->message_mode));
+	lua_pop(p_lua_st, 1);
 
-	lua_pushstring(l_state_temp, "posX");
-	lua_gettable(l_state_temp, 1);
-	posX = lua_tonumber(l_state_temp, -1);
-	lua_pop(l_state_temp, 1);
+	lua_pushstring(p_lua_st, "posX");
+	lua_gettable(p_lua_st, 1);
+	posX = lua_tonumber(p_lua_st, -1);
+	lua_pop(p_lua_st, 1);
 
-	lua_pushstring(l_state_temp, "posY");
-	lua_gettable(l_state_temp, 1);
-	posY = lua_tonumber(l_state_temp, -1);
-	lua_pop(l_state_temp, 1);
+	lua_pushstring(p_lua_st, "posY");
+	lua_gettable(p_lua_st, 1);
+	posY = lua_tonumber(p_lua_st, -1);
+	lua_pop(p_lua_st, 1);
 
-	lua_pushstring(l_state_temp, "delay_time_ms");
-	lua_gettable(l_state_temp, 1);
-	pop_msg_info->delay_time_ms = lua_tonumber(l_state_temp, -1);
-	lua_pop(l_state_temp, 1);
+	lua_pushstring(p_lua_st, "delay_time_ms");
+	lua_gettable(p_lua_st, 1);
+	pop_msg_info->delay_time_ms = lua_tonumber(p_lua_st, -1);
+	lua_pop(p_lua_st, 1);
 
-	lua_pushstring(l_state_temp, "font_size");
-	lua_gettable(l_state_temp, 1);
-	pop_msg_info->font_size = lua_tointeger(l_state_temp, -1);
-	lua_pop(l_state_temp, 1);
+	lua_pushstring(p_lua_st, "font_size");
+	lua_gettable(p_lua_st, 1);
+	pop_msg_info->font_size = lua_tointeger(p_lua_st, -1);
+	lua_pop(p_lua_st, 1);
 
-	lua_pushstring(l_state_temp, "color");
-	lua_gettable(l_state_temp, 1);
+	lua_pushstring(p_lua_st, "color");
+	lua_gettable(p_lua_st, 1);
 
 	int color_element_size = LuaCommunicator::Instance()->getTableSize(2);
 	for(int i = 1; i <= color_element_size; ++i)
 	{
-		lua_pushinteger(l_state_temp, i);
-		lua_gettable(l_state_temp, 2);
+		lua_pushinteger(p_lua_st, i);
+		lua_gettable(p_lua_st, 2);
 	}
-	pop_msg_info->color_val.r = lua_tointeger(l_state_temp, -3);
-	pop_msg_info->color_val.g = lua_tointeger(l_state_temp, -2);
-	pop_msg_info->color_val.b = lua_tointeger(l_state_temp, -1);
+	pop_msg_info->color_val.r = lua_tointeger(p_lua_st, -3);
+	pop_msg_info->color_val.g = lua_tointeger(p_lua_st, -2);
+	pop_msg_info->color_val.b = lua_tointeger(p_lua_st, -1);
 	
-	lua_pop(l_state_temp, color_element_size);
-	lua_pop(l_state_temp, 1);
+	lua_pop(p_lua_st, color_element_size);
+	lua_pop(p_lua_st, 1);
 
 	pop_msg_info->message_pt.x = posX;
 	pop_msg_info->message_pt.y = posY;	
@@ -653,32 +698,34 @@ unsigned int UIController::setPopupMessage(const char* key)
 }
 unsigned int UIController::setSlideControl(const char* key)
 {
+	lua_State* p_lua_st = LuaCommunicator::Instance()->Lua_GetState();
+
 	int posX, posY;
 	slide_ctrl_pack* slide_ctrl_info = new slide_ctrl_pack;
 
-	lua_pushstring(l_state_temp, "slide_background");
-	lua_gettable(l_state_temp, 1);
-	strncpy(slide_ctrl_info->background_image_info.file_name, lua_tostring(l_state_temp, -1), sizeof(slide_ctrl_info->background_image_info.file_name));
+	lua_pushstring(p_lua_st, "slide_background");
+	lua_gettable(p_lua_st, 1);
+	strncpy(slide_ctrl_info->background_image_info.file_name, lua_tostring(p_lua_st, -1), sizeof(slide_ctrl_info->background_image_info.file_name));
 
-	lua_pop(l_state_temp, 1);
+	lua_pop(p_lua_st, 1);
 
-	lua_pushstring(l_state_temp, "slide_bar");
-	lua_gettable(l_state_temp, 1);
-	strncpy(slide_ctrl_info->slide_bar_info.file_name, lua_tostring(l_state_temp, -1), sizeof(slide_ctrl_info->slide_bar_info.file_name));
+	lua_pushstring(p_lua_st, "slide_bar");
+	lua_gettable(p_lua_st, 1);
+	strncpy(slide_ctrl_info->slide_bar_info.file_name, lua_tostring(p_lua_st, -1), sizeof(slide_ctrl_info->slide_bar_info.file_name));
 
-	lua_pop(l_state_temp, 1);
+	lua_pop(p_lua_st, 1);
 
-	lua_pushstring(l_state_temp, "posX");
-	lua_gettable(l_state_temp, 1);
-	posX = lua_tonumber(l_state_temp, -1);
+	lua_pushstring(p_lua_st, "posX");
+	lua_gettable(p_lua_st, 1);
+	posX = lua_tonumber(p_lua_st, -1);
 
-	lua_pop(l_state_temp, 1);
+	lua_pop(p_lua_st, 1);
 
-	lua_pushstring(l_state_temp, "posY");
-	lua_gettable(l_state_temp, 1);
-	posY = lua_tonumber(l_state_temp, -1);
+	lua_pushstring(p_lua_st, "posY");
+	lua_gettable(p_lua_st, 1);
+	posY = lua_tonumber(p_lua_st, -1);
 
-	lua_pop(l_state_temp, 1);
+	lua_pop(p_lua_st, 1);
 
 	slide_ctrl_info->background_image_info.image_pt.x = slide_ctrl_info->slide_bar_info.image_pt.x = posX;
 	slide_ctrl_info->background_image_info.image_pt.y = slide_ctrl_info->slide_bar_info.image_pt.y = posY;	
@@ -687,38 +734,40 @@ unsigned int UIController::setSlideControl(const char* key)
 }
 unsigned int UIController::setSlideSelector(const char* key)
 {
+	lua_State* p_lua_st = LuaCommunicator::Instance()->Lua_GetState();
+
 	int posX, posY;
 	slide_sel_pack* slide_sel_info = new slide_sel_pack;
 
-	lua_pushstring(l_state_temp, "slide_sel_background");
-	lua_gettable(l_state_temp, 1);
-	strncpy(slide_sel_info->background_image_info.file_name, lua_tostring(l_state_temp, -1), sizeof(slide_sel_info->background_image_info.file_name));
+	lua_pushstring(p_lua_st, "slide_sel_background");
+	lua_gettable(p_lua_st, 1);
+	strncpy(slide_sel_info->background_image_info.file_name, lua_tostring(p_lua_st, -1), sizeof(slide_sel_info->background_image_info.file_name));
 
-	lua_pop(l_state_temp, 1);
+	lua_pop(p_lua_st, 1);
 
-	lua_pushstring(l_state_temp, "talk_balloon");
-	lua_gettable(l_state_temp, 1);
-	strncpy(slide_sel_info->talk_balloon_info.file_name, lua_tostring(l_state_temp, -1), sizeof(slide_sel_info->talk_balloon_info.file_name));
+	lua_pushstring(p_lua_st, "talk_balloon");
+	lua_gettable(p_lua_st, 1);
+	strncpy(slide_sel_info->talk_balloon_info.file_name, lua_tostring(p_lua_st, -1), sizeof(slide_sel_info->talk_balloon_info.file_name));
 
-	lua_pop(l_state_temp, 1);
+	lua_pop(p_lua_st, 1);
 
-	lua_pushstring(l_state_temp, "posX");
-	lua_gettable(l_state_temp, 1);
-	posX = lua_tonumber(l_state_temp, -1);
+	lua_pushstring(p_lua_st, "posX");
+	lua_gettable(p_lua_st, 1);
+	posX = lua_tonumber(p_lua_st, -1);
 
-	lua_pop(l_state_temp, 1);
+	lua_pop(p_lua_st, 1);
 
-	lua_pushstring(l_state_temp, "posY");
-	lua_gettable(l_state_temp, 1);
-	posY = lua_tonumber(l_state_temp, -1);
+	lua_pushstring(p_lua_st, "posY");
+	lua_gettable(p_lua_st, 1);
+	posY = lua_tonumber(p_lua_st, -1);
 
-	lua_pop(l_state_temp, 1);
+	lua_pop(p_lua_st, 1);
 
-	lua_pushstring(l_state_temp, "isVertical");
-	lua_gettable(l_state_temp, 1);
-	INTEGER_TO_BOOLEAN(slide_sel_info->isVertical, lua_toboolean(l_state_temp, -1));
+	lua_pushstring(p_lua_st, "isVertical");
+	lua_gettable(p_lua_st, 1);
+	INTEGER_TO_BOOLEAN(slide_sel_info->isVertical, lua_toboolean(p_lua_st, -1));
 
-	lua_pop(l_state_temp, 1);
+	lua_pop(p_lua_st, 1);
 
 	slide_sel_info->background_image_info.image_pt.x = posX;
 	slide_sel_info->background_image_info.image_pt.y = posY;	
@@ -727,26 +776,28 @@ unsigned int UIController::setSlideSelector(const char* key)
 }
 unsigned int UIController::setBackground(const char* key)
 {
+	lua_State* p_lua_st = LuaCommunicator::Instance()->Lua_GetState();
+
 	int posX, posY;
 	bg_pack* bg_info = new bg_pack;
 
-	lua_pushstring(l_state_temp, "background");
-	lua_gettable(l_state_temp, 1);
-	strncpy(bg_info->background_image_info.file_name, lua_tostring(l_state_temp, -1), sizeof(bg_info->background_image_info.file_name));
+	lua_pushstring(p_lua_st, "background");
+	lua_gettable(p_lua_st, 1);
+	strncpy(bg_info->background_image_info.file_name, lua_tostring(p_lua_st, -1), sizeof(bg_info->background_image_info.file_name));
 
-	lua_pop(l_state_temp, 1);
+	lua_pop(p_lua_st, 1);
 
-	lua_pushstring(l_state_temp, "posX");
-	lua_gettable(l_state_temp, 1);
-	posX = lua_tonumber(l_state_temp, -1);
+	lua_pushstring(p_lua_st, "posX");
+	lua_gettable(p_lua_st, 1);
+	posX = lua_tonumber(p_lua_st, -1);
 
-	lua_pop(l_state_temp, 1);
+	lua_pop(p_lua_st, 1);
 
-	lua_pushstring(l_state_temp, "posY");
-	lua_gettable(l_state_temp, 1);
-	posY = lua_tonumber(l_state_temp, -1);
+	lua_pushstring(p_lua_st, "posY");
+	lua_gettable(p_lua_st, 1);
+	posY = lua_tonumber(p_lua_st, -1);
 
-	lua_pop(l_state_temp, 1);
+	lua_pop(p_lua_st, 1);
 
 	bg_info->background_image_info.image_pt.x = posX;
 	bg_info->background_image_info.image_pt.y = posY;	
@@ -775,7 +826,7 @@ void UIController::setTouchBegan(cocos2d::CCTouch* pTouch, cocos2d::CCEvent* pEv
 		if(ui_iter->is_UITouched(touched_pt))
 		{
 			ui_iter->setTouchEvent(TOUCH_BEGIN, touched_pt);
-			isGetTouching = true;
+			setIsTouchGrab(true);
 		}
 	}
 

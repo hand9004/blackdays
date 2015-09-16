@@ -5,6 +5,7 @@
 #include "../SoundManager.h"
 #include "../System/SystemInfo.h"
 #include "../UI/UIController.h"
+#include "../LuaCommunicator.h"
 
 USING_NS_CC;
 
@@ -73,4 +74,14 @@ void StageSelectScene::menuCloseCallback(CCObject* pSender)
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     exit(0);
 #endif
+}
+
+void StageSelectScene::resume_scheduler()
+{
+	schedule(schedule_selector(StageSelectScene::schedule_updater));
+}
+
+void StageSelectScene::pause_scheduler()
+{
+	unschedule(schedule_selector(StageSelectScene::schedule_updater));
 }

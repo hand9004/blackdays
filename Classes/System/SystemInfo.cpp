@@ -115,7 +115,7 @@ int l_get_platform_type(lua_State* L)
 	strncpy(message, "Android", sizeof(message));
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
 	strncpy(message, "IOS", sizeof(message));
-#else
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
 	strncpy(message, "Windows", sizeof(message));
 #endif
 

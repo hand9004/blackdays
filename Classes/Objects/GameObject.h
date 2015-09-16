@@ -31,7 +31,6 @@ public:
 	const char* getActiveGraphicComp() { return graphic_ctrl.getActiveGraphicComp(); }
 	bool getControllable() { return object_info.isControllable; }
 	bool getIsEnemy() { return object_info.isEnemy; }
-	bool getIsAttacked() { return isAttackingByEnemy; }
 	bool getIsSelected() { return isSelected; }
 	bool getIsCollidedToTarget() { return isCollidedToTarget; }
 	bool getIsLeft() { return isLeft; }
@@ -56,6 +55,7 @@ public:
 		sleep_start_time = get_ms_onSystem();
 		sleep_end_time = get_ms_onSystem();
 	}
+	void addTapCount() { ++this->tap_count; }
 public:
 	bool setSkillSelect(unsigned int selected_index) { return skill_ctrl.setSkillSelect(selected_index); }
 	bool setSkillSelect(const char* skill_name) { return skill_ctrl.setSkillSelect(skill_name); }
@@ -68,20 +68,21 @@ public:
 	void Patrol(cocos2d::CCPoint patrol_pt, unsigned int patrol_delay_time);
 	void SetAllObjectList(std::vector<GameObject*>all_object_list);
 public:
+	void setStunPreset();
 	bool dead_check();
 	bool destroy_check();
 private:
-	void move_update();
-	void attack_update();
-	void skill_update();
-	void patrol_update();
-	void search_update();
-	void sleep_update();
-	void dead_update();
+	void update_move();
+	void update_attack();
+	void update_skill();
+	void update_patrol();
+	void update_search();
+	void update_sleep();
+	void update_stun();
+	void update_dead();
 
-	void throw_object_update();
+	void update_throw_object();
 	void check_non_target_attacked();
-	void check_is_attacked();
 	bool check_firing_area(GameObject* target);
 	bool check_has_map_object_in_line(CCPoint curr_pos, CCPoint target_pos);
 private:
@@ -93,21 +94,29 @@ private:
 	void skill_to_pos(const char* skill_name, cocos2d::CCPoint& skill_dest_pos);
 	void skill_to_target(const char* skill_name, GameObject* target);
 private:
+	void set_common_effect();
+	void update_common_effect();
+public:
+	Effect* get_common_effect(const char* eff_name);
+private:
 	obj_info object_info;
 	GameGraphicController graphic_ctrl;
 	HUDCollection hud_ctrl;
 	SkillController skill_ctrl;
 private:
 	GameObject* target;
-	bool isLeft, isSelected, isAttackingByEnemy, isNonTargetAttacked, isCollidedToTarget, onSleep, onDestroy;
-	unsigned int current_pos_index;
+	bool isLeft, isSelected, isNonTargetAttacked, isCollidedToTarget, onSleep, onStun, onDestroy;
+	unsigned int current_pos_index, tap_count, objective_tap_count;
 	obj_event current_event, prev_event;
 	std::vector<cocos2d::CCPoint>move_line_pt;
 	std::vector<CurveThrowObject*>throwing_object_list;
 	std::vector<GameObject*>all_object_list;
 
+	std::vector<std::string>common_eff_str_key;
+	std::map<const char*, Effect*>common_effect_list;
+
 	cocos2d::CCPoint dest_move_pos, start_move_pos, *patrol_select_pos;
-	long patrol_start_time, patrol_end_time, sleep_start_time, sleep_end_time;
+	long patrol_start_time, patrol_end_time, patrol_elapsed_time, sleep_start_time, sleep_end_time, sleep_elapsed_time;
 	float moved_delta_x;
 };
 

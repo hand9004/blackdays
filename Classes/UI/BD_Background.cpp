@@ -53,6 +53,19 @@ void* BD_Background::send_message_lua()
 }
 void BD_Background::recv_message_main(void* src_msg)
 {
+	bg_msg_recv* recv_msg = static_cast<bg_msg_recv*>(src_msg);
+
+	CCAssert(recv_msg != nullptr, "BD_Background recv_message_main packet is nullptr!");
+
+	CCSprite* change_img_spr = CCSprite::create(recv_msg->change_image_path);
+	CCTexture2D* change_img_tex = change_img_spr->getTexture();
+
+	CCSize img_size = change_img_tex->getContentSize();
+	background_image->setTexture(change_img_tex);
+	background_image->setTextureRect(CCRect(0, 0, img_size.width, img_size.height));
+	background_image->setContentSize(img_size);
+
+	change_img_spr->retain();
 }
 
 void BD_Background::recv_message_lua(void* src_msg)
@@ -76,6 +89,8 @@ void BD_Background::setResource(void* packet)
 	this->setContentSize(background_image->getContentSize());
 
 	addChild(background_image);
+
+	background_image->retain();
 
 	SAFE_DELETE(butt_packet);
 }

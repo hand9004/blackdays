@@ -24,6 +24,6 @@ private:
 	unsigned int currentSlidedValue; // Range 0 ~ 100
 	cocos2d::CCPoint slide_bar_pos, slide_bar_real_pos;
 	cocos2d::CCSprite* background_image, *slide_bar_image;
-	cocos2d::CCLabelBMFont* test_font;
+	cocos2d::CCLabelTTF* test_font;
 	int bar_x_mid_val;
 };

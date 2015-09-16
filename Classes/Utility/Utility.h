@@ -4,11 +4,21 @@
 #define DEBUG_MODE
 
 #ifdef DEBUG_MODE
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+
 #define BD_CCLog cocos2d::CCLog
 #define BD_CrtDumpMemoryLeaks _CrtDumpMemoryLeaks
+
+#define DBG_NEW new (_NORMAL_BLOCK, __FILE__, __LINE__)
+#define new DBG_NEW
+
 #else
 #define BD_CCLog
 #endif
+
+const float swipe_disable_range = 2.0f;
 
 #define SAFE_DELETE(x) \
 { \
@@ -31,7 +41,7 @@
 // int형의 자료형을 boolean으로 변경시 생기는 성능 경고 warning을 위한 매크로.
 #define INTEGER_TO_BOOLEAN(dest_boolean, src_integer) \
 { \
-	dest_boolean = (src_integer != 0) ? true : false; \
+	dest_boolean = (src_integer > 0) ? true : false; \
 }
 
 inline long get_ms_onSystem() {
@@ -44,7 +54,7 @@ inline long get_ms_onSystem() {
 	return ret_val;
 }
 
-// Reserved.
+// Will be Deprecated
 template<class T>
 inline void CCObject_Retain_Vector_List(std::vector<T>&list) 
 { 
@@ -56,7 +66,7 @@ inline void CCObject_Retain_Vector_List(std::vector<T>&list)
 	} 
 }
 
-// Reserved.
+// Will be Deprecated
 template<class T>
 inline void CCObject_Release_Vector_List(std::vector<T>&list) 
 { 
@@ -71,55 +81,67 @@ inline void CCObject_Release_Vector_List(std::vector<T>&list)
 template<class T>
 inline void vector_clear(std::vector<T>& vecObj)
 {
-	vecObj.clear();
+	if (!vecObj.empty())
+	{
+		vecObj.clear();
 
-	std::vector<T> tempObj;
-	
-	tempObj.swap(vecObj);
+		std::vector<T> tempObj;
+
+		tempObj.swap(vecObj);
+	}
 }
 
 template<class T>
 inline void vector_clear_heap(std::vector<T>& vecObj)
 {
-	std::vector<T> tempObj;
-
-	unsigned int vec_size = vecObj.size();
-
-	for(int i = 0; i < vec_size; ++i)
+	if (!vecObj.empty())
 	{
-		T vec_iter = vecObj.at(i);
-		SAFE_DELETE(vec_iter);
-	}
-	vecObj.clear();
+		std::vector<T> tempObj;
 
-	tempObj.swap(vecObj);
+		unsigned int vec_size = vecObj.size();
+
+		for (int i = 0; i < vec_size; ++i)
+		{
+			T vec_iter = vecObj.at(i);
+			SAFE_DELETE(vec_iter);
+		}
+		vecObj.clear();
+
+		tempObj.swap(vecObj);
+	}
 }
 
 template<class T1, class T2>
-inline void map_clear(std::map<T1, T2>& vecObj)
+inline void map_clear(std::map<T1, T2>& mapObj)
 {
-	vecObj.clear();
+	if (!mapObj.empty())
+	{
+		mapObj.clear();
 
-	std::map<T1, T2> tempObj;
+		std::map<T1, T2> tempObj;
 
-	tempObj.swap(vecObj);
+		tempObj.swap(mapObj);
+	}
 }
 
 template<class T1, class T2>
-inline void map_clear_heap(std::map<T1, T2>& vecObj)
+inline void map_clear_heap(std::map<T1, T2>& mapObj)
 {
-	std::map<T1, T2> tempObj;
-
-	auto begin = vecObj.begin();
-	auto end = vecObj.end();
-
-	for(; begin != end; ++begin)
+	if (!mapObj.empty())
 	{
-		SAFE_DELETE(begin->second);
-	}
-	vecObj.clear();
+		std::map<T1, T2> tempObj;
 
-	tempObj.swap(vecObj);
+		auto begin = mapObj.begin();
+		auto end = mapObj.end();
+
+		for (; begin != end; ++begin)
+		{
+			SAFE_DELETE(begin->second);
+		}
+		mapObj.clear();
+
+		tempObj.swap(mapObj);
+	}
 }
 
 #define MASK_VALUE_4BIT 0xF

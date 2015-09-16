@@ -102,7 +102,7 @@ void BD_Message::setResource(void* packet)
 	message_label = cocos2d::CCLabelTTF::create();
 	message_label->setFontSize(30);
 	message_label->setString(message);
-	message_label->setFontName("fonts/arial.ttf");
+	message_label->setFontName("fonts/nanum_font.ttf");
 	message_label->setColor(cocos2d::ccc3(0, 0, 0));
 	message_label->setAnchorPoint(cocos2d::CCPoint(0.0f, 0.0f));
 
@@ -118,6 +118,9 @@ void BD_Message::setResource(void* packet)
 
 	addChild(background_image);
 	addChild(message_label);
+
+	background_image->retain();
+	message_label->retain();
 
 	SAFE_DELETE(mess_pack);
 }

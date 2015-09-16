@@ -27,6 +27,7 @@ typedef enum OBJECT_EVENT
 	PATROL,
 	SEARCHING_RECOGNIZE_AREA,
 	SLEEP,
+	STUN,
 	DEAD,
 }obj_event;
 
@@ -64,6 +65,7 @@ typedef struct IN_PARTICLE_DATA
 typedef enum EFFECT_DRAW_TYPE
 {
 	DRAW_TO_ME,
+	DRAW_TO_ME_RANDOM,
 	DRAW_TO_TARGET,
 }eff_draw_type;
 
@@ -111,11 +113,16 @@ typedef struct ANIMATEFRAME_SET_INFO
 // 스킬 정보
 typedef struct SKILL_INFO
 {
+	// 루아로부터 입력 받는 기본 정보
 	const char* skill_image_name, *ref_ani_name, *skill_name, *attack_type, *skill_type;
 	std::vector<particle_data*>skill_particle_list;
 	std::vector<unsigned int>chain_hit_in_ani_frame_list;
+	float power_percentage, skill_cooldown, global_vibration;
 	unsigned int charge_dist;
-	float power_percentage;
+
+	// 실제 로직상에서 동작할 변수
+	bool isSkillUsed;
+	long cooldn_start_time, cooldn_end_time, cooldn_elapsed_time;
 }skill_info;
 
 // 통합 객체 정보

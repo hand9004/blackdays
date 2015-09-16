@@ -124,6 +124,9 @@ void BD_Button::setResource(void* packet)
 	addChild(button_image);
 	addChild(pressed_button_image);
 
+	button_image->retain();
+	pressed_button_image->retain();
+
 	SAFE_DELETE(butt_packet);
 }
 

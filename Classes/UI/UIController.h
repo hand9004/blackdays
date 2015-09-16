@@ -5,7 +5,6 @@
 #include "UI_Def.h"
 #include "UILayer.h"
 #include "UIComponent.h"
-#include "../LuaCommunicator.h"
 #include "../Scene/SceneManager.h"
 
 USING_NS_CC;
@@ -53,9 +52,7 @@ public:
 public:
 	void update_UIAll(float dt);
 	
-	// UI 클래스 내부에서 쓰임. 외부에선 사용 불가.
 	UIComponent* find_UIComponent(unsigned int src_id);
-	// UI 클래스 외부에서 쓰임. 루아 테이블의 이름을 키로 쓰면 됨.
 	UIComponent* find_UIComponent(const char* key);
 
 	void register_UIFunctions();

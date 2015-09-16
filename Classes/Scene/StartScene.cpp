@@ -33,6 +33,7 @@ void StartScene::onEnter()
 	CCScene::onEnter();
 
 	TouchLayer* touch_layer = TouchLayer::create();
+
 	addChild(touch_layer);
 
 	UIController::Instance()->init();
@@ -43,7 +44,7 @@ void StartScene::onExit()
 {
 	CCScene::onExit();
 }
-void StartScene::scene_schedule_updater(float dt)
+void StartScene::schedule_updater(float dt)
 {
 	SceneManager::Instance()->updateScene();
 }
@@ -64,14 +65,14 @@ void StartScene::init_SceneInfo()
 
 	LuaCommunicator::Instance()->Call_LuaFunction("sound_Init", ">");
 
-	schedule(schedule_selector(StartScene::scene_schedule_updater));
+	schedule(schedule_selector(StartScene::schedule_updater));
 
 	SceneManager::Instance()->set_SceneReplaceToken("");
 }
 
 void StartScene::destroy_SceneInfo()
 {
-	unschedule(schedule_selector(StartScene::scene_schedule_updater));
+	unschedule(schedule_selector(StartScene::schedule_updater));
 	LuaCommunicator::Instance()->Lua_FileClose();
 }
 
@@ -82,4 +83,14 @@ void StartScene::menuCloseCallback(CCObject* pSender)
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     exit(0);
 #endif
+}
+
+void StartScene::resume_scheduler()
+{
+	schedule(schedule_selector(StartScene::schedule_updater));
+}
+
+void StartScene::pause_scheduler()
+{
+	unschedule(schedule_selector(StartScene::schedule_updater));
 }

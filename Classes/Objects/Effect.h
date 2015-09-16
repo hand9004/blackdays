@@ -18,18 +18,21 @@ public:
 	void Destroy();
 public:
 	bool isEffectEnd();
+	void setEffectRandomSeed();
 	void syncWithEffectTime(unsigned int limit_time_ms);
 	void syncWithEffectFrameIndex(unsigned int frame_index);
 	void setObjectPos(cocos2d::CCPoint obj_pos) { object_pos = obj_pos; }
 	void setTargetPos(cocos2d::CCPoint tar_pos) { target_pos = tar_pos; }
+	void setObjectRect(cocos2d::CCRect obj_rect) { this->obj_rect = obj_rect; }
 	void setGraphicFlipX(bool isFlip) { isFlipX = isFlip; }
 	void setGraphicFlipY(bool isFlip) { isFlipY = isFlip; }
 	void setEffectVisible(bool isVisible) { isEffectOn = isVisible; }
 private:
 	effect_info* eff_info;
 	std::vector<eff_draw_data*>effect_frame;
+	cocos2d::CCRect obj_rect;
 	cocos2d::CCSprite* effect_spr;
-	cocos2d::CCPoint object_pos, target_pos;
+	cocos2d::CCPoint object_pos, target_pos, rand_pick_pos;
 	unsigned int selected_index;
 	bool isEffectOn, isFlipX, isFlipY;
 	unsigned long start_time, end_time;

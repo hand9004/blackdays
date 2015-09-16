@@ -13,29 +13,57 @@
 
 USING_NS_CC;
 
-int replace_Scene(lua_State* L)
+const int vibration_range = 5;
+
+int l_replace_scene(lua_State* L)
 {
 	SceneManager* scene_mgr = SceneManager::Instance();
+
 	scene_mgr->set_SceneReplaceToken(lua_tostring(L, 1));
+
 	return 0;
 }
 
-int l_set_Camera_Is_Fixed(lua_State* L)
+int l_set_camera_is_fixed(lua_State* L)
 {
 	bool isCameraFixed = false;
-	isCameraFixed = lua_tointeger(L, 1);
+	INTEGER_TO_BOOLEAN(isCameraFixed, lua_toboolean(L, 1));
 
 	lua_pop(L, 1);
 
-	SceneManager::Instance()->setIsCameraReset(false);
 	SceneManager::Instance()->setIsCameraFixed(isCameraFixed);
-
-	SceneManager::Instance()->set_in_UI_CameraFixed(isCameraFixed);
 
 	return 0;
 }
 
-SceneManager::SceneManager(void) : replace_scene_token(""), current_Scene(nullptr), isCameraFixed(false), isCameraReset(false)
+int l_control_scheduler(lua_State* L)
+{
+	bool isPaused = false;
+	const char* scene_type = lua_tostring(L, 1);
+	INTEGER_TO_BOOLEAN(isPaused, lua_toboolean(L, 2));
+
+	lua_pop(L, 2);
+
+	SceneManager::Instance()->control_scheduler(scene_type, isPaused);
+
+	return 0;
+}
+
+int l_vibrate_scene(lua_State* L)
+{
+	bool isVibrate = false;
+	INTEGER_TO_BOOLEAN(isVibrate, lua_toboolean(L, 1));
+	long vibrate_duration_ms = lua_tointeger(L, 2);
+
+	lua_pop(L, 2);
+
+	SceneManager::Instance()->setSceneVibration(isVibrate, vibrate_duration_ms);
+
+	return 0;
+}
+
+SceneManager::SceneManager(void) : replace_scene_token(""), current_Scene(nullptr), isCameraFixed(false), isGamePaused(false), isSceneVibration(false), 
+								vibrate_start_time(0), vibrate_end_time(0)
 {
 }
 
@@ -45,8 +73,10 @@ SceneManager::~SceneManager(void)
 
 void SceneManager::register_SceneFunction()
 {
-	LuaCommunicator::Instance()->Register_CFunction("replace_scene", replace_Scene);
-	LuaCommunicator::Instance()->Register_CFunction("set_Camera_Is_Fixed", l_set_Camera_Is_Fixed);
+	LuaCommunicator::Instance()->Register_CFunction("replace_scene", l_replace_scene);
+	LuaCommunicator::Instance()->Register_CFunction("set_camera_is_fixed", l_set_camera_is_fixed);
+	LuaCommunicator::Instance()->Register_CFunction("control_scheduler", l_control_scheduler);
+	LuaCommunicator::Instance()->Register_CFunction("vibrate_scene", l_vibrate_scene);
 }
 
 void SceneManager::createScene(scene_type type)
@@ -89,6 +119,8 @@ void SceneManager::updateScene()
 		scene_mgr->destroyScene();
 		scene_mgr->createScene(GAME);
 	}
+
+	update_scene_vibration();
 }
 
 void SceneManager::destroyScene()
@@ -115,6 +147,8 @@ void SceneManager::destroyScene()
 		select_inst->destroy_SceneInfo();
 	else if(game_inst != nullptr)
 		game_inst->destroy_SceneInfo();
+
+	BD_CrtDumpMemoryLeaks();
 }
 
 cocos2d::CCScene* SceneManager::getCurrentScene()
@@ -126,4 +160,87 @@ cocos2d::CCScene* SceneManager::getCurrentScene()
 void SceneManager::clearScene()
 {
 	LuaCommunicator::Instance()->Lua_FileClose();
+}
+
+void SceneManager::control_scheduler(const char* scene_type, bool isPaused)
+{
+	if (!strcmp(scene_type, "Main"))
+	{
+		StartScene* start_inst = dynamic_cast<StartScene*>(current_Scene);
+		
+		CCAssert(start_inst != nullptr, "StartScene is nullptr.");
+		if (isPaused)
+			start_inst->pause_scheduler();
+		else
+			start_inst->resume_scheduler();
+	}
+	else if (!strcmp(scene_type, "Select"))
+	{
+		StageSelectScene* select_inst = dynamic_cast<StageSelectScene*>(current_Scene);
+
+		CCAssert(select_inst != nullptr, "StageSelectScene is nullptr.");
+		if (isPaused)
+			select_inst->pause_scheduler();
+		else
+			select_inst->resume_scheduler();
+	}
+	else if (!strcmp(scene_type, "Game"))
+	{
+		GameScene* game_inst = dynamic_cast<GameScene*>(current_Scene);
+
+		CCAssert(game_inst != nullptr, "GameScene is nullptr.");
+		if (isPaused)
+			game_inst->pause_scheduler();
+		else
+			game_inst->resume_scheduler();
+	}
+}
+void SceneManager::update_scene_vibration()
+{
+	if (isSceneVibration)
+	{
+		if (current_Scene != nullptr)
+		{
+			long delta_time = vibrate_end_time - vibrate_start_time;
+
+			current_Scene->setPosition(CCPoint(0.f, 0.f));
+			if (delta_time > vibrate_duration_ms)
+			{
+				vibrate_start_time = get_ms_onSystem();
+				vibrate_end_time = get_ms_onSystem();
+
+				isSceneVibration = false;
+			}
+			else
+			{
+				srand(get_ms_onSystem());
+
+				bool isMinusX = false, isMinusY = false;
+				INTEGER_TO_BOOLEAN(isMinusX, rand() % 2);
+				INTEGER_TO_BOOLEAN(isMinusY, rand() % 2);
+
+				float rand_X = rand() % vibration_range, rand_Y = rand() % vibration_range;
+
+				rand_X = (isMinusX) ? -rand_X : rand_X;
+				rand_Y = (isMinusY) ? -rand_Y : rand_Y;
+
+				CCPoint scene_position = current_Scene->getPosition();
+
+				scene_position.x += rand_X;
+				scene_position.y += rand_Y;
+
+				current_Scene->setPosition(scene_position);
+
+				vibrate_end_time = get_ms_onSystem();
+				isSceneVibration = true;
+			}
+		}
+	}
+	else
+	{
+		current_Scene->setPosition(CCPoint(0.f, 0.f));
+
+		vibrate_start_time = get_ms_onSystem();
+		vibrate_end_time = get_ms_onSystem();
+	}
 }

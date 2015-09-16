@@ -53,6 +53,8 @@ public:
 
 	void setUpdateScrolling(float delta_x);
 public:
+	void setAllObjectEvent(obj_event obj_ev);
+	
 	bool getIsObjectDead(const char* object_name);
 	unsigned int getEnemyObjectCnt();
 	unsigned int getAllyObjectCnt();
@@ -97,8 +99,6 @@ public:
 
 		return ret_obj;
 	}
-public:
-	void setLuaState(lua_State* lua_st) { p_lua_st = lua_st; }
 private:
 	void setObjectInfo(obj_info&);
 	void setGraphicFrame(obj_info&);
@@ -114,9 +114,9 @@ public:
 private:
 	GameObject* selected_Object;
 	std::map<const char*, UIComponent*>binded_ui_list;
+	std::map<const char*, const char*>binded_skill_name_list;
 	std::vector<GameObject*>game_object_list;
 	bool isScrollingEvent, isTouchSelected;
-
-	lua_State* p_lua_st;
+	CCPoint CameraPos;
 };
 

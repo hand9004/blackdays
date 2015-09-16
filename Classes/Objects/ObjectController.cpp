@@ -5,14 +5,13 @@
 #include "../UI/BD_Button.h"
 #include "../Utility/Utility.h"
 #include "ParticleController.h"
+#include "../StageManager.h"
 #include "Map.h"
 
 USING_NS_CC;
 
 int l_add_Object(lua_State* L)
 {
-	ObjectController::Instance()->setLuaState(L);
-
 	const char *table_name = nullptr;
 
 	table_name = lua_tostring(L, 1);
@@ -24,7 +23,9 @@ int l_add_Object(lua_State* L)
 	lua_getglobal(L, table_name);
 	CCAssert(lua_istable(L, -1), "Error : Wasn't Lua Table Type.");
 
-	GameObject* created_obj = ObjectController::Instance()->add_Object(posX, posY);
+	CCPoint curr_map_start_pt = Map::Instance()->getMapStartPoint();
+
+	GameObject* created_obj = ObjectController::Instance()->add_Object(posX + curr_map_start_pt.x, posY);
 
 	lua_pushinteger(L, (int)created_obj);
 
@@ -70,7 +71,9 @@ int l_command_to_Object(lua_State* L)
 		unsigned int patrol_delay_time = lua_tointeger(L, 5);
 		CCPoint dest_pt = CCPoint(pos_X, pos_Y);
 
-		finded_obj->Patrol(dest_pt, patrol_delay_time);
+		CCPoint scrolled_pt =  Map::Instance()->getMapStartPoint();
+
+		finded_obj->Patrol(dest_pt + scrolled_pt, patrol_delay_time);
 
 		lua_pop(L, 4);
 	}
@@ -124,6 +127,45 @@ int l_set_ObjectInfo(lua_State* L)
 	return 0;
 }
 
+int l_set_AllObject_Event(lua_State* L)
+{
+	unsigned int obj_ev = lua_tointeger(L, 1);
+
+	ObjectController::Instance()->setAllObjectEvent(static_cast<obj_event>(obj_ev));
+
+	return 0;
+}
+
+int l_get_status_on_object(lua_State* L)
+{
+	const char* object_name = lua_tostring(L, 1);
+
+	lua_pop(L, 1);
+
+	GameObject* finded_obj = ObjectController::Instance()->getObject(object_name);
+	obj_event finded_ev = finded_obj->getEvent();
+
+	lua_pushinteger(L, finded_ev);
+
+	return 1;
+}
+
+int l_set_status_on_object(lua_State* L)
+{
+	const char* object_name = lua_tostring(L, 1);
+	unsigned int object_event = lua_tointeger(L, 2);
+
+	lua_pop(L, 2);
+
+	GameObject* finded_obj = ObjectController::Instance()->getObject(object_name);
+	finded_obj->setEvent(static_cast<obj_event>(object_event));
+
+	if (object_event == obj_event::STUN)
+		finded_obj->setStunPreset();
+
+	return 0;
+}
+
 int l_bindUI_On_GameObject(lua_State* L)
 {
 	const char* table_name = lua_tostring(L, 1);
@@ -149,6 +191,11 @@ int l_bindUI_On_GameObject(lua_State* L)
 
 ObjectController::ObjectController(void) : selected_Object(nullptr), isScrollingEvent(false), isTouchSelected(false)
 {
+	CameraPos = CCPoint(0.f, 0.f);
+
+	CCCamera* myCam = this->getCamera();
+	myCam->setEyeXYZ(CameraPos.x, CameraPos.y, 0.f);
+	myCam->setCenterXYZ(CameraPos.x, CameraPos.y, -0.000000000001f);
 }
 
 ObjectController::~ObjectController(void)
@@ -229,7 +276,23 @@ void ObjectController::update_Dead_Object()
 }
 void ObjectController::clear_Object()
 {
+	GameObject* player_obj = getObject("player");
+	if (player_obj != nullptr)
+	{
+		obj_info player_obj_info = player_obj->getObjectInfo();
+		unsigned int skill_cnt = player_obj_info.skill_list.size();
+		for (unsigned int i = 0; i < skill_cnt; ++i)
+		{
+			skill_info* skill_iter = player_obj_info.skill_list.at(i);
+
+			UIComponent* finded_UI = UIController::Instance()->find_UIComponent(binded_skill_name_list.at(skill_iter->skill_name));
+			if (finded_UI != nullptr)
+				finded_UI->setProgressTimerPercentage(0.f);
+		}
+	}
+
 	map_clear(binded_ui_list);
+	map_clear(binded_skill_name_list);
 
 	unsigned int game_obj_size = game_object_list.size();
 
@@ -250,13 +313,17 @@ void ObjectController::register_ObjectFunction()
 	LuaCommunicator::Instance()->Register_CFunction("remove_object", l_remove_Object);
 	LuaCommunicator::Instance()->Register_CFunction("command_to_object", l_command_to_Object);
 	LuaCommunicator::Instance()->Register_CFunction("set_ObjectInfo", l_set_ObjectInfo);
+	LuaCommunicator::Instance()->Register_CFunction("set_AllObject_Event", l_set_AllObject_Event);
+	LuaCommunicator::Instance()->Register_CFunction("get_status_on_object", l_get_status_on_object);
+	LuaCommunicator::Instance()->Register_CFunction("set_status_on_object", l_set_status_on_object);
 	LuaCommunicator::Instance()->Register_CFunction("bindUI_on_game_object", l_bindUI_On_GameObject);
 }
 
 void ObjectController::add_BindUI(UIComponent* src_ui, const char* key, const char* skill_name)
 {
 	CCAssert(src_ui != nullptr, "Can't BindUI To Object. UIComponent Is NULL.");
-	binded_ui_list[key] = src_ui;
+	binded_ui_list.insert(std::pair<const char*, UIComponent*>(key, src_ui));
+	binded_skill_name_list.insert(std::pair<const char*, const char*>(skill_name, key));
 
 	// 스킬이름이 공란이 아닐 경우는 버튼의 이미지를 변경해주고,
 	// 스킬이름이 공란일 경우는 버튼의 이미지를 디폴트로 그대로 놔둔다.
@@ -269,8 +336,6 @@ void ObjectController::add_BindUI(UIComponent* src_ui, const char* key, const ch
 
 		CCSprite* skill_img_spr = CCSprite::create(selected_skill->skill_image_name);
 
-		player_obj->setSkillSelect(skill_name);
-
 		BD_Button* butt_inst = dynamic_cast<BD_Button*>(src_ui);
 		if (butt_inst != nullptr)
 		{
@@ -282,34 +347,69 @@ void ObjectController::add_BindUI(UIComponent* src_ui, const char* key, const ch
 }
 void ObjectController::update_BindUI()
 {
-	auto begin = binded_ui_list.begin();
-	auto end = binded_ui_list.end();
+	GameObject* player_obj = getObject("player");
+	SkillController* player_skill_ctrl = player_obj->getSkillController();
 
-	for (auto i = begin; i != end; ++i)
+	auto bind_ui_begin = binded_ui_list.begin();
+	auto bind_ui_end = binded_ui_list.end();
+
+	for (auto bind_ui_iter = bind_ui_begin; bind_ui_iter != bind_ui_end; ++bind_ui_iter)
 	{
-		bool bind_msg_iter = static_cast<bool>(i->second->send_message_main());
-	
+		bool bind_msg_iter = static_cast<bool>(bind_ui_iter->second->send_message_main());
+
 		if (selected_Object != nullptr)
 		{
-			if (bind_msg_iter)
+			bool isSkillSelected = false;
+
+			auto bind_skill_begin = binded_skill_name_list.begin();
+			auto bind_skill_end = binded_skill_name_list.end();
+
+			for (auto skill_key_iter = bind_skill_begin; skill_key_iter != bind_skill_end; ++skill_key_iter)
 			{
-				const unsigned int skill_index[4] = { 0, 1, 2, 3 };
+				// UI 객체에 터치 이벤트가 할당된 경우
+				if (bind_msg_iter)
+				{
+					if (!strcmp(bind_ui_iter->first, skill_key_iter->second))
+					{
+						selected_Object->setSkillSelect(skill_key_iter->first);
+						skill_info* selected_skill = player_skill_ctrl->getSkill(skill_key_iter->first);
 
-				bool isSkillSelected = false;
+						if (selected_skill != nullptr)
+							isSkillSelected = true;
+					}
 
-				if (!strcmp(i->first, "skill_button_1"))
-					isSkillSelected = selected_Object->setSkillSelect(skill_index[0]);
-				else if (!strcmp(i->first, "skill_button_2"))
-					isSkillSelected = selected_Object->setSkillSelect(skill_index[1]);
-				else if (!strcmp(i->first, "skill_button_3"))
-					isSkillSelected = selected_Object->setSkillSelect(skill_index[2]);
-				else if (!strcmp(i->first, "skill_button_4"))
-					isSkillSelected = selected_Object->setSkillSelect(skill_index[3]);
+					bind_ui_iter->second->recv_message_main(false);
 
-				i->second->recv_message_main(false);
+					if (isSkillSelected)
+					{
+						selected_Object->Skill();
+						break;
+					}
+				}
+			}
+		}
+	}
 
-				if (isSkillSelected)
-					selected_Object->Skill();
+	// 플레이어의 모든 스킬의 쿨다운 진행 정도를 스킬별 버튼에 표시해준다.
+	if (player_obj != nullptr)
+	{
+		obj_info player_obj_info = player_obj->getObjectInfo();
+		unsigned int skill_cnt = player_obj_info.skill_list.size();
+		for (unsigned int i = 0; i < skill_cnt; ++i)
+		{
+			skill_info* skill_iter = player_obj_info.skill_list.at(i);
+
+			UIComponent* finded_UI = UIController::Instance()->find_UIComponent(binded_skill_name_list.at(skill_iter->skill_name));
+			if (finded_UI != nullptr)
+			{
+				if (skill_iter->isSkillUsed)
+				{
+					float cooldown_percentage = (skill_iter->cooldn_elapsed_time / (skill_iter->skill_cooldown * 1000)) * 100;
+
+					finded_UI->setProgressTimerPercentage(cooldown_percentage);
+				}
+				else
+					finded_UI->setProgressTimerPercentage(0.f);
 			}
 		}
 	}
@@ -317,6 +417,8 @@ void ObjectController::update_BindUI()
 
 void ObjectController::setObjectInfo(obj_info& p_obj_info)
 {
+	lua_State* p_lua_st = LuaCommunicator::Instance()->Lua_GetState();
+
 	lua_pushstring(p_lua_st, "info");
 	lua_gettable(p_lua_st, 1);
 
@@ -365,6 +467,8 @@ void ObjectController::setGraphicFrame(obj_info& p_obj_info)
 
 void ObjectController::setMainImage(obj_info& p_obj_info)
 {
+	lua_State* p_lua_st = LuaCommunicator::Instance()->Lua_GetState();
+
 	// image_table_start
 	lua_pushstring(p_lua_st, "main_image");
 	lua_gettable(p_lua_st, 1);
@@ -377,7 +481,7 @@ void ObjectController::setMainImage(obj_info& p_obj_info)
 		lua_gettable(p_lua_st, 2);
 
 		const char* ret_char = lua_tostring(p_lua_st, -1);
-		p_obj_info.main_image[ret_char] = ret_char;
+		p_obj_info.main_image.insert(std::pair<const char*, const char*>(ret_char, ret_char));
 		lua_pop(p_lua_st, 1);
 	}
 	// image_table_end
@@ -385,6 +489,8 @@ void ObjectController::setMainImage(obj_info& p_obj_info)
 }
 void ObjectController::setImageFrame(obj_info& p_obj_info)
 {
+	lua_State* p_lua_st = LuaCommunicator::Instance()->Lua_GetState();
+
 	// image_frame_table_start
 	lua_pushstring(p_lua_st, "image_frame");
 	lua_gettable(p_lua_st, 1);
@@ -424,6 +530,8 @@ void ObjectController::setImageFrame(obj_info& p_obj_info)
 }
 void ObjectController::setAniFrame(obj_info& p_obj_info)
 {
+	lua_State* p_lua_st = LuaCommunicator::Instance()->Lua_GetState();
+
 	// ani_image_table_start
 	lua_pushstring(p_lua_st, "ani_image_frame");
 	lua_gettable(p_lua_st, 1);
@@ -487,6 +595,8 @@ void ObjectController::setAniFrame(obj_info& p_obj_info)
 }
 void ObjectController::setAniFrameSet(obj_info& p_obj_info)
 {
+	lua_State* p_lua_st = LuaCommunicator::Instance()->Lua_GetState();
+
 	// ani_image_table_start
 	lua_pushstring(p_lua_st, "ani_frame_set");
 	lua_gettable(p_lua_st, 1);
@@ -528,6 +638,8 @@ void ObjectController::setAniFrameSet(obj_info& p_obj_info)
 }
 void ObjectController::setEffect(obj_info& p_obj_info)
 {
+	lua_State* p_lua_st = LuaCommunicator::Instance()->Lua_GetState();
+
 	// ani_image_table_start
 	lua_pushstring(p_lua_st, "effect_set");
 	lua_gettable(p_lua_st, 1);
@@ -571,7 +683,15 @@ void ObjectController::setEffect(obj_info& p_obj_info)
 			effect_set_info* effect_set_data = new effect_set_info;
 
 			effect_set_data->key = lua_tostring(p_lua_st, -5);
-			effect_set_data->draw_type = (!strcmp(lua_tostring(p_lua_st, -4), "draw_to_me")) ? DRAW_TO_ME : DRAW_TO_TARGET;
+
+			const char* ret_str = lua_tostring(p_lua_st, -4);
+			if (!strcmp(ret_str, "draw_to_target"))
+				effect_set_data->draw_type = DRAW_TO_TARGET;
+			else if (!strcmp(ret_str, "draw_to_me"))
+				effect_set_data->draw_type = DRAW_TO_ME;
+			else if (!strcmp(ret_str, "draw_to_me_random"))
+				effect_set_data->draw_type = DRAW_TO_ME_RANDOM;
+
 			effect_set_data->relative_distance.x = lua_tointeger(p_lua_st, -3);
 			effect_set_data->relative_distance.y = lua_tointeger(p_lua_st, -2);
 			effect_set_data->applying_index = lua_tointeger(p_lua_st, -1);
@@ -595,6 +715,8 @@ void ObjectController::setEffect(obj_info& p_obj_info)
 }
 void ObjectController::setSkill(obj_info& p_obj_info)
 {
+	lua_State* p_lua_st = LuaCommunicator::Instance()->Lua_GetState();
+
 	// ani_image_table_start
 	lua_pushstring(p_lua_st, "skill");
 	lua_gettable(p_lua_st, 1);
@@ -605,7 +727,7 @@ void ObjectController::setSkill(obj_info& p_obj_info)
 		lua_pushinteger(p_lua_st, i);
 		lua_gettable(p_lua_st, 2);
 
-		const int non_index_variable_size = 4;
+		const int non_index_variable_size = 6;
 		skill_info* skill_data = new skill_info;
 
 		// Non-Index Key (Graphic Component Key)
@@ -636,7 +758,7 @@ void ObjectController::setSkill(obj_info& p_obj_info)
 		{
 			lua_pushinteger(p_lua_st, j);
 			lua_gettable(p_lua_st, 4);
-				
+
 			unsigned in_skill_particle_element_cnt = LuaCommunicator::Instance()->getTableSize(5);
 			for (unsigned int k = 1; k <= in_skill_particle_element_cnt; ++k)
 			{
@@ -663,8 +785,12 @@ void ObjectController::setSkill(obj_info& p_obj_info)
 		}
 		lua_pop(p_lua_st, 1);
 		// particle_data end
+		
+		lua_pushstring(p_lua_st, "global_vibration");
+		lua_gettable(p_lua_st, 3);
+		skill_data->global_vibration = lua_tonumber(p_lua_st, -1);
+		lua_pop(p_lua_st, 1);
 
-		// Non-Index Key
 		lua_pushstring(p_lua_st, "charge_dist");
 		lua_gettable(p_lua_st, 3);
 		skill_data->charge_dist = lua_tointeger(p_lua_st, -1);
@@ -675,7 +801,10 @@ void ObjectController::setSkill(obj_info& p_obj_info)
 		skill_data->power_percentage = lua_tonumber(p_lua_st, -1);
 		lua_pop(p_lua_st, 1);
 
-		BD_CCLog("%d %f", skill_data->charge_dist, skill_data->power_percentage);
+		lua_pushstring(p_lua_st, "skill_cooldown");
+		lua_gettable(p_lua_st, 3);
+		skill_data->skill_cooldown = lua_tonumber(p_lua_st, -1);
+		lua_pop(p_lua_st, 1);
 
 		// Non-Index Key End(Graphic Component Key)
 
@@ -695,6 +824,11 @@ void ObjectController::setSkill(obj_info& p_obj_info)
 
 		lua_pop(p_lua_st, in_skill_content_size - non_index_variable_size);
 
+		skill_data->cooldn_start_time = 0;
+		skill_data->cooldn_end_time = 0;
+		skill_data->cooldn_elapsed_time = 0;
+		skill_data->isSkillUsed = false;
+
 		BD_CCLog("%s %s %s %s %s %d", skill_data->skill_image_name, skill_data->ref_ani_name, skill_data->skill_name, skill_data->attack_type, skill_data->skill_type,
 			skill_data->chain_hit_in_ani_frame_list.size());
 
@@ -710,223 +844,48 @@ void ObjectController::setUpdateScrolling(float delta_x)
 	unsigned int obj_size = game_object_list.size();
 	
 	bool isCameraFixed = SceneManager::Instance()->getIsCameraFixed();
-	bool isCameraReset = SceneManager::Instance()->getIsCameraReset();
+	CCSize win_size = CCDirector::sharedDirector()->getWinSize();
+	CCPoint map_start_pt = Map::Instance()->getMapStartPoint();
+	CCPoint map_end_pt = Map::Instance()->getMapEndPoint();
 
-	/* 카메라의 고정된 상태와 고정되지 않은 상태에 따라서 상태를 나누어 좌표를 다시 갱신해줘야 한다. 
-	   실제적으로 카메라의 동작이 아니고, 카메라의 동작을 흉내냈기 때문. (2D 좌표계에서 카메라를 만지면
-	   Projection이 꼬일 수 있다. Translate만 하면 원래 행렬에 영향 안줘서 화면을 움직일 수 있는걸로 알고 있으나,
-	   정확하게 아는게 아니고, 정보가 너무 적은 관계상 위와 같이 좌표 갱신으로 구현했다.) */
 	if (!isCameraFixed)
-	 {
-		/* 카메라 고정 => 비고정 상태로 처음 전환할 때(게임 최초 시작의 상태이다.
-						  정확히는 비고정 상태로 전환이 아니고 비고정 상태이다.) */
-		if (!isCameraReset)
-		{
-			if (Map::Instance()->getIsCanScrolling())
-			{
-				for (unsigned int i = 0; i < obj_size; ++i)
-				{
-					GameObject* obj_iter = game_object_list.at(i);
-
-					GameObject* obj_iter_target = obj_iter->getTarget();
-
-					CCPoint obj_pos = obj_iter->getObjectPos();
-					CCPoint obj_dest_pos = obj_iter->getDestMovePos();
-					float moved_delta_x = obj_iter->getMovedDeltaX();
-
-					obj_dest_pos.x += moved_delta_x;
-
-					obj_event obj_ev = obj_iter->getEvent();
-
-					switch (obj_ev)
-					{
-					case MOVE:
-						obj_iter->Move(obj_dest_pos);
-						break;
-					case ATTACK:
-						obj_iter->Attack(obj_iter_target);
-						break;
-					case SKILL:
-						obj_iter->Skill();
-						break;
-					case PATROL:
-						break;
-					default:
-						break;
-					}
-
-					obj_iter->change_PosList_On_Scrolling(delta_x);
-					obj_iter->change_ThrowPosList_On_Scrolling(delta_x);
-					obj_iter->change_SkillPos_On_Scrolling(delta_x);
-				}
-			}
-			else
-				Map::Instance()->reset_MapCoordinate();
-
-			SceneManager::Instance()->setIsCameraReset(true);
-		}
-		/* 카메라 고정 => 비고정 상태로 전환이 완료되었고 유지되는 상태 */
-		else
-		{
-			if (Map::Instance()->getIsCanScrolling())
-			{
-				for (unsigned int i = 0; i < obj_size; ++i)
-				{
-					GameObject* obj_iter = game_object_list.at(i);
-					CCPoint obj_pos = obj_iter->getObjectPos();
-
-					obj_event obj_ev = obj_iter->getEvent();
-
-					// 이동 명령시에는, 리스트를 직접 제작하여, 그에 맞춰 움직이지만,
-					// 공격 명령시에는, 타겟을 계속 쫓아가야하므로 실시간으로 계산을 하게 된다.
-					// 두 케이스는 스크롤시 처리 방법이 다르기 때문에, 케이스로 나눈다.
-					switch (obj_ev)
-					{
-					case MOVE:
-						break;
-					case PATROL:
-						obj_pos.x += delta_x;
-						break;
-					default:
-						obj_pos.x += delta_x;
-						obj_iter->setMovedDeltaX(0.0f);
-						obj_iter->setObjectPos(obj_pos);
-						break;
-					}
-
-					obj_iter->setObjectPos(obj_pos);
-					obj_iter->change_PosList_On_Scrolling(delta_x);
-					obj_iter->change_ThrowPosList_On_Scrolling(delta_x);
-					obj_iter->change_SkillPos_On_Scrolling(delta_x);
-				}
-			}
-			else
-				Map::Instance()->reset_MapCoordinate();
-		}
+	{
+		if (CameraPos.x >= map_start_pt.x && CameraPos.x + win_size.width <= map_end_pt.x)
+			CameraPos.x += delta_x;
+		else if (CameraPos.x < map_start_pt.x)
+			CameraPos.x = 0.f;
+		else if (CameraPos.x + win_size.width > map_end_pt.x)
+			CameraPos.x = map_end_pt.x - win_size.width;
 	}
 	else
 	{
-		for (unsigned int i = 0; i < obj_size; ++i)
+		GameObject* player_obj = getObject("player");
+
+		if (player_obj != nullptr)
 		{
-			GameObject* obj_iter = game_object_list.at(i);
-			CCPoint obj_pos = obj_iter->getObjectPos();
-
-			obj_event obj_ev = obj_iter->getEvent();
-
-			if (!obj_iter->getIsEnemy())
-			{
-				CCSize win_size = CCDirector::sharedDirector()->getWinSize();
-				
-				// 플레이어 및 나머지 객체를 가운데로 고정시켜놓는다.
-				bool isCanMapScrolling = Map::Instance()->getIsCanScrolling();
-				float dist_x_to_screen_mid_x = 0.0f, move_speed = 0.0f, screen_mid_x = win_size.width / 2;
-				if (isCanMapScrolling)
-				{
-					dist_x_to_screen_mid_x = screen_mid_x - obj_pos.x;
-					obj_pos.x = screen_mid_x;
-				}
-				else
-				{
-					CCPoint map_start_pt = Map::Instance()->getMapStartPoint();
-					CCPoint map_end_pt = Map::Instance()->getMapEndPoint();
-
-					if (obj_pos.x >= screen_mid_x && map_end_pt.x > win_size.width)
-					{
-						dist_x_to_screen_mid_x = screen_mid_x - obj_pos.x;
-						obj_pos.x = screen_mid_x;
-					}
-					else if (obj_pos.x < screen_mid_x && map_end_pt.x <= win_size.width)
-					{
-						dist_x_to_screen_mid_x = screen_mid_x - obj_pos.x;
-						obj_pos.x = screen_mid_x;
-					}
-				}
-
-				obj_iter->setObjectPos(obj_pos);
-				obj_iter->change_PosList_On_Scrolling(dist_x_to_screen_mid_x);
-				obj_iter->change_ThrowPosList_On_Scrolling(dist_x_to_screen_mid_x);
-				obj_iter->change_SkillPos_On_Scrolling(dist_x_to_screen_mid_x);
-
-				Map::Instance()->setUpdateScrolling(dist_x_to_screen_mid_x);
-				for (unsigned int j = 0; j < obj_size; ++j)
-				{
-					GameObject* other_obj_iter = game_object_list.at(j);
-					CCPoint other_obj_pos = other_obj_iter->getObjectPos();
-
-					if (other_obj_iter != obj_iter)
-					{
-						other_obj_pos.x += dist_x_to_screen_mid_x;
-						other_obj_iter->change_PosList_On_Scrolling(dist_x_to_screen_mid_x);
-						other_obj_iter->change_ThrowPosList_On_Scrolling(dist_x_to_screen_mid_x);
-						other_obj_iter->setObjectPos(other_obj_pos);
-					}
-				}
-
-				// 고정시킨 뒤에 나머지 객체들을 움직이는 속도에 따라서 바꿔준다.
-				if (obj_iter->getIsLeft())
-					move_speed = obj_iter->getMoveSpeed();
-				else
-					move_speed = -obj_iter->getMoveSpeed();
-
-				skill_info* curr_skill = obj_iter->getSkillController()->getCurrentSkill();
-				switch (obj_ev)
-				{
-				case MOVE:
-				case PATROL:
-					obj_iter->addMovedDeltaX(move_speed);
-					break;
-				case ATTACK:
-					if (obj_iter->getIsCollidedToTarget())
-						move_speed = 0.0f;
-
-					obj_iter->setMovedDeltaX(move_speed);
-					break;
-				case SKILL:
-					if (curr_skill != nullptr)
-					{
-						if (!strcmp(curr_skill->skill_type, "Charge"))
-							move_speed *= charge_speed;
-						else
-							move_speed = 0.f;
-					}
-
-					obj_iter->setMovedDeltaX(move_speed);
-					break;
-				case SEARCHING_RECOGNIZE_AREA:
-					move_speed = 0.0f;
-					obj_iter->setMovedDeltaX(move_speed);
-					break;
-				default:
-					move_speed = 0.0f;
-					obj_iter->setMovedDeltaX(move_speed);
-					break;
-				}
-
-				if (isCanMapScrolling)
-				{
-					obj_iter->change_PosList_On_Scrolling(move_speed);
-					obj_iter->change_ThrowPosList_On_Scrolling(move_speed);
-					obj_iter->change_SkillPos_On_Scrolling(move_speed);
-
-					Map::Instance()->setUpdateScrolling(move_speed);
-					for (unsigned int j = 0; j < obj_size; ++j)
-					{
-						GameObject* other_obj_iter = game_object_list.at(j);
-						CCPoint other_obj_pos = other_obj_iter->getObjectPos();
-
-						if (other_obj_iter != obj_iter)
-						{
-							other_obj_pos.x += move_speed;
-							other_obj_iter->change_ThrowPosList_On_Scrolling(move_speed);
-							other_obj_iter->change_PosList_On_Scrolling(move_speed);
-							other_obj_iter->change_SkillPos_On_Scrolling(move_speed);
-							other_obj_iter->setObjectPos(other_obj_pos);
-						}
-					}
-				}
-				break;
-			}
+			CCPoint player_pos = player_obj->getObjectPos();
+			CameraPos.x = player_pos.x - (win_size.width / 2);
 		}
+
+		if (CameraPos.x < map_start_pt.x)
+			CameraPos.x = 0.f;
+		else if (CameraPos.x + win_size.width > map_end_pt.x)
+			CameraPos.x = map_end_pt.x - win_size.width;
+	}
+
+	CCCamera* myCam = this->getCamera();
+	myCam->setEyeXYZ(CameraPos.x, CameraPos.y, 0.f);
+	myCam->setCenterXYZ(CameraPos.x, CameraPos.y, -0.1f);
+}
+
+void ObjectController::setAllObjectEvent(obj_event obj_ev)
+{
+	unsigned int obj_size = game_object_list.size();
+	for (unsigned i = 0; i < obj_size; ++i)
+	{
+		GameObject* game_pt = game_object_list.at(i);
+
+		game_pt->setEvent(obj_ev);
 	}
 }
 
@@ -1007,6 +966,9 @@ void ObjectController::setTouchMoved(cocos2d::CCTouch* pTouch, cocos2d::CCEvent*
 }
 void ObjectController::setTouchEnded(cocos2d::CCTouch* pTouch, cocos2d::CCEvent* pEvent)
 {
+	CCPoint converted_pt = pTouch->getLocation();
+	converted_pt.x += CameraPos.x;
+
 	if (!isScrollingEvent)
 	{
 		bool isEqualSelected = false;
@@ -1018,26 +980,31 @@ void ObjectController::setTouchEnded(cocos2d::CCTouch* pTouch, cocos2d::CCEvent*
 		for (unsigned int i = 0; i < object_size; ++i)
 		{
 			GameObject* obj_iter = game_object_list.at(i);
-			cocos2d::CCRect obj_rect = obj_iter->getObjectRect(pTouch->getLocation());
+			cocos2d::CCRect obj_rect = obj_iter->getObjectRect(converted_pt);
 
 			if (!obj_iter->dead_check())
 			{
-				if (obj_rect.containsPoint(pTouch->getLocation()))
+				if (obj_rect.containsPoint(converted_pt))
 				{
 					if (!obj_iter->getIsEnemy())
 					{
 						isEnemySelected = false;
-						if (selected_Object != obj_iter)
+						if (obj_iter->getControllable())
 						{
-							if (selected_Object != nullptr)
-								selected_Object->setIsSelected(false);
+							if (selected_Object != obj_iter)
+							{
+								if (selected_Object != nullptr)
+									selected_Object->setIsSelected(false);
 
-							obj_iter->setIsSelected(true);
-							selected_Object = obj_iter;
-							isTouchSelected = true;
+								obj_iter->setIsSelected(true);
+								selected_Object = obj_iter;
+								isTouchSelected = true;
+							}
+							else
+								isEqualSelected = true;
 						}
 						else
-							isEqualSelected = true;
+							obj_iter->setIsSelected(false);
 					}
 					else
 					{
@@ -1056,14 +1023,26 @@ void ObjectController::setTouchEnded(cocos2d::CCTouch* pTouch, cocos2d::CCEvent*
 			if (!isObjectSelected)
 			{
 				if (selected_Object->getControllable())
-					selected_Object->Move(pTouch->getLocation());
+					selected_Object->Move(converted_pt);
 			}
 			else
 			{
 				if (isEqualSelected)
-					selected_Object->Move(pTouch->getLocation());
+					selected_Object->Move(converted_pt);
 				else if (isEnemySelected)
 					selected_Object->Attack(enemy_iter);
+			}
+		}
+
+		GameObject* player_obj = getObject("player");
+		if (player_obj != nullptr)
+		{
+			obj_event player_ev = player_obj->getEvent();
+			switch (player_ev)
+			{
+			case STUN:
+				player_obj->addTapCount();
+				break;
 			}
 		}
 	}

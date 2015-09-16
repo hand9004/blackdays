@@ -10,30 +10,34 @@ USING_NS_CC;
 
 void set_animate_sort(std::vector<const char*>&dest_list, obj_info& src_data)
 {
-	unsigned int src_ani_size = src_data.ani_image_list.size();
-
-	for(unsigned int i = 0; i < src_ani_size; ++i)
+	if (!src_data.ani_image_list.empty())
 	{
-		aniframe_info* aniframe_iter = src_data.ani_image_list[i];
+		unsigned int src_ani_size = src_data.ani_image_list.size();
 
-		unsigned int res_list_size = dest_list.size();
-		if(res_list_size <= 0)
-			dest_list.push_back(aniframe_iter->ani_name);
-		else
+		for (unsigned int i = 0; i < src_ani_size; ++i)
 		{
-			bool hasAnimationStr = false;
-			for(unsigned int j = 0; j < res_list_size; ++j)
-			{
-				const char* ani_str = dest_list[j];
-				if(!strcmp(aniframe_iter->ani_name, ani_str))
-				{
-					hasAnimationStr = true;
-					break;
-				}
-			}
+			aniframe_info* aniframe_iter = src_data.ani_image_list.at(i);
 
-			if(!hasAnimationStr)
+			bool is_res_list_empty = dest_list.empty();
+			if (is_res_list_empty)
 				dest_list.push_back(aniframe_iter->ani_name);
+			else
+			{
+				bool hasAnimationStr = false;
+				unsigned int res_list_size = dest_list.size();
+				for (unsigned int j = 0; j < res_list_size; ++j)
+				{
+					const char* ani_str = dest_list.at(j);
+					if (!strcmp(aniframe_iter->ani_name, ani_str))
+					{
+						hasAnimationStr = true;
+						break;
+					}
+				}
+
+				if (!hasAnimationStr)
+					dest_list.push_back(aniframe_iter->ani_name);
+			}
 		}
 	}
 }
@@ -68,16 +72,19 @@ void GameGraphicController::add_Object(obj_info& game_obj_info)
 	}
 
 	// 메인으로 사용되는 고정된 이미지의 프레임을 설정한다.
-	unsigned int img_frame_size = game_obj_info.img_frame_list.size();
-	for(unsigned int i = 0; i < img_frame_size; ++i)
+	if (!game_obj_info.img_frame_list.empty())
 	{
-		main_grap_info grap_info;
-		GameGraphicComponent* img_frame_comp = new Normal();
-		grap_info.m_imgframe_info = game_obj_info.img_frame_list.at(i);
+		unsigned int img_frame_size = game_obj_info.img_frame_list.size();
+		for (unsigned int i = 0; i < img_frame_size; ++i)
+		{
+			main_grap_info grap_info;
+			GameGraphicComponent* img_frame_comp = new Normal();
+			grap_info.m_imgframe_info = game_obj_info.img_frame_list.at(i);
 
-		img_frame_comp->Init(grap_info);
+			img_frame_comp->Init(grap_info);
 
-		game_graphic_list[grap_info.m_imgframe_info->key] = img_frame_comp;
+			game_graphic_list.insert(std::pair<const char*, GameGraphicComponent*>(grap_info.m_imgframe_info->key, img_frame_comp));
+		}
 	}
 
 	// 전체 설정 파일 중, 애니메이션의 갯수 및 키를 추려낸다.
@@ -85,62 +92,75 @@ void GameGraphicController::add_Object(obj_info& game_obj_info)
 	set_animate_sort(ani_key_sort_list, game_obj_info);
 
 	// 위에서 얻은 애니메이션의 갯수 및 키를 통하여, 애니메이션 객체를 재구성한다.
-	unsigned int ani_size = ani_key_sort_list.size();
-	for(unsigned int i = 0; i < ani_size; ++i)
+	if (!ani_key_sort_list.empty())
 	{
-		main_grap_info ani_grap_info;
-		const char* ani_key_str = ani_key_sort_list.at(i);
-		GameGraphicComponent* img_frame_comp = new Animate();
-
-		const char* list_key_name = NULL;
-		main_ani_info ani_frame_comp;
-
-		ani_frame_comp.ani_frame_data = NULL;
-		ani_frame_comp.ani_frame_set = NULL;
-		ani_frame_comp.effect_data = NULL;
-
-		// 애니메이션 객체의 경우, 각 애니메이션 마다 프레임 넘기는 시간 및 반복과 반복하지 않는
-		// 여부를 따로 설정해야할 경우가 있다. 키 값이 같은 경우에 한해서 설정 값에 포인터를 넘겨준다.
-		unsigned int ani_frame_set_size = game_obj_info.ani_frame_set_list.size();
-		for(unsigned int j = 0; j < ani_frame_set_size; ++j)
+		unsigned int ani_size = ani_key_sort_list.size();
+		for (unsigned int i = 0; i < ani_size; ++i)
 		{
-			aniframe_set_info* ani_frame_set_iter = game_obj_info.ani_frame_set_list.at(j);
+			main_grap_info ani_grap_info;
+			const char* ani_key_str = ani_key_sort_list.at(i);
+			GameGraphicComponent* img_frame_comp = new Animate();
 
-			if(!strcmp(ani_key_str, ani_frame_set_iter->ani_name))
-				ani_frame_comp.ani_frame_set = ani_frame_set_iter;
-		}
+			const char* list_key_name = NULL;
+			main_ani_info ani_frame_comp;
 
-		// 애니메이션을 구성하는 실제적인 객체 포인터를 넘겨준다.
-		// plist 파일 안의 키값을 대조하여, x프레임에 어떤 Key에 해당하는 영역을 임의로 설정해주게 된다.
-		// ex) 1프레임 - 1.png(key)
-		unsigned int ani_frame_size = game_obj_info.ani_image_list.size();
-		for(unsigned int j = 0; j < ani_frame_size; ++j)
-		{
-			aniframe_info* ani_frame_iter = game_obj_info.ani_image_list.at(j);
-			
-			if(!strcmp(ani_key_str, ani_frame_iter->ani_name))
+			ani_frame_comp.ani_frame_data = NULL;
+			ani_frame_comp.ani_frame_set = NULL;
+			ani_frame_comp.effect_data = NULL;
+
+			// 애니메이션 객체의 경우, 각 애니메이션 마다 프레임 넘기는 시간 및 반복과 반복하지 않는
+			// 여부를 따로 설정해야할 경우가 있다. 키 값이 같은 경우에 한해서 설정 값에 포인터를 넘겨준다.
+			if (!game_obj_info.ani_frame_set_list.empty())
 			{
-				list_key_name = ani_frame_iter->ani_name;
+				unsigned int ani_frame_set_size = game_obj_info.ani_frame_set_list.size();
+				for (unsigned int j = 0; j < ani_frame_set_size; ++j)
+				{
+					aniframe_set_info* ani_frame_set_iter = game_obj_info.ani_frame_set_list.at(j);
 
-				ani_frame_comp.ani_frame_data = ani_frame_iter;
+					if (!strcmp(ani_key_str, ani_frame_set_iter->ani_name))
+						ani_frame_comp.ani_frame_set = ani_frame_set_iter;
+				}
 			}
+
+			// 애니메이션을 구성하는 실제적인 객체 포인터를 넘겨준다.
+			// plist 파일 안의 키값을 대조하여, x프레임에 어떤 Key에 해당하는 영역을 임의로 설정해주게 된다.
+			// ex) 1프레임 - 1.png(key)
+			if (!game_obj_info.ani_image_list.empty())
+			{
+				unsigned int ani_frame_size = game_obj_info.ani_image_list.size();
+				for (unsigned int j = 0; j < ani_frame_size; ++j)
+				{
+					aniframe_info* ani_frame_iter = game_obj_info.ani_image_list.at(j);
+
+					if (!strcmp(ani_key_str, ani_frame_iter->ani_name))
+					{
+						list_key_name = ani_frame_iter->ani_name;
+
+						ani_frame_comp.ani_frame_data = ani_frame_iter;
+					}
+				}
+			}
+
+			if (!game_obj_info.effect_list.empty())
+			{
+				unsigned int ani_in_effect_size = game_obj_info.effect_list.size();
+				for (unsigned int j = 0; j < ani_in_effect_size; ++j)
+				{
+					effect_info* effect_iter = game_obj_info.effect_list.at(j);
+
+					if (!strcmp(ani_key_str, effect_iter->grap_object_key))
+						ani_frame_comp.effect_data = effect_iter;
+					else
+						ani_frame_comp.effect_data = NULL;
+				}
+			}
+
+			ani_grap_info.m_ani_info = &ani_frame_comp;
+
+			img_frame_comp->Init(ani_grap_info);
+
+			game_graphic_list.insert(std::pair<const char*, GameGraphicComponent*>(list_key_name, img_frame_comp));
 		}
-
-		unsigned int ani_in_effect_size = game_obj_info.effect_list.size();
-		for(unsigned int j = 0; j < ani_in_effect_size; ++j)
-		{
-			effect_info* effect_iter = game_obj_info.effect_list[j];
-
-			if(!strcmp(ani_key_str, effect_iter->grap_object_key))
-				ani_frame_comp.effect_data = effect_iter;
-			else
-				ani_frame_comp.effect_data = NULL;
-		}
-		ani_grap_info.m_ani_info = &ani_frame_comp;
-
-		img_frame_comp->Init(ani_grap_info);
-
-		game_graphic_list[list_key_name] = img_frame_comp;
 	}
 }
 void GameGraphicController::update_Object()

@@ -5,8 +5,6 @@
 
 USING_NS_CC;
 
-const float swipe_disable_range = 5.0f;
-
 class UIComponent : public cocos2d::CCLayer
 {
 public:
@@ -41,6 +39,13 @@ public:
 	unsigned int get_Message() { return (id & UI_MESSAGE_FIELD) >> UI_MESSAGE_SHIFT; }
 	unsigned int get_UIStatus() { return (id & UI_TOUCH_EVENT_FIELD) >> UI_TOUCH_EVENT_SHIFT; }
 public:
+	void setProgressTimer(cocos2d::CCProgressTimer* progress_timer) { this->progress_timer = progress_timer; this->progress_timer->setZOrder(2); }
+	void setProgressTimerPercentage(float current_percent)
+	{
+		if (progress_timer != nullptr)
+			progress_timer->setPercentage(current_percent);
+	}
+
 	void setIsSwipeMode(bool isSwipe) { isSwipeMode = isSwipe; }
 	bool getIsSwipeMode() { return isSwipeMode; }
 	bool is_UITouched(cocos2d::CCPoint& touched_Pt)
@@ -64,6 +69,7 @@ protected:
 	virtual void setResource(void* packet) = 0;
 protected:
 	cocos2d::CCRect ui_rect;
+	cocos2d::CCProgressTimer* progress_timer;
 	unsigned int id; // UI 식별자 및 UI별 메시지 포함.(enum으로 정의 예정)
 	// 부호 없는 int자료형의 4byte중 LSB로부터 12bit는 ID 값이며, 다음 4bit는 UI 종류 비트이며,
 	// 이후 4bit는 현재 UI의 상태를 나타내며, 그 이후 12bit는 UI가 보내는 메시지에 해당한다.

@@ -21,7 +21,7 @@ public:
 private:
 	virtual void setResource(void* packet);
 private:
-	cocos2d::CCLabelBMFont* pop_font_label;
+	cocos2d::CCLabelTTF* pop_font_label;
 	char message_mode[16], message[512];
 	unsigned long delay_time_ms, start_time, end_time;
 	unsigned char opacity_val;

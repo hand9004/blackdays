@@ -25,7 +25,7 @@ void CurveThrowObject::Init(cocos2d::CCPoint start_pt, cocos2d::CCPoint end_pt)
 
 	effect_info* effect_info_data = new effect_info;
 
-	effect_info_data->effect_list_name = "Images/explosion_1.plist";
+	effect_info_data->effect_list_name = "Characters/common_effect.plist";
 
 //	effect_frame_name_list.push_back("explosion_1.png");
 	effect_frame_name_list.push_back("explosion_2.png");
@@ -62,19 +62,22 @@ void CurveThrowObject::Init(cocos2d::CCPoint start_pt, cocos2d::CCPoint end_pt)
 }
 void CurveThrowObject::Update()
 {
-	unsigned int throwing_size = throwing_line.size();
+	unsigned int throwing_size = 0;
 	if(!throwing_line.empty())
 	{
+		throwing_size = throwing_line.size();
 		if(current_index >= 0 && current_index < throwing_size)
 		{
-			cocos2d::CCPoint current_pos = throwing_line.at(current_index);
+			cocos2d::CCPoint current_pos = throwing_line.at(current_index++);
 
+			curve_throw_spr->setZOrder(-current_pos.y);
 			curve_throw_spr->setPosition(current_pos);
-			++current_index;
 		}
 		else
 		{
-			cocos2d::CCPoint current_pos = throwing_line.at(throwing_line.size() - 1);
+			cocos2d::CCPoint current_pos = throwing_line.at(throwing_size - 1);
+
+			curve_throw_spr->setZOrder(-current_pos.y);
 			curve_throw_spr->setPosition(current_pos);
 
 			if(!isSoundPlayed)
@@ -111,18 +114,26 @@ void CurveThrowObject::Destroy()
 }
 void CurveThrowObject::change_PosList_OnScrolling(int delta_X)
 {
-	unsigned int throw_pos_size = throwing_line.size();
-	for(unsigned int i = 0; i < throw_pos_size; ++i)
-		throwing_line.at(i).x += delta_X;
+	if (!throwing_line.empty())
+	{
+		unsigned int throw_pos_size = throwing_line.size();
+		for (unsigned int i = 0; i < throw_pos_size; ++i)
+			throwing_line.at(i).x += delta_X;
+	}
 }
 bool CurveThrowObject::isInBombArea(cocos2d::CCPoint src_pos)
 {
-	unsigned int throw_size = throwing_line.size();
-	cocos2d::CCPoint destroyed_pt = throwing_line.at(throw_size - 1);
-	cocos2d::CCRect destroyed_area = cocos2d::CCRect(destroyed_pt.x - radius_X, destroyed_pt.y - radius_Y, radius_X * 2, radius_Y * 2);
+	if (!throwing_line.empty())
+	{
+		unsigned int throw_size = throwing_line.size();
+		cocos2d::CCPoint destroyed_pt = throwing_line.at(throw_size - 1);
+		cocos2d::CCRect destroyed_area = cocos2d::CCRect(destroyed_pt.x - radius_X, destroyed_pt.y - radius_Y, radius_X * 2, radius_Y * 2);
 
-	if(destroyed_area.containsPoint(src_pos))
-		return true;
+		if (destroyed_area.containsPoint(src_pos))
+			return true;
+		else
+			return false;
+	}
 	else
 		return false;
 }
@@ -131,8 +142,7 @@ void CurveThrowObject::create_bezier_to_pos(cocos2d::CCPoint start_pt, cocos2d::
 	float radient = (end_pt.y - start_pt.y) / (end_pt.x - start_pt.x);
 	float atan_val_radient = atan(radient);
 
-	float degree_30 = (float)(30.0f * (PI / 180.0f));
-	float atan_val_degree_30 = atan(degree_30);
+//	float degree_30 = (float)(30.0f * (PI / 180.0f));
 	
 	float degree_90 = (float)(90.0f * (PI / 180.0f));
 	float atan_val_degree_90 = atan(degree_90);

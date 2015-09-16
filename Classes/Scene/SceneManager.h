@@ -32,12 +32,16 @@ public:
 	cocos2d::CCScene* getCurrentScene();
 
 	void setIsCameraFixed(bool isCameraFixed) { this->isCameraFixed = isCameraFixed; }
-	void setIsCameraReset(bool isCameraReset) { this->isCameraReset = isCameraReset; }
-	void set_in_UI_CameraFixed(bool in_UI_IsCameraFixed) { this->in_UI_IsCameraFixed = in_UI_IsCameraFixed; }
+	void setIsGamePaused(bool isGamePaused) { this->isGamePaused = isGamePaused; }
+	void setSceneVibration(bool isSceneVibration, long vibrate_duration_ms)
+	{
+		this->isSceneVibration = isSceneVibration;
+		this->vibrate_duration_ms = vibrate_duration_ms;
+	}
 
 	bool getIsCameraFixed() { return isCameraFixed; }
-	bool getIsCameraReset() { return isCameraReset; }
-	bool get_in_UI_CameraFixed() { return in_UI_IsCameraFixed; }
+	bool getIsGamePaused() { return isGamePaused; }
+	bool getIsSceneVibration() { return isSceneVibration; }
 
 	scene_type get_SceneType() { return current_scene_type; }
 
@@ -51,10 +55,15 @@ public:
 
 	void set_SceneReplaceToken(const char* tok) { replace_scene_token = tok; }
 	const char* get_SceneReplaceToken() { return replace_scene_token; }
+public:
+	void control_scheduler(const char* scene_type, bool isPaused);
+private:
+	void update_scene_vibration();
 private:
 	scene_type current_scene_type;
 	cocos2d::CCScene* current_Scene;
 	const char* replace_scene_token;
-	bool isCameraFixed, isCameraReset, in_UI_IsCameraFixed;
+	bool isCameraFixed, isGamePaused, isSceneVibration;
+	long vibrate_start_time, vibrate_end_time, vibrate_duration_ms;
 };
 

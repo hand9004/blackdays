@@ -40,11 +40,19 @@ void TouchLayer::menuCloseCallback(CCObject* pSender)
 
 bool TouchLayer::ccTouchBegan(cocos2d::CCTouch* pTouch, cocos2d::CCEvent* pEvent)
 {
-	UIController::Instance()->setTouchBegan(pTouch, pEvent);
-	if(!UIController::Instance()->getIsTouchGrab())
+	bool isGameTouchRestrict = StageManager::Instance()->getGameRestrict();
+	bool isUITouchRestrict = StageManager::Instance()->getUIRestrict();
+
+	if (!isUITouchRestrict)
+		UIController::Instance()->setTouchBegan(pTouch, pEvent);
+
+	if (!isGameTouchRestrict)
 	{
-		Map::Instance()->setTouchBegan(pTouch, pEvent);
-		ObjectController::Instance()->setTouchBegan(pTouch, pEvent);
+		if (!UIController::Instance()->getIsTouchGrab())
+		{
+			Map::Instance()->setTouchBegan(pTouch, pEvent);
+			ObjectController::Instance()->setTouchBegan(pTouch, pEvent);
+		}
 	}
 	scroll_delta.setPoint(0.0f, 0.0f);
 
@@ -52,27 +60,45 @@ bool TouchLayer::ccTouchBegan(cocos2d::CCTouch* pTouch, cocos2d::CCEvent* pEvent
 }
 void TouchLayer::ccTouchMoved(cocos2d::CCTouch* pTouch, cocos2d::CCEvent* pEvent)
 {
-	UIController::Instance()->setTouchMoved(pTouch, pEvent);
-	if(!UIController::Instance()->getIsTouchGrab())
-	{
-		Map::Instance()->setTouchMoved(pTouch, pEvent);
-		ObjectController::Instance()->setTouchMoved(pTouch, pEvent);
-	}
+	bool isGameTouchRestrict = StageManager::Instance()->getGameRestrict();
+	bool isUITouchRestrict = StageManager::Instance()->getUIRestrict();
 
-	cocos2d::CCPoint current_pt = pTouch->getLocation();
-	cocos2d::CCPoint prev_pt = pTouch->getPreviousLocation();
-	scroll_delta.setPoint(current_pt.x - prev_pt.x, current_pt.y - prev_pt.y);
+	if (!isUITouchRestrict)
+		UIController::Instance()->setTouchMoved(pTouch, pEvent);
+
+	if (!isGameTouchRestrict)
+	{
+		if (!UIController::Instance()->getIsTouchGrab())
+		{
+			Map::Instance()->setTouchMoved(pTouch, pEvent);
+			ObjectController::Instance()->setTouchMoved(pTouch, pEvent);
+		}
+
+		cocos2d::CCPoint current_pt = pTouch->getLocation();
+		cocos2d::CCPoint prev_pt = pTouch->getPreviousLocation();
+		scroll_delta.setPoint(prev_pt.x - current_pt.x, prev_pt.y - current_pt.y);
+
+		BD_CCLog("%f", scroll_delta.x);
+	}
 }
 void TouchLayer::ccTouchEnded(cocos2d::CCTouch* pTouch, cocos2d::CCEvent* pEvent)
 {
-	UIController::Instance()->setTouchEnded(pTouch, pEvent);
-	if(!UIController::Instance()->getIsTouchGrab())
+	bool isGameTouchRestrict = StageManager::Instance()->getGameRestrict();
+	bool isUITouchRestrict = StageManager::Instance()->getUIRestrict();
+
+	if (!isUITouchRestrict)
+		UIController::Instance()->setTouchEnded(pTouch, pEvent);
+
+	if (!isGameTouchRestrict)
 	{
-		Map::Instance()->setTouchEnded(pTouch, pEvent);
-		ObjectController::Instance()->setTouchEnded(pTouch, pEvent);
+		if (!UIController::Instance()->getIsTouchGrab())
+		{
+			Map::Instance()->setTouchEnded(pTouch, pEvent);
+			ObjectController::Instance()->setTouchEnded(pTouch, pEvent);
+		}
+		else
+			UIController::Instance()->setIsTouchGrab(false);
 	}
-	else
-		UIController::Instance()->setIsTouchGrab(false);
 }
 void TouchLayer::keyBackClicked()
 {
@@ -124,11 +150,17 @@ void TouchLayer::check_touch_event(float dt)
 
 				// 검사전 맵을 업데이트 하고, 업데이트 후, 검사함으로써, 좌표를 다시 제대로 잡는다.
 				// 그렇게 하여, 움직일 수 있는 경우면, 오브젝트 또한 갱신을 시도한다.
-				if (!SceneManager::Instance()->getIsCameraFixed())
+				if (!SceneManager::Instance()->getIsGamePaused())
 				{
-					Map::Instance()->setUpdateScrolling(scroll_delta.x);
-					if (Map::Instance()->getIsCanScrolling())
-						ObjectController::Instance()->setUpdateScrolling(scroll_delta.x);
+					if (abs(scroll_delta.x) > swipe_disable_range)
+					{
+						if (!SceneManager::Instance()->getIsCameraFixed())
+						{
+							Map::Instance()->setUpdateScrolling(scroll_delta.x);
+//							if (Map::Instance()->getIsCanScrolling())
+								ObjectController::Instance()->setUpdateScrolling(scroll_delta.x);
+						}
+					}
 				}
 			}
 		}

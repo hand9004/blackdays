@@ -40,6 +40,9 @@ function ui_Init()
 	LOG(notice_string .. stage2_marker.id)
 	LOG(notice_string .. stage3_marker.id)
 
+--	set_active_UI(stage2_marker.id, false)
+--	set_active_UI(stage3_marker.id, false)
+
 	create_layer("select_layer", 0, 0)
 	add_UI_to_layer("select_layer", worldmap_background.id, 0, 0)
 	add_UI_to_layer("select_layer", stage1_marker.id, 470, 512)
@@ -54,16 +57,26 @@ function ui_Update()
 
 	if touched_event == 3 then
 		if stage1_marker.id == touched_id then
+			ui_Destroy()
 			send_stage_index(1)
 			replace_scene("Game")
 		elseif stage2_marker.id == touched_id then
+			ui_Destroy()
 			send_stage_index(2)
 			replace_scene("Game")
 		elseif stage3_marker.id == touched_id then
+			ui_Destroy()
 			send_stage_index(3)
 			replace_scene("Game")
 		end
 	end
+end
+
+function ui_Destroy()
+	worldmap_background = nil
+	stage1_marker = nil
+	stage2_marker = nil
+	stage3_marker = nil
 end
 
 function sound_Init()
